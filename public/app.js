@@ -6,7 +6,7 @@ const EXPORTS=['downloadPng','downloadSvg','downloadPptx','downloadRegions','dow
 const CREDIT='통계청 SGIS · vuski/admdongkor (CC BY 4.0) · 2025-01-01 · 경계 간소화';
 let settings={...DEFAULTS},selections=initialSelections(),pins=[],countries=[],manifest={},korea={},provinceData=[],cityData=[],current=[],rawCurrent=[],items=[],allItems=[],adminCache={},dongCache={};
 let step=1,loadToken=0,ready=false,zoom={k:1,x:0,y:0},drawn=[],path,projection,toastTimer,saveTimer,focusIds=null,contextFeatures=[],weightedTopology=null,geometryKey='',pinMode=false,selectedPinId=null,copiedPin=null;
-let dragging=false,dragDistance=0,dragStart=null,dragPinId=null;
+let dragging=false,dragDistance=0,dragStart=null,dragPinId=null,pointerStartedOnPin=false;
 const busy=new Set(),svg=d3.select('#map');
 const selection=()=>selections[settings.unit];
 const styleFor=id=>selection()[id];
@@ -26,7 +26,14 @@ function setStep(value,focus=false){
   $('stepHint').textContent=step===3?t('exportQuestion'):t('help');
   $('selectionDetails').hidden=step!==2;pinMode=false;svg.classed('pin-mode',false);$('addPin').classList.remove('active');
   if(focus)$('step'+step).querySelector('h2').focus({preventScroll:true});
-  if(ready)renderPins();
+  if(ready){syncMapInteraction();renderPins();}
+}
+function syncMapInteraction(){
+  for(const region of document.querySelectorAll('#map .region')){
+    region.setAttribute('tabindex',step===1?'0':'-1');
+    if(step===1){region.setAttribute('role','checkbox');region.setAttribute('aria-checked',String(!!styleFor(region.dataset.id)));}
+    else{region.removeAttribute('role');region.removeAttribute('aria-checked');}
+  }
 }
 function syncEnabled(){
   for(const id of EXPORTS)$(id).disabled=!ready||busy.has(id);
@@ -161,7 +168,7 @@ function renderMap(){
   for(const f of current){const id=keyFor(f),s=styleFor(id),d=path(f);if(!d)continue;drawn.push(f);
     const shape=regions.append('path').attr('d',d).attr('class','region').attr('fill',s?.mode==='fill'?s.color:settings.baseColor).attr('stroke',settings.lineColor).attr('stroke-width',settings.lineWidth).attr('stroke-linejoin',settings.corners==='round'?'round':'miter').attr('data-id',id).attr('tabindex',0).attr('role','checkbox').attr('aria-label',settings.unit==='continent'?(continentName(id)):nameOf(f)).attr('aria-checked',String(!!s));
     shape.append('title').text(settings.unit==='continent'?(continentName(id)):nameOf(f));
-    shape.on('click',()=>{if(!pinMode&&dragDistance<5){toggleRegion(id);$('tooltip').hidden=true;}}).on('dblclick',()=>{if(!pinMode&&canDrill({id}))drill(id);}).on('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleRegion(id);}}).on('pointermove',e=>{if(dragging||pinMode)return;$('tooltip').textContent=(settings.unit==='continent'?(continentName(id)):nameOf(f))+(s?' · '+t('selected'):'');$('tooltip').hidden=false;$('tooltip').style.left=Math.max(5,Math.min(e.clientX+12,window.innerWidth-210))+'px';$('tooltip').style.top=Math.min(e.clientY+14,window.innerHeight-45)+'px';}).on('pointerleave',()=>{$('tooltip').hidden=true;});
+    shape.on('click',()=>{if(step===1&&!pinMode&&dragDistance<5){toggleRegion(id);$('tooltip').hidden=true;}}).on('dblclick',()=>{if(step===1&&!pinMode&&canDrill({id}))drill(id);}).on('keydown',e=>{if(step===1&&(e.key==='Enter'||e.key===' ')){e.preventDefault();toggleRegion(id);}}).on('pointermove',e=>{if(dragging||pinMode)return;$('tooltip').textContent=(settings.unit==='continent'?(continentName(id)):nameOf(f))+(s?' · '+t('selected'):'');$('tooltip').hidden=false;$('tooltip').style.left=Math.max(5,Math.min(e.clientX+12,window.innerWidth-210))+'px';$('tooltip').style.top=Math.min(e.clientY+14,window.innerHeight-45)+'px';}).on('pointerleave',()=>{$('tooltip').hidden=true;});
   }
   const borders=g.append('g').attr('pointer-events','none');for(const f of drawn){const s=styleFor(keyFor(f));if(s?.mode==='border')borders.append('path').attr('d',path(f)).attr('fill','none').attr('stroke',s.color).attr('stroke-width',Math.max(2.5,settings.lineWidth*3)).attr('stroke-linejoin',settings.corners==='round'?'round':'miter');}
   const markers=g.append('g').attr('pointer-events','none'),grouped=d3.group(drawn,keyFor);
@@ -170,7 +177,7 @@ function renderMap(){
     if(settings.showLabels)text(markers,x,y+(s.mode==='flag'?18:4),settings.unit==='continent'?(continentName(id)):nameOf(features[0]),14).attr('paint-order','stroke').attr('stroke','#fff').attr('stroke-width',3).attr('stroke-linejoin','round');
   }
   applyZoom();if(settings.mapTitle)text(svg,36,43,settings.mapTitle,26,'#233c35','start').attr('font-weight',650);if(settings.legend)renderLegend(grouped,w,h-(isKorea()?20:0));
-  renderPins();if(isKorea())text(svg,20,h-9,CREDIT,9,'#718077','start');
+  syncMapInteraction();renderPins();if(isKorea())text(svg,20,h-9,CREDIT,9,'#718077','start');
 }
 function renderLegend(grouped,w,h){
   const entries=currentSelections().filter(i=>grouped.has(i.id)),maxChars=Math.max(...entries.map(i=>i.name.length),5),colWidth=Math.min(270,Math.max(140,maxChars*12+28)),cols=Math.max(1,Math.floor((w-72)/colWidth)),max=cols*2;
@@ -195,7 +202,7 @@ function selectPin(id){selectedPinId=id;const p=pins.find(p=>p.id===id);$('pinEd
 function addPin(position,source=null){if(pins.length>=200){notify('핀은 최대 200개까지 추가할 수 있어요.');return;}const pin={id:'pin-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7),x:position.x,y:position.y,size:source?.size||24,color:source?.color||'#d57464',shape:source?.shape||'pin',outline:source?.outline??true};pins.push(pin);selectPin(pin.id);persist();}
 function duplicatePin(){const p=pins.find(p=>p.id===selectedPinId);if(p)addPin({x:Math.min(.98,p.x+.025),y:Math.min(.98,p.y+.025)},p);}
 $('map').addEventListener('pointerdown',e=>{
-  if(!ready||e.button!==0)return;const pin=e.target.closest('[data-pin]');dragDistance=0;dragPinId=pin?.getAttribute('data-pin')||null;
+  if(!ready||e.button!==0)return;const pin=e.target.closest('[data-pin]');dragDistance=0;dragPinId=pin?.getAttribute('data-pin')||null;pointerStartedOnPin=!!pin;
   if(dragPinId){selectPin(dragPinId);dragging=true;}else if(!pinMode)dragging=true;else return;
   dragStart={x:e.clientX,y:e.clientY};
 });
@@ -206,15 +213,20 @@ window.addEventListener('pointermove',e=>{
   $('tooltip').hidden=true;
 });
 window.addEventListener('pointerup',()=>{if(dragPinId)persist();dragging=false;dragPinId=null;});
-window.addEventListener('pointercancel',()=>{dragging=false;dragPinId=null;});
-$('map').addEventListener('click',e=>{if(pinMode&&dragDistance<5){addPin(pointFromEvent(e));pinMode=false;svg.classed('pin-mode',false);$('addPin').classList.remove('active');$('canvasHelp').textContent=t('canvasHint');}});
+window.addEventListener('pointercancel',()=>{dragging=false;dragPinId=null;pointerStartedOnPin=false;});
+$('map').addEventListener('click',e=>{
+  const onPin=pointerStartedOnPin||!!e.target.closest('[data-pin]');pointerStartedOnPin=false;
+  if(onPin||dragDistance>=5)return;
+  if(pinMode){addPin(pointFromEvent(e));pinMode=false;svg.classed('pin-mode',false);$('addPin').classList.remove('active');$('canvasHelp').textContent=t('canvasHint');}
+  else if(step===2)selectPin(null);
+});
 window.addEventListener('keydown',e=>{
   if(e.target.matches?.('input,textarea,select,[contenteditable=true]'))return;
   const p=pins.find(p=>p.id===selectedPinId);
   if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='c'&&p){copiedPin={...p};e.preventDefault();notify(t('done')+' Ctrl/Cmd+V');}
   if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='v'&&copiedPin){e.preventDefault();setStep(2);addPin({x:Math.min(.98,copiedPin.x+.03),y:Math.min(.98,copiedPin.y+.03)},copiedPin);}
   if((e.key==='Delete'||e.key==='Backspace')&&p){e.preventDefault();pins=pins.filter(pin=>pin.id!==p.id);selectPin(null);persist();}
-  if(e.key==='Escape'){pinMode=false;selectedPinId=null;svg.classed('pin-mode',false);renderPins();}
+  if(e.key==='Escape'){pinMode=false;svg.classed('pin-mode',false);selectPin(null);}
 });
 function applyStyle(key,value){settings[key]=value;for(const s of Object.values(selection()))s[key==='accent'?'color':'mode']=value;syncControls();renderSelected();renderMap();persist();}
 function download(blob,filename){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);}

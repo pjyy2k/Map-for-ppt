@@ -256,3 +256,6 @@ button:hover { background-color:rgba(213,234,226,.7); }
 .region-trail button:last-child { background:#dcefe5b3; color:var(--green); font-weight:650; }
 .region-trail span { color:#7c958b; }
 @media(max-width:650px) { .region-trail button { min-height:44px; font-size:13px; } }
+
+.reset-button { min-height:40px; padding:8px 12px; white-space:nowrap; font-size:12px; }
+@media(max-width:650px) { .reset-button { min-height:44px; padding:8px 10px; font-size:12px; } }

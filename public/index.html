@@ -5,15 +5,15 @@
   <meta name="description" content="지역을 고르고 스타일을 더해 PPT용 지도를 만드세요. 한국 읍면동부터 세계 지도까지, PNG·SVG·편집 가능한 PPT로 다운로드합니다.">
   <title>Map for PPT — 슬라이드를 위한 지도</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%23176b58'/%3E%3Cpath d='m8 12 8-4 8 4 8-4v22l-8 4-8-4-8 4z' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css?v=7">
+  <link rel="stylesheet" href="styles.css?v=8">
   <script src="vendor/d3.min.js" defer></script><script src="vendor/topology.min.js" defer></script><script src="vendor/jszip.min.js" defer></script>
-  <script type="module" src="app.js?v=7"></script>
+  <script type="module" src="app.js?v=8"></script>
 </head>
 <body>
 <header class="topbar">
   <a class="brand" href="./" aria-label="Map for PPT 홈"><span class="brand-icon">◩</span>Map <span class="brand-light">for</span> PPT</a>
   <div class="top-actions"><span class="local-badge"><i></i>설치 없이, 브라우저에서</span>
-    <select id="language" aria-label="언어 / Language"></select><details class="work-menu"><summary>작업 관리</summary><div><button id="saveProject">작업 파일 저장</button><button id="loadProject">작업 불러오기</button><button id="reset">모두 초기화</button></div></details>
+    <select id="language" aria-label="언어 / Language"></select><button id="reset" class="secondary reset-button">모두 초기화</button><details class="work-menu"><summary>작업 관리</summary><div><button id="saveProject">작업 파일 저장</button><button id="loadProject">작업 불러오기</button></div></details>
     <input type="file" id="projectFile" accept="application/json,.json" hidden><a href="https://github.com/pjyy2k/Map-for-ppt" target="_blank" rel="noopener noreferrer" class="github">GitHub ↗</a>
   </div>
 </header>

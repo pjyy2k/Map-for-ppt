@@ -73,6 +73,6 @@ test('three-step editor, Korean drilldown, smoothing, pins, 30 languages and all
   const prior=downloads.length;click('downloadSingle');assert.equal(downloads.length,prior+1);
   change('transparent',false);change('ratio','square');click('downloadPng');await waitFor(()=>downloads.filter(d=>d.filename.endsWith('.png')).length===2);data=Buffer.from(await latest('.png').blob.arrayBuffer());assert.equal(data.readUInt32BE(20),1920);const opaque=await loadImage(data),oc=createCanvas(1920,1920),ocx=oc.getContext('2d');ocx.drawImage(opaque,0,0);assert.equal(ocx.getImageData(0,0,1,1).data[3],255);
   click('saveProject');const saved=JSON.parse(await latest('.json').blob.text());assert.equal(saved.pins.length,2);assert.equal(saved.settings.simplification,80);assert(saved.selections.dong);
-  click('reset');await ready();assert.equal($('step1').hidden,false);assert.equal(document.querySelectorAll('[data-pin]').length,0);assert.equal($('selectedCount').textContent,'0');
+  assert.equal($('reset').closest('details'),null);assert($('reset').closest('.topbar'));click('reset');await ready();assert.equal($('step1').hidden,false);assert.equal(document.querySelectorAll('[data-pin]').length,0);assert.equal($('selectedCount').textContent,'0');
  }finally{URL.createObjectURL=oldCreate;URL.revokeObjectURL=oldRevoke;globalThis.setTimeout=oldTimeout;}
 });

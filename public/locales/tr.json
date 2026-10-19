@@ -38,7 +38,7 @@
   "labels": "Adları göster",
   "legend": "Göstergeyi göster",
   "appearance": "Harita şekli ve renkler",
-  "corners": "Köşeler",
+  "corners": "Sadeleştirme modu",
   "round": "Yuvarlak",
   "angular": "Köşeli",
   "simplify": "Sınırları basitleştir",

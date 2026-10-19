@@ -38,7 +38,7 @@
   "labels": "显示地名",
   "legend": "显示图例",
   "appearance": "地图形状与颜色",
-  "corners": "拐角",
+  "corners": "简化模式",
   "round": "圆角",
   "angular": "尖角",
   "simplify": "简化边界",

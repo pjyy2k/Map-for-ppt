@@ -38,7 +38,7 @@
   "labels": "Tampilkan nama",
   "legend": "Tampilkan legenda",
   "appearance": "Bentuk dan warna peta",
-  "corners": "Sudut",
+  "corners": "Mode penyederhanaan",
   "round": "Membulat",
   "angular": "Bersudut",
   "simplify": "Sederhanakan batas",

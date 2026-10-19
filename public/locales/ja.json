@@ -38,7 +38,7 @@
   "labels": "地域名を表示",
   "legend": "凡例を表示",
   "appearance": "地図の形と色",
-  "corners": "角の形",
+  "corners": "単純化モード",
   "round": "丸く",
   "angular": "角ばって",
   "simplify": "境界を簡略化",

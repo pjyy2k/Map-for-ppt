@@ -38,7 +38,7 @@
   "labels": "Zobrazit názvy",
   "legend": "Zobrazit legendu",
   "appearance": "Tvar a barvy mapy",
-  "corners": "Rohy",
+  "corners": "Režim zjednodušení",
   "round": "Zaoblené",
   "angular": "Ostré",
   "simplify": "Zjednodušit hranice",

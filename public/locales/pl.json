@@ -38,7 +38,7 @@
   "labels": "Pokaż nazwy",
   "legend": "Pokaż legendę",
   "appearance": "Kształt i kolory mapy",
-  "corners": "Narożniki",
+  "corners": "Tryb uproszczenia",
   "round": "Zaokrąglone",
   "angular": "Kanciaste",
   "simplify": "Uprość granice",

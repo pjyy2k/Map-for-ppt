@@ -38,7 +38,7 @@
   "labels": "Show place names",
   "legend": "Show legend",
   "appearance": "Map shape and colors",
-  "corners": "Corners",
+  "corners": "Simplification mode",
   "round": "Rounded",
   "angular": "Angular",
   "simplify": "Simplify boundaries",

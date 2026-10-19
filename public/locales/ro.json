@@ -38,7 +38,7 @@
   "labels": "Arată numele",
   "legend": "Arată legenda",
   "appearance": "Forma și culorile hărții",
-  "corners": "Colțuri",
+  "corners": "Mod de simplificare",
   "round": "Rotunjite",
   "angular": "Unghiulare",
   "simplify": "Simplifică limitele",

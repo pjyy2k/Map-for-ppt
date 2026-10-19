@@ -38,7 +38,7 @@
   "labels": "Namen anzeigen",
   "legend": "Legende anzeigen",
   "appearance": "Kartenform und Farben",
-  "corners": "Ecken",
+  "corners": "Vereinfachungsmodus",
   "round": "Abgerundet",
   "angular": "Eckig",
   "simplify": "Grenzen vereinfachen",

@@ -38,7 +38,7 @@
   "labels": "Mostra nomi",
   "legend": "Mostra legenda",
   "appearance": "Forma e colori",
-  "corners": "Angoli",
+  "corners": "Modalità di semplificazione",
   "round": "Arrotondati",
   "angular": "Spigolosi",
   "simplify": "Semplifica confini",

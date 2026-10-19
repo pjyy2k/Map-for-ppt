@@ -38,7 +38,7 @@
   "labels": "Visa namn",
   "legend": "Visa teckenförklaring",
   "appearance": "Kartform och färger",
-  "corners": "Hörn",
+  "corners": "Förenklingsläge",
   "round": "Rundade",
   "angular": "Kantiga",
   "simplify": "Förenkla gränser",

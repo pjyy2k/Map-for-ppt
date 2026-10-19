@@ -38,7 +38,7 @@
   "labels": "Nevek megjelenítése",
   "legend": "Jelmagyarázat megjelenítése",
   "appearance": "Térkép alakja és színei",
-  "corners": "Sarkok",
+  "corners": "Egyszerűsítési mód",
   "round": "Lekerekített",
   "angular": "Szögletes",
   "simplify": "Határok egyszerűsítése",

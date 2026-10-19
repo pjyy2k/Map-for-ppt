@@ -38,7 +38,7 @@
   "labels": "Mostrar nomes",
   "legend": "Mostrar legenda",
   "appearance": "Forma e cores",
-  "corners": "Cantos",
+  "corners": "Modo de simplificação",
   "round": "Arredondados",
   "angular": "Angulares",
   "simplify": "Simplificar limites",

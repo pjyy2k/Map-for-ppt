@@ -1,11 +1,11 @@
 import {CONTINENTS,MODES,COLORS,SIZE,DEFAULTS,initialSelections,collection,nameOf,validateProject,visibleFeature,filteredCountries} from './core.js?v=3';
 import {createEditablePptx} from './export.js?v=3';
-import {initLanguage,language,t,continentName} from './i18n.js?v=3';
+import {initLanguage,language,t,continentName} from './i18n.js?v=4';
 const $=id=>document.getElementById(id),d3=window.d3,STORAGE='map-for-ppt:v1';
 const EXPORTS=['downloadPng','downloadSvg','downloadPptx','downloadRegions','downloadSingle'];
 const CREDIT='통계청 SGIS · vuski/admdongkor (CC BY 4.0) · 2025-01-01 · 경계 간소화';
 let settings={...DEFAULTS},selections=initialSelections(),pins=[],countries=[],manifest={},korea={},provinceData=[],cityData=[],current=[],rawCurrent=[],items=[],allItems=[],adminCache={},dongCache={};
-let step=1,loadToken=0,ready=false,zoom={k:1,x:0,y:0},drawn=[],path,projection,toastTimer,saveTimer,focusIds=null,weightedTopology=null,geometryKey='',pinMode=false,selectedPinId=null,copiedPin=null;
+let step=1,loadToken=0,ready=false,zoom={k:1,x:0,y:0},drawn=[],path,projection,toastTimer,saveTimer,focusIds=null,contextFeatures=[],weightedTopology=null,geometryKey='',pinMode=false,selectedPinId=null,copiedPin=null;
 let dragging=false,dragDistance=0,dragStart=null,dragPinId=null;
 const busy=new Set(),svg=d3.select('#map');
 const selection=()=>selections[settings.unit];
@@ -22,7 +22,7 @@ function setStep(value,focus=false){
   step=Math.max(1,Math.min(3,value));document.querySelector('.workspace').dataset.currentStep=String(step);
   document.querySelectorAll('[data-step-panel]').forEach(el=>{el.hidden=Number(el.dataset.stepPanel)!==step;});
   document.querySelectorAll('[data-step-to]').forEach(el=>{const n=Number(el.dataset.stepTo);if(n===step)el.setAttribute('aria-current','step');else el.removeAttribute('aria-current');el.classList.toggle('completed',n<step);});
-  $('previousStep').hidden=step===1;$('nextStep').hidden=step===3;$('nextStep').textContent=(step===1?t('style'):t('download'))+' →';
+  $('previousStep').hidden=step===1;$('nextStep').hidden=step===3;$('mobileDownload').hidden=step!==3;$('nextStep').textContent=(step===1?t('style'):t('download'))+' →';
   $('stepHint').textContent=step===3?t('exportQuestion'):t('help');
   $('selectionDetails').hidden=step!==2;pinMode=false;svg.classed('pin-mode',false);$('addPin').classList.remove('active');
   if(focus)$('step'+step).querySelector('h2').focus({preventScroll:true});
@@ -30,7 +30,7 @@ function setStep(value,focus=false){
 }
 function syncEnabled(){
   for(const id of EXPORTS)$(id).disabled=!ready||busy.has(id);
-  $('nextStep').disabled=!ready;
+  $('nextStep').disabled=!ready;$('mobileDownload').disabled=!ready||busy.has('downloadPng');
   $('koreaMap').disabled=!ready;$('worldMap').disabled=!ready;
 }
 function syncControls(){
@@ -50,7 +50,18 @@ function syncControls(){
   const old=$('municipality').value;$('municipality').replaceChildren();
   for(const city of cityOptions){const option=document.createElement('option');option.value=city.code;option.textContent=city.name;$('municipality').append(option);}
   $('municipality').value=settings.municipality;
-  syncEnabled();
+  syncContextOptions();syncEnabled();
+}
+function syncContextOptions(){
+  const hasId=id=>contextFeatures.some(f=>f.properties.id===id);
+  const us=hasId('USA');
+  const pieces=contextFeatures.some(f=>f.geometry.type==='MultiPolygon'&&f.geometry.coordinates.length>1);
+  const relevant={alaska:us||contextFeatures.some(f=>f.properties.code==='US-AK'),hawaii:us||contextFeatures.some(f=>f.properties.code==='US-HI'),greenland:hasId('GRL'),antarctica:hasId('ATA'),mainland:pieces,usInset:settings.scope==='country'&&settings.country==='USA'};
+  for(const [id,show]of Object.entries(relevant))$(id).closest('label').hidden=!show;
+  $('islandArea').hidden=!pieces;document.querySelector('label[for=islandArea]').hidden=!pieces;
+  $('islandOptions').querySelector('.help').hidden=!pieces;
+  $('islandOptions').hidden=!pieces&&!Object.values(relevant).some(Boolean);
+  if($('islandOptions').hidden)$('islandOptions').open=false;
 }
 function addCrumb(label,action){const b=document.createElement('button');b.textContent=label;b.addEventListener('click',action);if($('breadcrumbs').children.length){const s=document.createElement('span');s.textContent='›';$('breadcrumbs').append(s);}$('breadcrumbs').append(b);}
 function renderBreadcrumbs(){
@@ -78,7 +89,7 @@ async function changeView(){
       if(token!==loadToken)return false;rawCurrent=adminCache[settings.country];
     }else rawCurrent=filteredCountries(countries,settings);
     if(token!==loadToken)return false;
-    rawCurrent=rawCurrent.map(f=>visibleFeature(f,settings)).filter(Boolean);focusIds=null;geometryKey='';
+    contextFeatures=rawCurrent;rawCurrent=rawCurrent.map(f=>visibleFeature(f,settings)).filter(Boolean);focusIds=null;geometryKey='';
     weightedTopology=rawCurrent.length?window.topojson.presimplify(window.topojson.topology({regions:collection(rawCurrent)})):null;
     if(settings.unit==='continent')items=[...new Set(rawCurrent.map(f=>f.properties.continent))].map(c=>({id:c,name:continentName(c),en:c}));
     else items=rawCurrent.map(f=>({id:f.properties.id,name:nameOf(f),en:f.properties.name,fullName:f.properties.fullName}));
@@ -213,6 +224,7 @@ function download(blob,filename){const url=URL.createObjectURL(blob),a=document.
 function cleanSvg(){const node=$('map').cloneNode(true),[w,h]=dimensions();node.setAttribute('xmlns','http://www.w3.org/2000/svg');node.setAttribute('width',w);node.setAttribute('height',h);node.querySelectorAll('[data-editor]').forEach(el=>el.remove());node.querySelectorAll('[tabindex]').forEach(el=>{el.removeAttribute('tabindex');el.removeAttribute('role');el.removeAttribute('aria-checked');el.removeAttribute('class');});node.querySelectorAll('text').forEach(el=>el.setAttribute('font-family','Noto Sans KR, Apple SD Gothic Neo, Malgun Gothic, sans-serif'));return node;}
 function svgBlob(node=cleanSvg()){return new Blob([new XMLSerializer().serializeToString(node)],{type:'image/svg+xml;charset=utf-8'});}
 async function exportAction(id,label,fn){if(!ready||busy.has(id))return;busy.add(id);const b=$(id),old=b.textContent;b.textContent=label;syncEnabled();try{await fn();}catch(e){notify(e.message);}finally{busy.delete(id);b.textContent=old;syncEnabled();}}
+$('mobileDownload').addEventListener('click',()=>$('downloadPng').click());
 $('downloadSvg').addEventListener('click',()=>{if(ready){download(svgBlob(),'map-for-ppt.svg');notify(t('done'));}});
 $('downloadPng').addEventListener('click',()=>exportAction('downloadPng',t('busy'),async()=>{
   const [w,h]=dimensions(),resolution=settings.resolution,url=URL.createObjectURL(svgBlob());

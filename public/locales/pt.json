@@ -94,5 +94,6 @@
   "count": "regiões",
   "busy": "Preparando…",
   "done": "Concluído.",
-  "error": "Não foi possível concluir. Tente novamente."
+  "error": "Não foi possível concluir. Tente novamente.",
+  "pinCanvasHint": "Clique no mapa para adicionar um pino. Com um pino selecionado, clique num espaço vazio para desmarcar."
 }

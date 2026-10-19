@@ -94,5 +94,6 @@
   "count": "bölge",
   "busy": "Hazırlanıyor…",
   "done": "Tamamlandı.",
-  "error": "İşlem tamamlanamadı. Tekrar deneyin."
+  "error": "İşlem tamamlanamadı. Tekrar deneyin.",
+  "pinCanvasHint": "İğne eklemek için haritaya tıklayın. Bir iğne seçiliyken boş bir yere tıklayarak seçimi kaldırın."
 }

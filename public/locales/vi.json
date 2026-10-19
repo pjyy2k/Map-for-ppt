@@ -94,5 +94,6 @@
   "count": "vùng",
   "busy": "Đang tạo…",
   "done": "Hoàn tất.",
-  "error": "Không thể hoàn tất. Vui lòng thử lại."
+  "error": "Không thể hoàn tất. Vui lòng thử lại.",
+  "pinCanvasHint": "Nhấp vào bản đồ để thêm ghim. Khi đang chọn ghim, nhấp vào chỗ trống để bỏ chọn."
 }

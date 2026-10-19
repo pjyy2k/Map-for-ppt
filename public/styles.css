@@ -265,3 +265,5 @@ button:hover { background-color:rgba(213,234,226,.7); }
 .workspace:not([data-current-step="1"]) #map .region { cursor:default; }
 .workspace:not([data-current-step="1"]) #map .region:hover { filter:none; }
 .workspace[data-current-step="2"] #map.pin-mode .region { cursor:crosshair; }
+
+.workspace[data-current-step="2"] #map.pin-ready,.workspace[data-current-step="2"] #map.pin-ready .region { cursor:crosshair; }

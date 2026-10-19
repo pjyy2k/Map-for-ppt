@@ -94,5 +94,6 @@
   "count": "regiones",
   "busy": "Preparando…",
   "done": "Listo.",
-  "error": "No se pudo completar. Inténtalo de nuevo."
+  "error": "No se pudo completar. Inténtalo de nuevo.",
+  "pinCanvasHint": "Haz clic en el mapa para añadir un pin. Con un pin seleccionado, haz clic en un espacio vacío para deseleccionarlo."
 }

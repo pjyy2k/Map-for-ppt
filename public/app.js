@@ -25,9 +25,11 @@ function setStep(value,focus=false){
   $('previousStep').hidden=step===1;$('nextStep').hidden=step===3;$('mobileDownload').hidden=step!==3;$('nextStep').textContent=(step===1?t('style'):t('download'))+' →';
   $('stepHint').textContent=step===3?t('exportQuestion'):t('help');
   $('selectionDetails').hidden=step!==2;pinMode=false;svg.classed('pin-mode',false);$('addPin').classList.remove('active');
+  updateCanvasHelp();
   if(focus)$('step'+step).querySelector('h2').focus({preventScroll:true});
   if(ready){syncMapInteraction();renderPins();}
 }
+function updateCanvasHelp(){ $('canvasHelp').textContent=step===2?t('pinCanvasHint'):t('canvasHint'); }
 function syncMapInteraction(){
   for(const region of document.querySelectorAll('#map .region')){
     region.setAttribute('tabindex',step===1?'0':'-1');
@@ -189,6 +191,7 @@ function resetZoom(){zoom={k:1,x:0,y:0};applyZoom();}
 function zoomBy(factor){if(!ready)return;const [w,h]=dimensions(),next=Math.max(.5,Math.min(10,zoom.k*factor)),ratio=next/zoom.k;zoom.x=w/2-(w/2-zoom.x)*ratio;zoom.y=h/2-(h/2-zoom.y)*ratio;zoom.k=next;applyZoom();}
 function pointFromEvent(e){const rect=$('map').getBoundingClientRect();return {x:Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width)),y:Math.max(0,Math.min(1,(e.clientY-rect.top)/rect.height))};}
 function renderPins(){
+  svg.classed('pin-ready',step===2&&!selectedPinId);
   svg.select('[data-pins-layer]').remove();const layer=svg.append('g').attr('data-pins-layer','true'),[w,h]=dimensions();
   for(const pin of pins){const g=layer.append('g').attr('data-pin',pin.id).attr('transform',`translate(${pin.x*w},${pin.y*h})`).attr('role','button').attr('tabindex',0).attr('aria-label',t('pin')).classed('pin-selected',pin.id===selectedPinId),s=pin.size,stroke=pin.outline?'#ffffff':'none';
     if(pin.shape==='pin'){g.append('path').attr('d',`M0 0 C${-s*.35} ${-s*.55} ${-s*.7} ${-s*.8} ${-s*.7} ${-s*1.22} C${-s*.7} ${-s*2.18} ${s*.7} ${-s*2.18} ${s*.7} ${-s*1.22} C${s*.7} ${-s*.8} ${s*.35} ${-s*.55} 0 0 Z`).attr('fill',pin.color).attr('stroke',stroke).attr('stroke-width',1.8);g.append('circle').attr('cy',-s*1.25).attr('r',s*.24).attr('fill','#fff');}
@@ -217,8 +220,8 @@ window.addEventListener('pointercancel',()=>{dragging=false;dragPinId=null;point
 $('map').addEventListener('click',e=>{
   const onPin=pointerStartedOnPin||!!e.target.closest('[data-pin]');pointerStartedOnPin=false;
   if(onPin||dragDistance>=5)return;
-  if(pinMode){addPin(pointFromEvent(e));pinMode=false;svg.classed('pin-mode',false);$('addPin').classList.remove('active');$('canvasHelp').textContent=t('canvasHint');}
-  else if(step===2)selectPin(null);
+  if(pinMode){addPin(pointFromEvent(e));pinMode=false;svg.classed('pin-mode',false);$('addPin').classList.remove('active');updateCanvasHelp();}
+  else if(step===2){if(selectedPinId)selectPin(null);else addPin(pointFromEvent(e));}
 });
 window.addEventListener('keydown',e=>{
   if(e.target.matches?.('input,textarea,select,[contenteditable=true]'))return;
@@ -274,7 +277,7 @@ for(const [id,selected]of [['selectAll',true],['clearAll',false]])$(id).addEvent
 $('zoomIn').addEventListener('click',()=>zoomBy(1.25));$('zoomOut').addEventListener('click',()=>zoomBy(.8));$('fit').addEventListener('click',()=>{focusIds=null;resetZoom();renderMap();});
 $('fitSelection').addEventListener('click',()=>{const selected=items.filter(i=>styleFor(i.id));if(!selected.length){notify('강조할 지역을 먼저 선택해 주세요.');return;}focusIds=new Set(selected.map(i=>i.id));resetZoom();renderMap();});
 $('nextStep').addEventListener('click',()=>{if(ready)setStep(step+1,true);});$('previousStep').addEventListener('click',()=>setStep(step-1,true));document.querySelectorAll('[data-step-to]').forEach(b=>b.addEventListener('click',()=>{if(ready){setStep(Number(b.dataset.stepTo),true);renderPins();}}));
-$('addPin').addEventListener('click',()=>{pinMode=!pinMode;svg.classed('pin-mode',pinMode);$('addPin').classList.toggle('active',pinMode);$('canvasHelp').textContent=pinMode?t('canvasHint'):t('canvasHint');});
+$('addPin').addEventListener('click',()=>{pinMode=!pinMode;svg.classed('pin-mode',pinMode);$('addPin').classList.toggle('active',pinMode);updateCanvasHelp();});
 $('duplicatePin').addEventListener('click',duplicatePin);$('deletePin').addEventListener('click',()=>{pins=pins.filter(p=>p.id!==selectedPinId);selectPin(null);persist();});
 for(const [id,key]of [['pinShape','shape'],['pinColor','color'],['pinSize','size'],['pinOutline','outline']])$(id).addEventListener(id==='pinColor'||id==='pinSize'?'input':'change',()=>{const p=pins.find(p=>p.id===selectedPinId);if(!p)return;p[key]=id==='pinOutline'?$(id).checked:id==='pinSize'?Number($(id).value):$(id).value;$('pinSizeValue').textContent=p.size;renderPins();persist();});
 $('reset').addEventListener('click',()=>{settings={...DEFAULTS};selections=initialSelections();pins=[];selectedPinId=null;copiedPin=null;$('search').value='';setStep(1);syncControls();selectPin(null);changeView();document.querySelector('.work-menu').open=false;notify(t('done'));});
@@ -296,7 +299,7 @@ document.addEventListener('languagechange',()=>{
  else items=items.map(i=>({...i,name:nameOf(rawCurrent.find(f=>f.properties.id===i.id))}));
  if(settings.unit==='country')allItems=countries.map(f=>({id:f.properties.id,name:nameOf(f),en:f.properties.name}));else allItems=settings.unit==='continent'?Object.keys(CONTINENTS).map(id=>({id,name:continentName(id),en:id})):items;
  $('viewName').textContent=isKorea()?t(settings.unit==='admin1'?'states':settings.unit==='municipality'?'cities':'dongs'):settings.scope==='world'?t('world'):settings.scope==='country'?nameOf(countries.find(f=>f.properties.id===settings.country)):continentName(settings.scope);
- $('pinCount').textContent=`${t('pins')} · ${pins.length}`;$('canvasHelp').textContent=t('canvasHint');syncControls();
+ $('pinCount').textContent=`${t('pins')} · ${pins.length}`;updateCanvasHelp();syncControls();
  setStep(step);renderBreadcrumbs();renderList();renderSelected();renderMap();renderExportRegions();
 });
 init();

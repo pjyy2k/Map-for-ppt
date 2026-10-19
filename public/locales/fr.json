@@ -94,5 +94,6 @@
   "count": "régions",
   "busy": "Préparation…",
   "done": "Terminé.",
-  "error": "Impossible de terminer. Veuillez réessayer."
+  "error": "Impossible de terminer. Veuillez réessayer.",
+  "pinCanvasHint": "Cliquez sur la carte pour ajouter une épingle. Si une épingle est sélectionnée, cliquez dans un espace vide pour la désélectionner."
 }

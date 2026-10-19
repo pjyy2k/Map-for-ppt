@@ -94,5 +94,6 @@
   "count": "wilayah",
   "busy": "Menyiapkan…",
   "done": "Selesai.",
-  "error": "Tindakan gagal. Silakan coba lagi."
+  "error": "Tindakan gagal. Silakan coba lagi.",
+  "pinCanvasHint": "Klik peta untuk menambahkan pin. Jika pin dipilih, klik tempat kosong untuk membatalkan pilihan."
 }

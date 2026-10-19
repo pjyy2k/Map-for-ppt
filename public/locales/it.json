@@ -94,5 +94,6 @@
   "count": "regioni",
   "busy": "Preparazione…",
   "done": "Fatto.",
-  "error": "Impossibile completare. Riprova."
+  "error": "Impossibile completare. Riprova.",
+  "pinCanvasHint": "Fai clic sulla mappa per aggiungere un segnaposto. Con un segnaposto selezionato, fai clic su uno spazio vuoto per deselezionarlo."
 }

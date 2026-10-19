@@ -94,5 +94,6 @@
   "count": "oblastí",
   "busy": "Příprava…",
   "done": "Hotovo.",
-  "error": "Akci nelze dokončit. Zkuste to znovu."
+  "error": "Akci nelze dokončit. Zkuste to znovu.",
+  "pinCanvasHint": "Kliknutím na mapu přidejte špendlík. Když je špendlík vybrán, klikněte na prázdné místo pro zrušení výběru."
 }

@@ -94,5 +94,6 @@
   "count": "aluetta",
   "busy": "Valmistellaan…",
   "done": "Valmis.",
-  "error": "Toiminto epäonnistui. Yritä uudelleen."
+  "error": "Toiminto epäonnistui. Yritä uudelleen.",
+  "pinCanvasHint": "Lisää nasta napsauttamalla karttaa. Kun nasta on valittu, poista valinta napsauttamalla tyhjää kohtaa."
 }

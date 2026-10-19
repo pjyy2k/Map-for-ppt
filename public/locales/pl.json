@@ -94,5 +94,6 @@
   "count": "regionów",
   "busy": "Przygotowywanie…",
   "done": "Gotowe.",
-  "error": "Nie udało się zakończyć. Spróbuj ponownie."
+  "error": "Nie udało się zakończyć. Spróbuj ponownie.",
+  "pinCanvasHint": "Kliknij mapę, aby dodać pinezkę. Gdy pinezka jest wybrana, kliknij puste miejsce, aby anulować wybór."
 }

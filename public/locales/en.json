@@ -94,5 +94,6 @@
   "count": "regions",
   "busy": "Preparing…",
   "done": "Done.",
-  "error": "Could not complete the action. Please try again."
+  "error": "Could not complete the action. Please try again.",
+  "pinCanvasHint": "Click the map to add a pin. With a pin selected, click an empty spot to deselect."
 }

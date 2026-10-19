@@ -33,6 +33,9 @@
       <div class="list-toolbar"><span id="listCount">지도를 불러오는 중…</span><div><button id="selectAll" class="text-button">모두 선택</button><button id="clearAll" class="text-button">해제</button></div></div>
       <div id="regionList" class="region-list" aria-label="지역 체크리스트" aria-busy="true"></div>
       <p class="help">체크해서 강조하거나, 지역 옆 › 버튼으로 더 자세히 살펴보세요.</p>
+      <details class="options" id="islandOptions" hidden><summary>섬과 분리 지역</summary><label class="check-line"><input type="checkbox" id="alaska" checked>알래스카 표시</label><label class="check-line"><input type="checkbox" id="hawaii" checked>하와이 표시</label><label class="check-line"><input type="checkbox" id="greenland" checked>그린란드 표시</label><label class="check-line"><input type="checkbox" id="antarctica">남극 표시</label><label class="check-line"><input type="checkbox" id="mainland">지역별 가장 큰 육지만 표시</label><label class="check-line"><input type="checkbox" id="usInset" checked>미국 지도: 알래스카·하와이 삽입</label>
+        <label for="islandArea" class="range-label">작은 섬 생략 <output id="islandAreaValue">0</output></label><input id="islandArea" type="range" min="0" max="100" value="0"><p class="help">값이 커질수록 작은 섬을 더 많이 생략합니다.</p>
+      </details>
     </div>
     <div class="panel step-panel" id="step2" data-step-panel="2" hidden>
       <div class="panel-heading"><div><p class="eyebrow">STEP 02</p><h2 tabindex="-1">어떻게 표현할까요?</h2></div></div>
@@ -56,9 +59,7 @@
           <div class="button-pair"><button id="duplicatePin" class="secondary">복제</button><button id="deletePin" class="secondary">삭제</button></div><p class="help">Ctrl/Cmd+C → Ctrl/Cmd+V</p>
         </div><p id="pinCount" class="help">추가한 핀 0개</p>
       </details>
-      <details class="options" id="islandOptions" hidden><summary>섬과 분리 지역</summary><label class="check-line"><input type="checkbox" id="alaska" checked>알래스카 표시</label><label class="check-line"><input type="checkbox" id="hawaii" checked>하와이 표시</label><label class="check-line"><input type="checkbox" id="greenland" checked>그린란드 표시</label><label class="check-line"><input type="checkbox" id="antarctica">남극 표시</label><label class="check-line"><input type="checkbox" id="mainland">지역별 가장 큰 육지만 표시</label><label class="check-line"><input type="checkbox" id="usInset" checked>미국 지도: 알래스카·하와이 삽입</label>
-        <label for="islandArea" class="range-label">작은 섬 생략 <output id="islandAreaValue">0</output></label><input id="islandArea" type="range" min="0" max="100" value="0"><p class="help">값이 커질수록 작은 섬을 더 많이 생략합니다.</p>
-      </details>
+
     </div>
     <div class="panel step-panel" id="step3" data-step-panel="3" hidden>
       <div class="panel-heading"><div><p class="eyebrow">STEP 03</p><h2 tabindex="-1">슬라이드에 담아 보세요.</h2></div></div>

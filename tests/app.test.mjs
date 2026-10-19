@@ -33,6 +33,7 @@ test('three-step editor, Korean drilldown, smoothing, pins, 30 languages and all
  const latest=extension=>[...downloads].reverse().find(d=>d.filename.endsWith(extension));
  try{
   await import('../public/app.js');await ready();
+  assert.equal($('islandOptions').closest('[data-step-panel]').id,'step1');assert.equal(document.querySelector('#step2 #islandOptions'),null);
   assert.equal(paths().length,241);assert.equal($('alaska').closest('label').hidden,false);assert.equal($('selectedCount').textContent,'0');assert.equal($('step2').hidden,true);assert.equal($('step3').hidden,true);
   assert.equal(document.querySelectorAll('#step1 select').length,0);assert.equal(document.querySelector('[aria-label="아시아 ›"]').textContent,'›');event(document.querySelector('[aria-label="아시아 ›"]'),'click');await ready();assert.equal($('language').options.length,30);assert.equal($('language').options[0].value,'ko');
   for(const id of ['KOR','JPN','CHN','IND'])event(document.querySelector(`#map [data-id="${id}"]`),'click');assert.equal($('selectedCount').textContent,'4');

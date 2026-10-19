@@ -7,7 +7,7 @@ export const initialSelections = () => ({country:{},continent:{},admin1:{},munic
 export const collection = features => ({type:'FeatureCollection',features});
 export const nameOf = f => {
  const p=f?.properties||{},lang=globalThis.document?.documentElement?.lang||'ko';
- if(p.iso2&&p.iso2.length===2){try{return new Intl.DisplayNames([lang],{type:'region'}).of(p.iso2);}catch{}}
+ if(p.iso2&&p.iso2.length===2&&!['IOA','ATC'].includes(p.id)){try{return new Intl.DisplayNames([lang],{type:'region'}).of(p.iso2);}catch{}}
  return lang==='ko'?(p.ko||p.name):(p.name||p.ko);
 };
 export const isColor = c => typeof c==='string' && /^#[a-f\d]{6}$/i.test(c);

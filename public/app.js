@@ -1,6 +1,6 @@
-import {CONTINENTS,MODES,COLORS,SIZE,DEFAULTS,initialSelections,collection,nameOf,validateProject,visibleFeature,filteredCountries} from './core.js?v=2';
-import {createEditablePptx} from './export.js?v=2';
-import {initLanguage,language,t,continentName} from './i18n.js?v=2';
+import {CONTINENTS,MODES,COLORS,SIZE,DEFAULTS,initialSelections,collection,nameOf,validateProject,visibleFeature,filteredCountries} from './core.js?v=3';
+import {createEditablePptx} from './export.js?v=3';
+import {initLanguage,language,t,continentName} from './i18n.js?v=3';
 const $=id=>document.getElementById(id),d3=window.d3,STORAGE='map-for-ppt:v1';
 const EXPORTS=['downloadPng','downloadSvg','downloadPptx','downloadRegions','downloadSingle'];
 const CREDIT='통계청 SGIS · vuski/admdongkor (CC BY 4.0) · 2025-01-01 · 경계 간소화';
@@ -37,7 +37,7 @@ function syncControls(){
   for(const key of Object.keys(DEFAULTS)){const el=$(key);if(!el)continue;if(el.type==='checkbox')el.checked=settings[key];else el.value=settings[key];}
   for(const key of ['lineWidth','markerSize','simplification','islandArea'])$(key+'Value').textContent=settings[key];
   document.querySelectorAll('[data-mode]').forEach(b=>{b.classList.toggle('active',b.dataset.mode===settings.mode);b.setAttribute('aria-pressed',String(b.dataset.mode===settings.mode));});
-  document.querySelectorAll('[data-color]').forEach(b=>b.classList.toggle('active',b.dataset.color===settings.accent));
+  document.querySelectorAll('[data-color]').forEach(b=>{b.classList.toggle('active',b.dataset.color===settings.accent);b.setAttribute('aria-label',t('color')+' '+b.dataset.color);});
   $('koreaMap').classList.toggle('active',isKorea());$('worldMap').classList.toggle('active',!isKorea());
   $('scopeField').hidden=isKorea()||settings.unit==='admin1';$('countryField').hidden=settings.scope!=='country'||isKorea();
   $('provinceField').hidden=!['municipality','dong'].includes(settings.unit);$('municipalityField').hidden=settings.unit!=='dong';
@@ -142,7 +142,7 @@ function labelPoint(features,id){
   return featurePoint(features.reduce((a,b)=>path.area(a)>path.area(b)?a:b));
 }
 function renderMap(){
-  if(!ready)return;updateGeometry();const [w,h]=dimensions();svg.attr('viewBox',`0 0 ${w} ${h}`);svg.selectAll('*').remove();svg.append('title').text(settings.mapTitle||$('viewName').textContent);
+  if(!ready)return;updateGeometry();const [w,h]=dimensions();svg.attr('viewBox',`0 0 ${w} ${h}`).attr('aria-label',settings.mapTitle||$('viewName').textContent);svg.selectAll('*').remove();svg.append('title').text(settings.mapTitle||$('viewName').textContent);
   if(isKorea())svg.append('metadata').text('Derived from Statistics Korea SGIS (KOGL Type 1), modified by vuski/admdongkor (CC BY 4.0), 2025-01-01. Simplified by Map for PPT. https://github.com/vuski/admdongkor');
   const titleHeight=settings.mapTitle?72:0,footerHeight=(settings.legend?86:0)+(isKorea()?20:0);
   svg.append('defs').append('clipPath').attr('id','mapClip').append('rect').attr('width',w).attr('y',titleHeight).attr('height',h-titleHeight-footerHeight);
@@ -199,11 +199,11 @@ window.addEventListener('pointermove',e=>{
 });
 window.addEventListener('pointerup',()=>{if(dragPinId)persist();dragging=false;dragPinId=null;$('map').classList.remove('dragging');});
 window.addEventListener('pointercancel',()=>{dragging=false;dragPinId=null;});
-$('map').addEventListener('click',e=>{if(pinMode&&dragDistance<5){addPin(pointFromEvent(e));pinMode=false;svg.classed('pin-mode',false);$('addPin').classList.remove('active');$('canvasHelp').textContent='핀을 드래그해 위치를 옮길 수 있어요.';}});
+$('map').addEventListener('click',e=>{if(pinMode&&dragDistance<5){addPin(pointFromEvent(e));pinMode=false;svg.classed('pin-mode',false);$('addPin').classList.remove('active');$('canvasHelp').textContent=t('canvasHint');}});
 window.addEventListener('keydown',e=>{
   if(e.target.matches?.('input,textarea,select,[contenteditable=true]'))return;
   const p=pins.find(p=>p.id===selectedPinId);
-  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='c'&&p){copiedPin={...p};e.preventDefault();notify('핀을 복사했습니다. Ctrl/Cmd+V로 붙여넣으세요.');}
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='c'&&p){copiedPin={...p};e.preventDefault();notify(t('done')+' Ctrl/Cmd+V');}
   if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='v'&&copiedPin){e.preventDefault();setStep(2);addPin({x:Math.min(.98,copiedPin.x+.03),y:Math.min(.98,copiedPin.y+.03)},copiedPin);}
   if((e.key==='Delete'||e.key==='Backspace')&&p){e.preventDefault();pins=pins.filter(pin=>pin.id!==p.id);selectPin(null);persist();}
   if(e.key==='Escape'){pinMode=false;selectedPinId=null;svg.classed('pin-mode',false);renderPins();}
@@ -261,12 +261,12 @@ $('saveProject').addEventListener('click',()=>download(new Blob([JSON.stringify(
 $('loadProject').addEventListener('click',()=>$('projectFile').click());
 $('projectFile').addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;try{if(file.size>2*1024*1024)throw Error('작업 파일은 2 MB 이하만 불러올 수 있습니다.');const p=validateProject(JSON.parse(await file.text()));if(!countries.some(f=>f.properties.id===p.settings.country))throw Error('지원하지 않는 국가입니다.');if(['municipality','dong'].includes(p.settings.unit)&&(!korea.provinces.some(x=>x.code===p.settings.province)||!korea.cities.some(x=>x.code===p.settings.municipality&&x.province===p.settings.province)))throw Error('한국 행정구역 코드가 잘못되었습니다.');settings=p.settings;selections=p.selections;pins=p.pins;selectedPinId=null;$('search').value='';syncControls();if(await changeView())notify(t('done'));}catch(err){notify(err instanceof SyntaxError?'올바른 JSON 파일이 아닙니다.':err.message);}finally{e.target.value='';}});
 async function init(){
-  setStep(1);syncEnabled();
+  syncEnabled();
   try{
     await initLanguage();setStep(1);
     [countries,manifest,korea,provinceData,cityData]=await Promise.all([getJSON('data/countries.geojson').then(d=>d.features),getJSON('data/manifest.json'),getJSON('data/korea/index.json'),getJSON('data/korea/provinces.geojson').then(d=>d.features),getJSON('data/korea/municipalities.geojson').then(d=>d.features)]);
     try{const saved=localStorage.getItem(STORAGE);if(saved){const p=validateProject(JSON.parse(saved));if(countries.some(f=>f.properties.id===p.settings.country)){settings=p.settings;selections=p.selections;pins=p.pins;}}}catch{/* Ignore incompatible or unavailable local storage. */}
-    for(const f of [...countries].sort((a,b)=>nameOf(a).localeCompare(nameOf(b),'ko'))){const option=document.createElement('option');option.value=f.properties.id;option.textContent=nameOf(f)+(manifest.admin1[f.properties.id]?'':' (시도 데이터 없음)');$('country').append(option);}
+    for(const f of [...countries].sort((a,b)=>nameOf(a).localeCompare(nameOf(b),'ko'))){const option=document.createElement('option');option.value=f.properties.id;option.textContent=nameOf(f)+(manifest.admin1[f.properties.id]?'':' · '+t('states')+' —');$('country').append(option);}
     for(const p of [...korea.provinces].sort((a,b)=>a.name.localeCompare(b.name,'ko'))){const option=document.createElement('option');option.value=p.code;option.textContent=p.name;$('province').append(option);}
     syncControls();await changeView();selectPin(null);
   }catch(e){$('loading').textContent='지도를 불러오지 못했습니다. 연결을 확인하고 새로고침해 주세요.';notify(e.message);}
@@ -278,6 +278,7 @@ document.addEventListener('languagechange',()=>{
  if(settings.unit==='country')allItems=countries.map(f=>({id:f.properties.id,name:nameOf(f),en:f.properties.name}));else allItems=settings.unit==='continent'?Object.keys(CONTINENTS).map(id=>({id,name:continentName(id),en:id})):items;
  for(const option of $('country').options){const f=countries.find(f=>f.properties.id===option.value);if(f)option.textContent=nameOf(f);}
  $('viewName').textContent=isKorea()?t(settings.unit==='admin1'?'states':settings.unit==='municipality'?'cities':'dongs'):settings.scope==='world'?t('world'):settings.scope==='country'?nameOf(countries.find(f=>f.properties.id===settings.country)):continentName(settings.scope);
+ $('pinCount').textContent=`${t('pins')} · ${pins.length}`;$('canvasHelp').textContent=t('canvasHint');syncControls();
  setStep(step);renderBreadcrumbs();renderList();renderSelected();renderMap();renderExportRegions();
 });
 init();

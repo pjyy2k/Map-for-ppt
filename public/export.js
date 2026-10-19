@@ -1,6 +1,6 @@
 // Native DrawingML freeforms keep every map region editable in PowerPoint.
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
-const color = s => /^#[\da-f]{6}$/i.test(s || '') ? s.slice(1).toUpperCase() : '233C35';
+const color = s => /^#[\da-f]{6}$/i.test(s || '') ? s.slice(1).toUpperCase() : /^#[\da-f]{3}$/i.test(s || '') ? s.slice(1).split('').map(c=>c+c).join('').toUpperCase() : '233C35';
 const number = n => Math.round(Number.isFinite(n) ? n : 0);
 const solid = c => c && c !== 'none' ? `<a:solidFill><a:srgbClr val="${color(c)}"/></a:solidFill>` : '<a:noFill/>';
 const points = (x,y) => `<a:pt x="${number(x)}" y="${number(y)}"/>`;

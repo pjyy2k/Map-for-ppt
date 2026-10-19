@@ -34,7 +34,7 @@ test('three-step editor, Korean drilldown, smoothing, pins, 30 languages and all
  try{
   await import('../public/app.js');await ready();
   assert.equal(paths().length,241);assert.equal($('selectedCount').textContent,'0');assert.equal($('step2').hidden,true);assert.equal($('step3').hidden,true);
-  assert.equal($('language').options.length,30);assert.equal($('language').options[0].value,'ko');
+  assert.equal(document.querySelector('#scope option[value=Asia]').textContent,'아시아');assert.equal($('language').options.length,30);assert.equal($('language').options[0].value,'ko');
   for(const id of ['KOR','JPN','USA','DEU'])event(document.querySelector(`#map [data-id="${id}"]`),'click');assert.equal($('selectedCount').textContent,'4');
   click('nextStep');assert.equal($('step1').hidden,true);assert.equal($('step2').hidden,false);assert.equal($('step3').hidden,true);
   event(document.querySelector('[data-mode="flag"]'),'click');assert.equal(document.querySelectorAll('[data-marker]').length,4);
@@ -57,7 +57,7 @@ test('three-step editor, Korean drilldown, smoothing, pins, 30 languages and all
   click('koreaMap');await ready();assert.equal($('selectedCount').textContent,'17');
   change('language','en');await waitFor(()=>document.documentElement.lang==='en');assert.equal(document.querySelector('h1').textContent,'One map. Three simple steps.');assert.equal($('downloadPng').textContent,'Download PNG');
   change('language','ar');await waitFor(()=>document.documentElement.dir==='rtl');assert.equal($('language').options[0].value,'ko');assert.equal(paths().length,17);
-  for(const lang of JSON.parse(await fs.readFile(new URL('locales/languages.json',root),'utf8'))){change('language',lang.code);await waitFor(()=>document.documentElement.lang===lang.code);const pack=JSON.parse(await fs.readFile(new URL('locales/'+lang.code+'.json',root),'utf8'));assert.equal(document.querySelector('h1').textContent,pack.hero,lang.code);assert.equal($('downloadPng').textContent,pack.png,lang.code);}
+  for(const lang of JSON.parse(await fs.readFile(new URL('locales/languages.json',root),'utf8'))){change('language',lang.code);await waitFor(()=>document.documentElement.lang===lang.code);const pack=JSON.parse(await fs.readFile(new URL('locales/'+lang.code+'.json',root),'utf8'));assert.equal(document.querySelector('h1').textContent,pack.hero,lang.code);assert.equal($('downloadPng').textContent,pack.png,lang.code);assert($('pinCount').textContent.startsWith(pack.pins),lang.code);}
   change('language','ko');await waitFor(()=>document.documentElement.lang==='ko');assert.equal(document.documentElement.dir,'ltr');
   change('mapTitle','<script>alert(1)</script>','input');assert.equal(document.querySelectorAll('#map script').length,0);change('mapTitle','Global presence','input');
   click('nextStep');click('nextStep');assert.equal($('step3').hidden,false);assert.equal($('step1').hidden,true);assert.equal($('step2').hidden,true);

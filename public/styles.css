@@ -250,3 +250,9 @@ button:hover { background-color:rgba(213,234,226,.7); }
  .topbar,.panel,.selection-card,.work-menu>div,.stepper,.step-actions { background:#f8fbfb; -webkit-backdrop-filter:none; backdrop-filter:none; }
  .stage-surround { background:#e6eef1; -webkit-backdrop-filter:none; backdrop-filter:none; }
 }
+
+.region-trail { display:flex; align-items:center; flex-wrap:wrap; gap:4px; margin:18px 0 4px; padding:8px; border:1px solid #ffffffb8; border-radius:12px; background:#ffffff60; }
+.region-trail button { min-height:36px; padding:7px 8px; color:#42695d; font-size:12px; }
+.region-trail button:last-child { background:#dcefe5b3; color:var(--green); font-weight:650; }
+.region-trail span { color:#7c958b; }
+@media(max-width:650px) { .region-trail button { min-height:44px; font-size:13px; } }

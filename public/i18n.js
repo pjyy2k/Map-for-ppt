@@ -57,7 +57,7 @@ function apply(){
   document.getElementById('zoomIn').setAttribute('aria-label','+');document.getElementById('zoomOut').setAttribute('aria-label','−');
   document.title='Map for PPT — '+t('hero');
 }
-async function load(code){if(!packs.has(code)){const r=await fetch(`locales/${code}.json`);if(!r.ok)throw Error('Language file unavailable');packs.set(code,await r.json());}return packs.get(code);}
+async function load(code){if(!packs.has(code)){const r=await fetch(`locales/${code}.json`,{cache:'no-store'});if(!r.ok)throw Error('Language file unavailable');packs.set(code,await r.json());}return packs.get(code);}
 export async function setLanguage(code){
   if(!languages.some(l=>l.code===code))code='ko';
   const next=await load(code);locale=code;pack=next;document.getElementById('language').value=code;apply();
@@ -65,7 +65,7 @@ export async function setLanguage(code){
   document.dispatchEvent(new window.Event('languagechange'));
 }
 export async function initLanguage(){
-  const response=await fetch('locales/languages.json');languages=await response.json();await load('ko');
+  const response=await fetch('locales/languages.json',{cache:'no-store'});languages=await response.json();await load('ko');
   const select=document.getElementById('language');for(const lang of languages){const option=document.createElement('option');option.value=lang.code;option.textContent=lang.name;option.lang=lang.code;select.append(option);}
   capture(document.body);
   let initial='ko';try{initial=localStorage.getItem('map-for-ppt:language')||'ko';}catch{}

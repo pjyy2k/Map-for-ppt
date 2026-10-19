@@ -34,8 +34,8 @@ test('three-step editor, Korean drilldown, smoothing, pins, 30 languages and all
  try{
   await import('../public/app.js');await ready();
   assert.equal(paths().length,241);assert.equal($('alaska').closest('label').hidden,false);assert.equal($('selectedCount').textContent,'0');assert.equal($('step2').hidden,true);assert.equal($('step3').hidden,true);
-  assert.equal(document.querySelector('#scope option[value=Asia]').textContent,'아시아');assert.equal($('language').options.length,30);assert.equal($('language').options[0].value,'ko');
-  for(const id of ['KOR','JPN','USA','DEU'])event(document.querySelector(`#map [data-id="${id}"]`),'click');assert.equal($('selectedCount').textContent,'4');
+  assert.equal(document.querySelectorAll('#step1 select').length,0);assert.equal(document.querySelector('[aria-label="아시아 ›"]').textContent,'›');event(document.querySelector('[aria-label="아시아 ›"]'),'click');await ready();assert.equal($('language').options.length,30);assert.equal($('language').options[0].value,'ko');
+  for(const id of ['KOR','JPN','CHN','IND'])event(document.querySelector(`#map [data-id="${id}"]`),'click');assert.equal($('selectedCount').textContent,'4');
   click('nextStep');assert.equal($('step1').hidden,true);assert.equal($('step2').hidden,false);assert.equal($('step3').hidden,true);
   event(document.querySelector('[data-mode="flag"]'),'click');assert.equal(document.querySelectorAll('[data-marker]').length,4);
   change('accent','#ff1122','input');assert.equal(document.querySelector('[data-marker="KOR"] path').getAttribute('fill'),'#ff1122');
@@ -52,10 +52,10 @@ test('three-step editor, Korean drilldown, smoothing, pins, 30 languages and all
   event(document.querySelector('[aria-label="서울특별시 ›"]'),'click');await ready();assert.equal(paths().length,25);
   event(document.querySelector('[aria-label="종로구 ›"]'),'click');await ready();assert.equal(paths().length,17);
   const idx=JSON.parse(await fs.readFile(new URL('data/korea/index.json',root),'utf8')),jeongeup=idx.cities.find(c=>c.name==='정읍시');assert(jeongeup);
-  change('province',jeongeup.province);await ready();change('municipality',jeongeup.code);await ready();assert.equal(paths().length,idx.dongCounts[jeongeup.code]);
+  click('koreaMap');await ready();const provinceName=idx.provinces.find(p=>p.code===jeongeup.province).name;event(document.querySelector(`[aria-label="${provinceName} ›"]`),'click');await ready();event(document.querySelector('[aria-label="정읍시 ›"]'),'click');await ready();assert.equal(paths().length,idx.dongCounts[jeongeup.code]);
   click('selectAll');assert.equal(Number($('selectedCount').textContent),paths().length);
-  change('unit','admin1');await ready();click('selectAll');assert.equal($('selectedCount').textContent,'17');
-  change('country','USA');await ready();assert.equal(paths().length,51);assert.equal($('alaska').closest('label').hidden,false);assert.equal($('greenland').closest('label').hidden,true);change('alaska',false);await ready();change('hawaii',false);await ready();assert.equal(paths().length,49);
+  click('koreaMap');await ready();click('selectAll');assert.equal($('selectedCount').textContent,'17');
+  click('worldMap');await ready();event(document.querySelector('[aria-label="북아메리카 ›"]'),'click');await ready();const usaItem=Array.from(document.querySelectorAll('#regionList .drill-button')).find(b=>b.getAttribute('aria-label').startsWith('미국'));assert(usaItem);event(usaItem,'click');await ready();assert.equal(paths().length,51);assert.equal($('alaska').closest('label').hidden,false);assert.equal($('greenland').closest('label').hidden,true);change('alaska',false);await ready();change('hawaii',false);await ready();assert.equal(paths().length,49);
   click('koreaMap');await ready();assert.equal($('selectedCount').textContent,'17');
   change('language','en');await waitFor(()=>document.documentElement.lang==='en');assert.equal(document.querySelector('h1').textContent,'One map. Three simple steps.');assert.equal($('downloadPng').textContent,'Download PNG');
   change('language','ar');await waitFor(()=>document.documentElement.dir==='rtl');assert.equal($('language').options[0].value,'ko');assert.equal(paths().length,17);

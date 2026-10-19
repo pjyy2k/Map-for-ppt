@@ -81,7 +81,7 @@
   "next": "Next",
   "fit": "Fit",
   "fitSelected": "Fit selection",
-  "canvasHint": "Click to select, drag to move",
+  "canvasHint": "Click regions to select; drag pins to move them.",
   "individual": "Individual region styles",
   "data": "Map data and usage",
   "notice": "Simplified presentation map. Korean detail: 2025-01-01. Not an official boundary reference.",

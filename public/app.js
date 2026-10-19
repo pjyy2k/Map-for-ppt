@@ -1,6 +1,6 @@
 import {CONTINENTS,MODES,COLORS,SIZE,DEFAULTS,initialSelections,collection,nameOf,validateProject,visibleFeature,filteredCountries} from './core.js?v=3';
 import {createEditablePptx} from './export.js?v=3';
-import {initLanguage,language,t,continentName} from './i18n.js?v=4';
+import {initLanguage,language,t,continentName} from './i18n.js?v=6';
 const $=id=>document.getElementById(id),d3=window.d3,STORAGE='map-for-ppt:v1';
 const EXPORTS=['downloadPng','downloadSvg','downloadPptx','downloadRegions','downloadSingle'];
 const CREDIT='통계청 SGIS · vuski/admdongkor (CC BY 4.0) · 2025-01-01 · 경계 간소화';
@@ -201,14 +201,15 @@ function duplicatePin(){const p=pins.find(p=>p.id===selectedPinId);if(p)addPin({
 $('map').addEventListener('pointerdown',e=>{
   if(!ready||e.button!==0)return;const pin=e.target.closest('[data-pin]');dragDistance=0;dragPinId=pin?.getAttribute('data-pin')||null;
   if(dragPinId){selectPin(dragPinId);dragging=true;}else if(!pinMode)dragging=true;else return;
-  dragStart={x:e.clientX,y:e.clientY,zx:zoom.x,zy:zoom.y};
+  dragStart={x:e.clientX,y:e.clientY};
 });
 window.addEventListener('pointermove',e=>{
   if(!dragging)return;const dx=e.clientX-dragStart.x,dy=e.clientY-dragStart.y;dragDistance=Math.hypot(dx,dy);if(dragDistance<5)return;
   if(dragPinId){const p=pins.find(p=>p.id===dragPinId);if(p){Object.assign(p,pointFromEvent(e));renderPins();}}
-  else{const rect=$('map').getBoundingClientRect();$('map').classList.add('dragging');zoom.x=dragStart.zx+dx*dimensions()[0]/rect.width;zoom.y=dragStart.zy+dy*dimensions()[1]/rect.height;applyZoom();}$('tooltip').hidden=true;
+  // Track background drags only to suppress accidental region clicks.
+  $('tooltip').hidden=true;
 });
-window.addEventListener('pointerup',()=>{if(dragPinId)persist();dragging=false;dragPinId=null;$('map').classList.remove('dragging');});
+window.addEventListener('pointerup',()=>{if(dragPinId)persist();dragging=false;dragPinId=null;});
 window.addEventListener('pointercancel',()=>{dragging=false;dragPinId=null;});
 $('map').addEventListener('click',e=>{if(pinMode&&dragDistance<5){addPin(pointFromEvent(e));pinMode=false;svg.classed('pin-mode',false);$('addPin').classList.remove('active');$('canvasHelp').textContent=t('canvasHint');}});
 window.addEventListener('keydown',e=>{

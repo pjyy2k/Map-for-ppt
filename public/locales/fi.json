@@ -81,7 +81,7 @@
   "next": "Seuraava",
   "fit": "Sovita",
   "fitSelected": "Sovita valintaan",
-  "canvasHint": "Valitse napsauttamalla, siirrä vetämällä",
+  "canvasHint": "Valitse alue napsauttamalla; siirrä nastoja vetämällä.",
   "individual": "Aluekohtaiset tyylit",
   "data": "Karttatiedot ja käyttö",
   "notice": "Yksinkertaistettu esityskartta. Korean tiedot: 2025-01-01. Ei virallinen rajalähde.",

@@ -5,9 +5,9 @@
   <meta name="description" content="지역을 고르고 스타일을 더해 PPT용 지도를 만드세요. 한국 읍면동부터 세계 지도까지, PNG·SVG·편집 가능한 PPT로 다운로드합니다.">
   <title>Map for PPT — 슬라이드를 위한 지도</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%23176b58'/%3E%3Cpath d='m8 12 8-4 8 4 8-4v22l-8 4-8-4-8 4z' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="stylesheet" href="styles.css?v=6">
   <script src="vendor/d3.min.js" defer></script><script src="vendor/topology.min.js" defer></script><script src="vendor/jszip.min.js" defer></script>
-  <script type="module" src="app.js?v=4"></script>
+  <script type="module" src="app.js?v=6"></script>
 </head>
 <body>
 <header class="topbar">
@@ -82,7 +82,7 @@
     <div class="canvas-toolbar"><div id="breadcrumbs" aria-label="지도 탐색 경로"></div><div class="view-controls"><button id="zoomOut" aria-label="축소">−</button><span id="zoomValue">100%</span><button id="zoomIn" aria-label="확대">+</button><button id="fit" title="지도 크기 맞추기">맞춤</button></div></div>
     <div class="stage-surround"><div class="map-stage" id="mapStage"><svg id="map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-label="선택 지역이 강조된 지도"><title>선택 지역 지도</title></svg><div id="loading" class="loading">지도를 준비하고 있어요…</div></div></div>
     <div class="canvas-bottom"><p><strong id="viewName">세계 지도</strong><span class="canvas-tag" id="aspectTag">16:9</span><span id="selectionSummary">선택 0개</span></p><button class="text-button" id="fitSelection">선택 지역에 맞춤</button></div>
-    <p class="canvas-help" id="canvasHelp">지역을 클릭해 강조하고, 드래그로 지도를 옮길 수 있어요.</p>
+    <p class="canvas-help" id="canvasHelp">지역은 클릭으로 선택하고, 핀은 드래그로 옮기세요.</p>
     <details class="selection-card" id="selectionDetails" hidden><summary>선택 지역별 색상·스타일 <span id="selectedCount">0</span></summary><div id="selectedRegions" class="selected-regions"></div></details>
     <details class="data-note"><summary>지도 데이터와 이용 안내</summary><p>발표용 개략 지도입니다. 경계·지명은 데이터 기준일에 따르며 일부 섬을 생략할 수 있습니다. 한국 시군구·읍면동은 2025-01-01 기준 행정동 경계이며 법정리 경계는 포함하지 않습니다.</p><p>한국 상세 경계: 통계청 SGIS(공공누리 제1유형) 원자료, vuski/admdongkor 가공(CC BY 4.0), 본 서비스 간소화. <a href="https://github.com/vuski/admdongkor" target="_blank" rel="noopener noreferrer">출처 ↗</a> · 세계 지도: Natural Earth.</p></details>
   </section>

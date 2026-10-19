@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="대륙, 국가, 시도 지도를 선택하고 색상과 깃발로 강조하세요. PPT용 고해상도 PNG와 SVG를 브라우저에서 만듭니다.">
+<title>Map for PPT — 슬라이드를 위한 지도</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%23176b58'/%3E%3Cpath d='m8 12 8-4 8 4 8-4v22l-8 4-8-4-8 4z' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+<script src="vendor/d3.min.js" defer></script><script type="module" src="app.js"></script>
+</head>
+<body>
+<header class="topbar">
+ <a class="brand" href="./" aria-label="Map for PPT 홈"><span class="brand-icon">◩</span>Map <span class="brand-light">for</span> PPT<span class="beta">STUDIO</span></a>
+ <div class="top-actions"><span class="local-badge"><i></i>브라우저에서 안전하게 작업</span><button id="saveProject" class="quiet">작업 저장</button><button id="loadProject" class="quiet">불러오기</button><input type="file" id="projectFile" accept="application/json,.json" hidden><a href="https://github.com/pjyy2k/Map-for-ppt" target="_blank" rel="noopener noreferrer" class="github">GitHub ↗</a></div>
+</header>
+<div class="intro"><div><p class="eyebrow">A WORLD OF POSSIBILITIES</p><h1>전하고 싶은 이야기를, 지도 위에.</h1><p>지역을 고르고, 스타일을 더하고, 슬라이드에 담으세요.</p></div><div class="intro-note">설치 없이 · 가입 없이<br><strong>당신의 다음 슬라이드를 위해</strong></div></div>
+<main class="workspace">
+ <aside class="panel locations" aria-label="지역 선택">
+  <div class="panel-heading"><h2><span class="step">01</span> 지역 선택</h2><button id="reset" class="text-button">초기화</button></div>
+  <label for="unit">선택 단위</label><select id="unit"><option value="country">국가 / 지역</option><option value="continent">대륙</option><option value="admin1">시도 / 주 / 1차 행정구역</option></select>
+  <label for="scope">지도 범위</label><select id="scope"><option value="world">전 세계</option><option value="Asia">아시아</option><option value="Europe">유럽</option><option value="Africa">아프리카</option><option value="North America">북아메리카</option><option value="South America">남아메리카</option><option value="Oceania">오세아니아</option><option value="Antarctica">남극</option><option value="country">국가 한 곳</option></select>
+  <div id="countryField" hidden><label for="country">국가</label><select id="country"></select></div>
+  <div class="search-wrap"><span aria-hidden="true">⌕</span><input type="search" id="search" placeholder="지역 검색 (한국 / Korea)" aria-label="지역 검색" autocomplete="off"></div>
+  <div class="list-toolbar"><span id="listCount">불러오는 중…</span><div><button id="selectAll" class="text-button">모두 선택</button><span class="divider">/</span><button id="clearAll" class="text-button">해제</button></div></div>
+  <div id="regionList" class="region-list" aria-label="지역 체크리스트" aria-busy="true"></div>
+  <p class="help small">지도 위 지역을 클릭해도 선택할 수 있어요.<br>단위별 선택은 따로 유지됩니다.</p>
+ </aside>
+ <section class="canvas-area" aria-label="지도 미리보기">
+  <div class="canvas-toolbar"><div><span class="live-dot"></span><strong id="viewName">세계 지도</strong><span class="canvas-tag" id="aspectTag">16:9</span></div><div class="view-controls"><button id="zoomOut" aria-label="축소">−</button><span id="zoomValue">100%</span><button id="zoomIn" aria-label="확대">+</button><button id="fit" title="지도 크기 맞추기">맞춤</button></div></div>
+  <div class="stage-surround"><div class="map-stage" id="mapStage"><svg id="map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-label="선택 지역이 강조된 지도"><title>선택 지역 지도</title></svg><div id="loading" class="loading">지도를 준비하고 있어요…</div></div></div>
+  <div class="canvas-bottom"><p><span class="keyboard">↖</span> 클릭으로 선택 · 드래그로 이동 · + / − 확대</p><button class="text-button" id="fitSelection">선택 지역에 맞춤</button></div>
+  <div class="selection-card"><div class="selection-header"><h2>선택한 지역 <span id="selectedCount">0</span></h2><span>개별 색상과 스타일을 변경할 수 있어요</span></div><div id="selectedRegions" class="selected-regions"></div></div>
+  <details class="data-note"><summary>지도 데이터 안내</summary><p>Natural Earth 기반의 간소화된 발표용 지도입니다. 경계와 지명은 최신 행정·외교 기준과 다를 수 있습니다. 초소형 지역과 일부 섬은 생략될 수 있으며, 공식 경계 확인용으로 사용하지 마세요. 시도 단위는 데이터에 포함된 국가에서 제공됩니다. 깃발은 선택 위치를 표시하는 단색 표식입니다.</p></details>
+ </section>
+ <aside class="panel appearance" aria-label="스타일 및 다운로드">
+  <div class="panel-heading"><h2><span class="step">02</span> 스타일</h2><span class="tiny-label">선택 지역 전체에 적용</span></div>
+  <label>강조 방식</label><div class="style-options" role="group" aria-label="강조 방식"><button data-mode="fill" class="active"><span>◒</span>색칠</button><button data-mode="flag"><span>⚑</span>깃발</button><button data-mode="border"><span>▱</span>테두리</button></div>
+  <div class="color-row"><label for="accent">강조 색상</label><input id="accent" type="color" value="#176b58"></div>
+  <div class="swatches" id="swatches" aria-label="추천 색상"></div>
+  <div class="color-row"><label for="baseColor">기본 육지</label><input type="color" id="baseColor" value="#e3e9e7"></div><div class="color-row"><label for="lineColor">경계선</label><input type="color" id="lineColor" value="#ffffff"></div>
+  <label for="lineWidth" class="range-label">경계선 두께 <output id="lineWidthValue">1</output></label><input type="range" id="lineWidth" min="0.25" max="3" step="0.25" value="1">
+  <label for="markerSize" class="range-label">깃발 크기 <output id="markerSizeValue">16</output></label><input type="range" id="markerSize" min="8" max="32" step="1" value="16">
+  <div class="section-break"></div>
+  <label for="mapTitle">지도 제목 <span class="optional">선택</span></label><input id="mapTitle" type="text" maxlength="100" placeholder="예: 글로벌 사업 현황">
+  <label class="check-line"><input type="checkbox" id="showLabels">선택 지역 이름 표시</label><label class="check-line"><input type="checkbox" id="legend">범례 표시</label>
+  <details class="options" open><summary>분리 지역 · 표시 옵션</summary><label class="check-line"><input type="checkbox" id="alaska" checked>알래스카</label><label class="check-line"><input type="checkbox" id="hawaii" checked>하와이</label><label class="check-line"><input type="checkbox" id="greenland" checked>그린란드</label><label class="check-line"><input type="checkbox" id="antarctica">남극</label><label class="check-line"><input type="checkbox" id="mainland">지역별 가장 큰 육지만 표시</label><label class="check-line"><input type="checkbox" id="usInset" checked>미국 단독 지도: 알래스카·하와이 삽입</label><p class="help small">숨긴 지역은 내보내기에서도 제외됩니다. 가장 큰 육지 옵션은 여러 섬으로 된 국가에서도 섬을 생략합니다.</p></details>
+  <div class="section-break"></div><div class="panel-heading export-heading"><h2><span class="step">03</span> 내보내기</h2></div>
+  <label for="ratio">캔버스 비율</label><select id="ratio"><option value="wide">와이드 · 16:9</option><option value="standard">스탠다드 · 4:3</option><option value="square">정사각형 · 1:1</option></select>
+  <div class="color-row"><label for="background">배경색</label><input type="color" id="background" value="#ffffff"></div><label class="check-line"><input type="checkbox" id="transparent" checked>투명 배경</label>
+  <label for="resolution">PNG 크기</label><select id="resolution"><option value="1920">1920 px · 기본</option><option value="3840" selected>3840 px · 고해상도</option><option value="7680">7680 px · 최고해상도</option></select>
+  <button id="downloadPng" class="primary download" disabled>↓ &nbsp; PNG 다운로드</button><button id="downloadSvg" class="secondary download" disabled>SVG 벡터 다운로드</button><p class="help small center">PNG는 PPT에 바로 삽입할 수 있어요.<br>SVG는 확대해도 선명합니다.</p>
+ </aside>
+</main>
+<footer><span>Map for PPT <span class="footer-dot">·</span> Made for your next presentation.</span><span>운영자 JinYoungPark <span class="footer-dot">·</span> <a href="https://github.com/pjyy2k/Map-for-ppt" target="_blank" rel="noopener noreferrer">GitHub ↗</a> <span class="footer-dot">·</span> Data: Natural Earth</span></footer>
+<div id="toast" class="toast" role="status" aria-live="polite"></div><div id="tooltip" class="tooltip" role="tooltip" hidden></div>
+</body></html>

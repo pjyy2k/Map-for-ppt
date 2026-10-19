@@ -1,0 +1,27 @@
+{
+  "name": "map-for-ppt",
+  "version": "1.0.0",
+  "description": "Static presentation map editor with country, continent and administrative region selection",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "check": "node --check public/app.js && node --check public/core.mjs",
+    "prepare-data": "node scripts/prepare-data.cjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pjyy2k/Map-for-ppt.git"
+  },
+  "keywords": [],
+  "author": "JinYoungPark",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/pjyy2k/Map-for-ppt/issues"
+  },
+  "homepage": "https://github.com/pjyy2k/Map-for-ppt#readme",
+  "devDependencies": {
+    "@napi-rs/canvas": "^0.1.80",
+    "linkedom": "^0.18.12",
+    "mapshaper": "^0.6.113"
+  },
+  "private": true
+}

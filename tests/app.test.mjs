@@ -1,59 +1,76 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
-import path from 'node:path';
 import vm from 'node:vm';
-import {parseHTML} from 'linkedom';
+import JSZip from 'jszip';
+import {parseHTML,DOMParser} from 'linkedom';
 import {createCanvas,Image as CanvasImage,loadImage} from '@napi-rs/canvas';
 const root=new URL('../public/',import.meta.url);
-test('editor selects regions, changes styles, switches levels, handles hidden states and exports PNG/SVG',async()=>{
+test('three-step editor, Korean drilldown, smoothing, pins, 30 languages and all exports',async()=>{
  const {window,document}=parseHTML(await fs.readFile(new URL('index.html',root),'utf8'));
- const values=new WeakMap();const descriptor=Object.getOwnPropertyDescriptor(window.HTMLSelectElement.prototype,'value');
+ const values=new WeakMap(),descriptor=Object.getOwnPropertyDescriptor(window.HTMLSelectElement.prototype,'value');
  Object.defineProperty(window.HTMLSelectElement.prototype,'value',{get(){return values.get(this)??descriptor.get.call(this);},set(v){values.set(this,String(v));},configurable:true});
+ window.HTMLElement.prototype.focus??=()=>{};
  const storage=new Map(),blobs=new Map(),downloads=[];let nextBlob=0;
- const realURL=globalThis.URL;const oldCreate=realURL.createObjectURL,oldRevoke=realURL.revokeObjectURL;
- realURL.createObjectURL=blob=>{const url='blob:test-'+(++nextBlob);blobs.set(url,blob);return url;};realURL.revokeObjectURL=url=>blobs.delete(url);
- Object.assign(globalThis,{window,document,localStorage:{getItem:key=>storage.get(key),setItem:(key,v)=>storage.set(key,v)},fetch:async url=>({ok:true,json:async()=>JSON.parse(await fs.readFile(new URL(url,root),'utf8'))}),XMLSerializer:class{serializeToString(node){return node.toString();}}});
+ const oldCreate=URL.createObjectURL,oldRevoke=URL.revokeObjectURL,oldTimeout=globalThis.setTimeout;
+ globalThis.setTimeout=(fn,ms,...args)=>{const timer=oldTimeout(fn,ms,...args);if(ms>=30000)timer.unref();return timer;};
+ URL.createObjectURL=blob=>{const url='blob:test-'+(++nextBlob);blobs.set(url,blob);return url;};URL.revokeObjectURL=url=>blobs.delete(url);
+ Object.assign(globalThis,{window,document,localStorage:{getItem:key=>storage.get(key),setItem:(key,v)=>storage.set(key,v)},fetch:async url=>({ok:true,json:async()=>JSON.parse(await fs.readFile(new URL(url,root),'utf8')),arrayBuffer:async()=>Uint8Array.from(await fs.readFile(new URL(url,root))).buffer}),XMLSerializer:class{serializeToString(node){return node.toString();}}});
+ window.JSZip=JSZip;
  const originalCreate=document.createElement.bind(document);
- document.createElement=(tag,...args)=>{
-  const el=originalCreate(tag,...args);
-  if(tag==='a')el.click=()=>downloads.push({filename:el.download,blob:blobs.get(el.href)});
-  if(tag==='canvas'){
-   const canvas=createCanvas(1,1);Object.defineProperty(el,'width',{set:v=>canvas.width=v,get:()=>canvas.width});Object.defineProperty(el,'height',{set:v=>canvas.height=v,get:()=>canvas.height});el.getContext=()=>canvas.getContext('2d');el.toBlob=async cb=>cb(new Blob([await canvas.encode('png')],{type:'image/png'}));
-  }
-  return el;
- };
+ document.createElement=(tag,...args)=>{const el=originalCreate(tag,...args);if(tag==='a')el.click=()=>downloads.push({filename:el.download,blob:blobs.get(el.href)});if(tag==='canvas'){const canvas=createCanvas(1,1);Object.defineProperty(el,'width',{set:v=>canvas.width=v,get:()=>canvas.width});Object.defineProperty(el,'height',{set:v=>canvas.height=v,get:()=>canvas.height});el.getContext=()=>canvas.getContext('2d');el.toBlob=async cb=>cb(new Blob([await canvas.encode('png')],{type:'image/png'}));}return el;};
  globalThis.Image=class extends CanvasImage{set src(url){blobs.get(url).arrayBuffer().then(data=>{super.src=Buffer.from(data);}).catch(e=>this.onerror?.(e));}};
  const context={window,document};vm.runInNewContext(await fs.readFile(new URL('vendor/d3.min.js',root),'utf8'),context);window.d3=context.d3;
+ vm.runInNewContext(await fs.readFile(new URL('vendor/topology.min.js',root),'utf8'),context);window.topojson=context.topojson;
  const $=id=>document.getElementById(id);
- const event=(el,type)=>el.dispatchEvent(new window.Event(type,{bubbles:true}));
- const change=(id,value)=>{const el=$(id);if(el.type==='checkbox')el.checked=value;else el.value=value;event(el,'change');};
+ $('map').getBoundingClientRect=()=>({left:0,top:0,width:1000,height:562.5});
+ const event=(el,type,props={})=>{const e=new window.Event(type,{bubbles:true});for(const[k,v]of Object.entries(props))Object.defineProperty(e,k,{value:v});return el.dispatchEvent(e);};
+ const change=(id,value,type='change')=>{const el=$(id);if(el.type==='checkbox')el.checked=value;else el.value=value;event(el,type);};
  const click=id=>event($(id),'click');
- const waitFor=async predicate=>{for(let i=0;i<200;i++){if(predicate())return;await new Promise(r=>setTimeout(r,5));}throw Error('Timed out waiting for editor state: '+$('loading').textContent);};
+ const paths=()=>document.querySelectorAll('#map .region');
+ const waitFor=async predicate=>{for(let i=0;i<400;i++){if(predicate())return;await new Promise(r=>setTimeout(r,5));}throw Error('Timed out: '+$('loading').textContent+' / '+$('toast').textContent);};
+ const ready=()=>waitFor(()=>$('loading').hidden);
+ const latest=extension=>[...downloads].reverse().find(d=>d.filename.endsWith(extension));
  try{
-  await import('../public/app.js');await waitFor(()=>$('loading').hidden);
-  assert.equal(document.querySelectorAll('#map .region').length,241); // Antarctica off by default.
-  assert.equal($('selectedCount').textContent,'4');
+  await import('../public/app.js');await ready();
+  assert.equal(paths().length,241);assert.equal($('selectedCount').textContent,'0');assert.equal($('step2').hidden,true);assert.equal($('step3').hidden,true);
+  assert.equal($('language').options.length,30);assert.equal($('language').options[0].value,'ko');
+  for(const id of ['KOR','JPN','USA','DEU'])event(document.querySelector(`#map [data-id="${id}"]`),'click');assert.equal($('selectedCount').textContent,'4');
+  click('nextStep');assert.equal($('step1').hidden,true);assert.equal($('step2').hidden,false);assert.equal($('step3').hidden,true);
   event(document.querySelector('[data-mode="flag"]'),'click');assert.equal(document.querySelectorAll('[data-marker]').length,4);
-  $('accent').value='#ff1122';event($('accent'),'input');assert.equal(document.querySelector('[data-marker="KOR"] path').getAttribute('fill'),'#ff1122');
-  const korea=document.querySelector('#map [data-id="KOR"]');event(korea,'click');assert.equal($('selectedCount').textContent,'3');event(document.querySelector('#map [data-id="KOR"]'),'click');assert.equal($('selectedCount').textContent,'4');
-  change('scope','country');change('unit','admin1');await waitFor(()=>$('loading').hidden);assert.equal(document.querySelectorAll('#map .region').length,17);
-  click('selectAll');assert.equal($('selectedCount').textContent,'17');
-  const firstColor=document.querySelector('#selectedRegions input');firstColor.value='#123456';event(firstColor,'input');assert.equal(document.querySelector('[data-marker] path').getAttribute('fill')!==null,true);
-  change('country','USA');await waitFor(()=>$('loading').hidden);assert.equal(document.querySelectorAll('#map .region').length,51);
-  change('alaska',false);change('hawaii',false);await waitFor(()=>$('loading').hidden);assert.equal(document.querySelectorAll('#map .region').length,49);
-  assert(!document.querySelector('#map [data-id="USA-3563"]'));
-  change('country','KOR');await waitFor(()=>$('loading').hidden);assert.equal($('selectedCount').textContent,'17');
-  change('unit','continent');change('scope','Asia');await waitFor(()=>$('loading').hidden);click('selectAll');assert.equal($('selectedCount').textContent,'1');
-  change('unit','country');change('scope','country');await waitFor(()=>$('loading').hidden);
-  $('mapTitle').value='<script>alert(1)</script>';event($('mapTitle'),'input');assert.equal(document.querySelectorAll('#map script').length,0);
-  $('mapTitle').value='Global presence';event($('mapTitle'),'input');
-  click('downloadSvg');const exported=downloads.at(-1);assert.equal(exported.filename,'map-for-ppt.svg');const xml=await exported.blob.text();assert(xml.includes('Global presence'));assert(xml.includes('xmlns="http://www.w3.org/2000/svg"'));assert(!xml.includes('NaN'));
-  change('resolution','1920');click('downloadPng');await waitFor(()=>downloads.some(d=>d.filename.endsWith('.png')));let png=downloads.at(-1);let data=Buffer.from(await png.blob.arrayBuffer());assert.equal(data.readUInt32BE(16),1920);assert.equal(data.readUInt32BE(20),1080);
-  const image=await loadImage(data),canvas=createCanvas(1920,1080),ctx=canvas.getContext('2d');ctx.drawImage(image,0,0);assert.equal(ctx.getImageData(0,0,1,1).data[3],0,'transparent background');
+  change('accent','#ff1122','input');assert.equal(document.querySelector('[data-marker="KOR"] path').getAttribute('fill'),'#ff1122');
+  const detailed=paths()[0].getAttribute('d');change('simplification','80','input');const simplified=paths()[0].getAttribute('d');assert.notEqual(simplified,detailed);assert(simplified.length<detailed.length);
+  change('corners','angular');const angular=paths()[0].getAttribute('d');change('corners','round');assert.notEqual(paths()[0].getAttribute('d'),angular);
+  click('addPin');event($('map'),'click',{clientX:300,clientY:250});assert.equal(document.querySelectorAll('[data-pin]').length,1);
+  change('pinColor','#123456','input');change('pinSize','40','input');assert.equal(document.querySelector('[data-pin] path').getAttribute('fill'),'#123456');
+  click('duplicatePin');assert.equal(document.querySelectorAll('[data-pin]').length,2);
+  event(window,'keydown',{key:'c',ctrlKey:true});event(window,'keydown',{key:'v',ctrlKey:true});assert.equal(document.querySelectorAll('[data-pin]').length,3);
+  click('deletePin');assert.equal(document.querySelectorAll('[data-pin]').length,2);
+  click('previousStep');click('koreaMap');await ready();assert.equal(paths().length,17);
+  event(document.querySelector('[aria-label="서울특별시 ›"]'),'click');await ready();assert.equal(paths().length,25);
+  event(document.querySelector('[aria-label="종로구 ›"]'),'click');await ready();assert.equal(paths().length,17);
+  const idx=JSON.parse(await fs.readFile(new URL('data/korea/index.json',root),'utf8')),jeongeup=idx.cities.find(c=>c.name==='정읍시');assert(jeongeup);
+  change('province',jeongeup.province);await ready();change('municipality',jeongeup.code);await ready();assert.equal(paths().length,idx.dongCounts[jeongeup.code]);
+  click('selectAll');assert.equal(Number($('selectedCount').textContent),paths().length);
+  change('unit','admin1');await ready();click('selectAll');assert.equal($('selectedCount').textContent,'17');
+  change('country','USA');await ready();assert.equal(paths().length,51);change('alaska',false);await ready();change('hawaii',false);await ready();assert.equal(paths().length,49);
+  click('koreaMap');await ready();assert.equal($('selectedCount').textContent,'17');
+  change('language','en');await waitFor(()=>document.documentElement.lang==='en');assert.equal(document.querySelector('h1').textContent,'One map. Three simple steps.');assert.equal($('downloadPng').textContent,'Download PNG');
+  change('language','ar');await waitFor(()=>document.documentElement.dir==='rtl');assert.equal($('language').options[0].value,'ko');assert.equal(paths().length,17);
+  for(const lang of JSON.parse(await fs.readFile(new URL('locales/languages.json',root),'utf8'))){change('language',lang.code);await waitFor(()=>document.documentElement.lang===lang.code);const pack=JSON.parse(await fs.readFile(new URL('locales/'+lang.code+'.json',root),'utf8'));assert.equal(document.querySelector('h1').textContent,pack.hero,lang.code);assert.equal($('downloadPng').textContent,pack.png,lang.code);}
+  change('language','ko');await waitFor(()=>document.documentElement.lang==='ko');assert.equal(document.documentElement.dir,'ltr');
+  change('mapTitle','<script>alert(1)</script>','input');assert.equal(document.querySelectorAll('#map script').length,0);change('mapTitle','Global presence','input');
+  click('nextStep');click('nextStep');assert.equal($('step3').hidden,false);assert.equal($('step1').hidden,true);assert.equal($('step2').hidden,true);
+  click('downloadSvg');const xml=await latest('.svg').blob.text();assert(xml.includes('Global presence'));assert(xml.includes('xmlns="http://www.w3.org/2000/svg"'));assert(!xml.includes('NaN'));assert(!xml.includes('data-editor'));assert(xml.includes('SGIS'));
+  change('resolution','1920');click('downloadPng');await waitFor(()=>latest('.png'));let data=Buffer.from(await latest('.png').blob.arrayBuffer());assert.equal(data.readUInt32BE(16),1920);assert.equal(data.readUInt32BE(20),1080);
+  const image=await loadImage(data),canvas=createCanvas(1920,1080),ctx=canvas.getContext('2d');ctx.drawImage(image,0,0);assert.equal(ctx.getImageData(0,0,1,1).data[3],0);
   await fs.mkdir(new URL('../.qa/',import.meta.url),{recursive:true});await fs.writeFile(new URL('../.qa/export.png',import.meta.url),data);
-  change('transparent',false);change('ratio','square');click('downloadPng');await waitFor(()=>downloads.filter(d=>d.filename.endsWith('.png')).length===2);data=Buffer.from(await downloads.at(-1).blob.arrayBuffer());assert.equal(data.readUInt32BE(20),1920);const opaque=await loadImage(data),opaqueCanvas=createCanvas(1920,1920),opaqueCtx=opaqueCanvas.getContext('2d');opaqueCtx.drawImage(opaque,0,0);assert.equal(opaqueCtx.getImageData(0,0,1,1).data[3],255,'opaque background');
-  click('saveProject');assert.equal(downloads.at(-1).filename,'map-for-ppt-project.json');const saved=JSON.parse(await downloads.at(-1).blob.text());assert.equal(saved.selections.admin1['KOR-2497'].mode,'flag');
-  change('country','JPN');await waitFor(()=>$('loading').hidden);click('fitSelection');const before=document.querySelector('#map .region').getAttribute('d');$('accent').value='#4788bd';event($('accent'),'input');assert.equal(document.querySelector('#map .region').getAttribute('d'),before,'selection frame remains stable while styling');
- }finally{realURL.createObjectURL=oldCreate;realURL.revokeObjectURL=oldRevoke;}
+  click('downloadPptx');await waitFor(()=>latest('.pptx'));const pptxData=Buffer.from(await latest('.pptx').blob.arrayBuffer()),pptx=await JSZip.loadAsync(pptxData),slide=await pptx.file('ppt/slides/slide1.xml').async('string');assert(!slide.includes('<p:pic>'));assert((slide.match(/<p:sp>/g)||[]).length>=19);assert(slide.includes('Pin pin-'));assert(slide.includes('Global presence'));assert(!slide.includes('NaN'));assert.equal(new DOMParser().parseFromString(slide,'text/xml').documentElement.nodeName,'p:sld');
+  await fs.writeFile(new URL('../.qa/editable-map.pptx',import.meta.url),pptxData);
+  click('downloadRegions');await waitFor(()=>latest('.zip'));const zip=await JSZip.loadAsync(await latest('.zip').blob.arrayBuffer());assert.equal(Object.keys(zip.files).filter(n=>n.endsWith('.svg')).length,17);
+  const prior=downloads.length;click('downloadSingle');assert.equal(downloads.length,prior+1);
+  change('transparent',false);change('ratio','square');click('downloadPng');await waitFor(()=>downloads.filter(d=>d.filename.endsWith('.png')).length===2);data=Buffer.from(await latest('.png').blob.arrayBuffer());assert.equal(data.readUInt32BE(20),1920);const opaque=await loadImage(data),oc=createCanvas(1920,1920),ocx=oc.getContext('2d');ocx.drawImage(opaque,0,0);assert.equal(ocx.getImageData(0,0,1,1).data[3],255);
+  click('saveProject');const saved=JSON.parse(await latest('.json').blob.text());assert.equal(saved.pins.length,2);assert.equal(saved.settings.simplification,80);assert(saved.selections.dong);
+  click('reset');await ready();assert.equal($('step1').hidden,false);assert.equal(document.querySelectorAll('[data-pin]').length,0);assert.equal($('selectedCount').textContent,'0');
+ }finally{URL.createObjectURL=oldCreate;URL.revokeObjectURL=oldRevoke;globalThis.setTimeout=oldTimeout;}
 });

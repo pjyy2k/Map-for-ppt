@@ -2,7 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
-import {DEFAULTS,initialSelections,validateProject,visibleFeature,filteredCountries} from '../public/core.mjs';
+import {DEFAULTS,initialSelections,validateProject,visibleFeature,filteredCountries} from '../public/core.js';
 const read=file=>JSON.parse(fs.readFileSync(new URL('../public/data/'+file,import.meta.url)));
 const countries=read('countries.geojson').features,manifest=read('manifest.json');
 const context={};vm.runInNewContext(fs.readFileSync(new URL('../public/vendor/d3.min.js',import.meta.url),'utf8'),context);const d3=context.d3;

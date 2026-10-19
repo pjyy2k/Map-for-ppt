@@ -4,8 +4,10 @@
   "description": "Static presentation map editor with country, continent and administrative region selection",
   "scripts": {
     "test": "node --test tests/*.test.mjs",
-    "check": "node --check public/app.js && node --check public/core.mjs",
-    "prepare-data": "node scripts/prepare-data.cjs"
+    "check": "node --check public/app.js && node --check public/core.js && node --check public/export.js && node --check public/i18n.js",
+    "prepare-data": "node scripts/prepare-data.cjs",
+    "prepare-korea": "node scripts/prepare-korea.cjs",
+    "prepare-template": "node scripts/prepare-pptx-template.cjs"
   },
   "repository": {
     "type": "git",
@@ -20,8 +22,14 @@
   "homepage": "https://github.com/pjyy2k/Map-for-ppt#readme",
   "devDependencies": {
     "@napi-rs/canvas": "^0.1.80",
+    "esbuild": "^0.25.11",
+    "jszip": "^3.10.1",
     "linkedom": "^0.18.12",
-    "mapshaper": "^0.6.113"
+    "mapshaper": "^0.6.113",
+    "pptxgenjs": "^4.0.1",
+    "topojson-client": "^3.1.0",
+    "topojson-server": "^3.0.1",
+    "topojson-simplify": "^3.0.3"
   },
   "private": true
 }

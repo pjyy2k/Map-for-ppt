@@ -100,5 +100,6 @@
   "route": "Pontozott útvonal hagyása",
   "moveOnly": "Csak mozgatás",
   "clearRoute": "Útvonal törlése",
-  "routeColor": "Útvonal színe"
+  "routeColor": "Útvonal színe",
+  "confirmDeletePin": "Törli ezt a jelölőt és a hozzá kapcsolódó útvonalat?"
 }

@@ -100,5 +100,6 @@
   "route": "Jätä pisteviivareitti",
   "moveOnly": "Vain siirto",
   "clearRoute": "Poista reitti",
-  "routeColor": "Reitin väri"
+  "routeColor": "Reitin väri",
+  "confirmDeletePin": "Poistetaanko tämä nasta ja siihen liittyvä reitti?"
 }

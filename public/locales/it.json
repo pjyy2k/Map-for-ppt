@@ -100,5 +100,6 @@
   "route": "Lascia percorso punteggiato",
   "moveOnly": "Sposta soltanto",
   "clearRoute": "Cancella percorso",
-  "routeColor": "Colore percorso"
+  "routeColor": "Colore percorso",
+  "confirmDeletePin": "Eliminare questo segnaposto e il percorso collegato?"
 }

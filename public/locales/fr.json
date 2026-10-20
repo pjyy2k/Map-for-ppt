@@ -100,5 +100,6 @@
   "route": "Laisser un trajet pointillé",
   "moveOnly": "Déplacer seulement",
   "clearRoute": "Effacer le trajet",
-  "routeColor": "Couleur du trajet"
+  "routeColor": "Couleur du trajet",
+  "confirmDeletePin": "Supprimer cette épingle et son trajet associé ?"
 }

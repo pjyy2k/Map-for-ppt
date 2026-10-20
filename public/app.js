@@ -1,6 +1,6 @@
 import {CONTINENTS,MODES,COLORS,SIZE,DEFAULTS,initialSelections,collection,nameOf,validateProject,visibleFeature,filteredCountries} from './core.js?v=14';
 import {createEditablePptx} from './export.js?v=12';
-import {initLanguage,language,t,continentName} from './i18n.js?v=14';
+import {initLanguage,language,t,continentName} from './i18n.js?v=16';
 const $=id=>document.getElementById(id),d3=window.d3,STORAGE='map-for-ppt:v1';
 const EXPORTS=['downloadPng','downloadSvg','downloadPptx','downloadRegions','downloadSingle'];
 const CREDIT='통계청 SGIS · vuski/admdongkor (CC BY 4.0) · 2025-01-01 · 경계 간소화';
@@ -232,7 +232,7 @@ function renderPins(){
 function selectPin(id){selectedPinId=id;const p=pins.find(p=>p.id===id);$('pinEditor').hidden=!p;$('clearRoute').hidden=!p?.origin;$('pinCount').textContent=`${t('pins')} · ${pins.length}`;if(p){for(const [id,key]of [['pinShape','shape'],['pinColor','color'],['pinSize','size']])$(id).value=p[key];$('pinOutline').checked=p.outline;$('pinSizeValue').textContent=p.size;if(step!==2)setStep(2);$('pinEditor').closest('details').open=true;}renderPins();}
 function addPin(position,source=null){if(pins.length>=200){notify('핀은 최대 200개까지 추가할 수 있어요.');return;}const pin={id:'pin-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7),x:position.x,y:position.y,...(source?.origin?{origin:{...source.origin}}:{}),size:source?.size||24,color:source?.color||'#d57464',shape:source?.shape||'pin',outline:source?.outline??true};pins.push(pin);selectPin(pin.id);persist();}
 function removePin(id){
-  if(!id)return;
+  if(!id||!pins.some(p=>p.id===id)||!window.confirm(t('confirmDeletePin')))return;
   pins=pins.filter(p=>p.id!==id);
   if(dragPinId===id){dragging=false;dragPinId=null;pointerStartedOnPin=false;}
   selectPin(selectedPinId===id?null:selectedPinId);persist();

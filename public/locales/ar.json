@@ -100,5 +100,6 @@
   "route": "ترك مسار منقط",
   "moveOnly": "نقل فقط",
   "clearRoute": "مسح المسار",
-  "routeColor": "لون المسار"
+  "routeColor": "لون المسار",
+  "confirmDeletePin": "هل تريد حذف هذا الدبوس والمسار المتصل به؟"
 }

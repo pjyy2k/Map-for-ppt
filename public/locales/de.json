@@ -100,5 +100,6 @@
   "route": "Gepunktete Route hinterlassen",
   "moveOnly": "Nur verschieben",
   "clearRoute": "Route löschen",
-  "routeColor": "Routenfarbe"
+  "routeColor": "Routenfarbe",
+  "confirmDeletePin": "Diesen Pin und die verbundene Route löschen?"
 }

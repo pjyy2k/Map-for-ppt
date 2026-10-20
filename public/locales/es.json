@@ -100,5 +100,6 @@
   "route": "Dejar ruta de puntos",
   "moveOnly": "Solo mover",
   "clearRoute": "Borrar ruta",
-  "routeColor": "Color de ruta"
+  "routeColor": "Color de ruta",
+  "confirmDeletePin": "¿Eliminar este pin y su ruta conectada?"
 }

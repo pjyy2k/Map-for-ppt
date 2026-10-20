@@ -100,5 +100,6 @@
   "route": "Lämna prickad rutt",
   "moveOnly": "Flytta endast",
   "clearRoute": "Rensa rutt",
-  "routeColor": "Ruttfärg"
+  "routeColor": "Ruttfärg",
+  "confirmDeletePin": "Ta bort den här nålen och dess anslutna rutt?"
 }

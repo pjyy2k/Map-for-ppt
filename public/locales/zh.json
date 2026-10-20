@@ -100,5 +100,6 @@
   "route": "保留虚线路径",
   "moveOnly": "仅移动位置",
   "clearRoute": "清除路径",
-  "routeColor": "路径颜色"
+  "routeColor": "路径颜色",
+  "confirmDeletePin": "删除此图钉及其连接路径？"
 }

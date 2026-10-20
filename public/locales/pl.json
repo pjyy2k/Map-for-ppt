@@ -100,5 +100,6 @@
   "route": "Pozostaw trasę kropkowaną",
   "moveOnly": "Tylko przesuń",
   "clearRoute": "Usuń trasę",
-  "routeColor": "Kolor trasy"
+  "routeColor": "Kolor trasy",
+  "confirmDeletePin": "Usunąć tę pinezkę i powiązaną trasę?"
 }

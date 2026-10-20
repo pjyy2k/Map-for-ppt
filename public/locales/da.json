@@ -100,5 +100,6 @@
   "route": "Efterlad prikket rute",
   "moveOnly": "Flyt kun",
   "clearRoute": "Ryd rute",
-  "routeColor": "Rutefarve"
+  "routeColor": "Rutefarve",
+  "confirmDeletePin": "Slet denne knappenål og dens tilknyttede rute?"
 }

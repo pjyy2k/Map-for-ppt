@@ -100,5 +100,6 @@
   "route": "বিন্দুযুক্ত পথ রাখুন",
   "moveOnly": "শুধু সরান",
   "clearRoute": "পথ মুছুন",
-  "routeColor": "পথের রং"
+  "routeColor": "পথের রং",
+  "confirmDeletePin": "এই পিন এবং এর সংযুক্ত পথ মুছবেন?"
 }

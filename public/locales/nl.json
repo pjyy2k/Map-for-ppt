@@ -100,5 +100,6 @@
   "route": "Gestippelde route achterlaten",
   "moveOnly": "Alleen verplaatsen",
   "clearRoute": "Route wissen",
-  "routeColor": "Routekleur"
+  "routeColor": "Routekleur",
+  "confirmDeletePin": "Deze pin en de bijbehorende route verwijderen?"
 }

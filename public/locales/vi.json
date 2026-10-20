@@ -100,5 +100,6 @@
   "route": "Để lại đường chấm",
   "moveOnly": "Chỉ di chuyển",
   "clearRoute": "Xóa đường đi",
-  "routeColor": "Màu đường đi"
+  "routeColor": "Màu đường đi",
+  "confirmDeletePin": "Xóa ghim này và đường đi được kết nối?"
 }

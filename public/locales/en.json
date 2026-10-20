@@ -100,5 +100,6 @@
   "route": "Leave a dotted route",
   "moveOnly": "Move only",
   "clearRoute": "Clear route",
-  "routeColor": "Route color"
+  "routeColor": "Route color",
+  "confirmDeletePin": "Delete this pin and its connected route?"
 }

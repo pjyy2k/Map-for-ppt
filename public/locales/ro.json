@@ -100,5 +100,6 @@
   "route": "Lăsați traseu punctat",
   "moveOnly": "Doar mutare",
   "clearRoute": "Ștergeți traseul",
-  "routeColor": "Culoarea traseului"
+  "routeColor": "Culoarea traseului",
+  "confirmDeletePin": "Ștergeți acest marcaj și traseul conectat?"
 }

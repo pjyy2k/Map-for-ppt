@@ -100,5 +100,6 @@
   "route": "Tinggalkan rute bertitik",
   "moveOnly": "Pindahkan saja",
   "clearRoute": "Hapus rute",
-  "routeColor": "Warna rute"
+  "routeColor": "Warna rute",
+  "confirmDeletePin": "Hapus pin ini dan rute yang terhubung?"
 }

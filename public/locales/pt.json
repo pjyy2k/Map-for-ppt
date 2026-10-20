@@ -100,5 +100,6 @@
   "route": "Deixar rota pontilhada",
   "moveOnly": "Apenas mover",
   "clearRoute": "Limpar rota",
-  "routeColor": "Cor da rota"
+  "routeColor": "Cor da rota",
+  "confirmDeletePin": "Excluir este pino e sua rota conectada?"
 }

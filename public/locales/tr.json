@@ -100,5 +100,6 @@
   "route": "Noktalı rota bırak",
   "moveOnly": "Yalnızca taşı",
   "clearRoute": "Rotayı sil",
-  "routeColor": "Rota rengi"
+  "routeColor": "Rota rengi",
+  "confirmDeletePin": "Bu iğne ve bağlı rotası silinsin mi?"
 }

@@ -100,5 +100,6 @@
   "route": "Tinggalkan laluan bertitik",
   "moveOnly": "Alih sahaja",
   "clearRoute": "Padam laluan",
-  "routeColor": "Warna laluan"
+  "routeColor": "Warna laluan",
+  "confirmDeletePin": "Padam pin ini dan laluan yang disambungkan?"
 }

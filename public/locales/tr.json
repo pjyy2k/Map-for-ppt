@@ -18,7 +18,7 @@
   "countries": "Ülkeler ve bölgeler",
   "continents": "Kıtalar",
   "states": "Eyaletler ve iller",
-  "cities": "Kore belediyeleri",
+  "cities": "Belediyeler",
   "dongs": "Kore mahalleleri",
   "scope": "Harita alanı",
   "country": "Ülke",
@@ -103,5 +103,6 @@
   "routeColor": "Rota rengi",
   "confirmDeletePin": "Bu iğne ve bağlı rotası silinsin mi?",
   "dropQuestion": "Bıraktıktan sonra ne yapmak istersiniz?",
-  "cancel": "İptal"
+  "cancel": "İptal",
+  "municipalSupport": "Belediye sınırları şu anda Güney Kore için kullanılabilir."
 }

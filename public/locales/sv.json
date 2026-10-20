@@ -18,7 +18,7 @@
   "countries": "Länder och territorier",
   "continents": "Kontinenter",
   "states": "Delstater och provinser",
-  "cities": "Kommuner i Korea",
+  "cities": "Kommuner",
   "dongs": "Stadsdelar i Korea",
   "scope": "Kartområde",
   "country": "Land",
@@ -103,5 +103,6 @@
   "routeColor": "Ruttfärg",
   "confirmDeletePin": "Ta bort den här nålen och dess anslutna rutt?",
   "dropQuestion": "Vad vill du göra efter att du släppt?",
-  "cancel": "Avbryt"
+  "cancel": "Avbryt",
+  "municipalSupport": "Kommungränser finns för närvarande för Sydkorea."
 }

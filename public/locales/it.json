@@ -18,7 +18,7 @@
   "countries": "Paesi e territori",
   "continents": "Continenti",
   "states": "Stati e province",
-  "cities": "Comuni della Corea",
+  "cities": "Comuni",
   "dongs": "Quartieri della Corea",
   "scope": "Area della mappa",
   "country": "Paese",
@@ -103,5 +103,6 @@
   "routeColor": "Colore percorso",
   "confirmDeletePin": "Eliminare questo segnaposto e il percorso collegato?",
   "dropQuestion": "Cosa vuoi fare dopo il rilascio?",
-  "cancel": "Annulla"
+  "cancel": "Annulla",
+  "municipalSupport": "I confini comunali coprono attualmente la Corea del Sud."
 }

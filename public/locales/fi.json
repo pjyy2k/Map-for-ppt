@@ -18,7 +18,7 @@
   "countries": "Maat ja alueet",
   "continents": "Maanosat",
   "states": "Osavaltiot ja maakunnat",
-  "cities": "Korean kunnat",
+  "cities": "Kunnat",
   "dongs": "Korean kaupunginosat",
   "scope": "Kartta-alue",
   "country": "Maa",
@@ -103,5 +103,6 @@
   "routeColor": "Reitin väri",
   "confirmDeletePin": "Poistetaanko tämä nasta ja siihen liittyvä reitti?",
   "dropQuestion": "Mitä haluat tehdä pudottamisen jälkeen?",
-  "cancel": "Peruuta"
+  "cancel": "Peruuta",
+  "municipalSupport": "Kuntarajat ovat tällä hetkellä saatavilla Etelä-Korealle."
 }

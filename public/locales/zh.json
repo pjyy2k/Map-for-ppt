@@ -18,7 +18,7 @@
   "countries": "国家和地区",
   "continents": "大洲",
   "states": "省和州",
-  "cities": "韩国市郡区",
+  "cities": "市郡区",
   "dongs": "韩国邑面洞",
   "scope": "地图范围",
   "country": "国家",
@@ -103,5 +103,6 @@
   "routeColor": "路径颜色",
   "confirmDeletePin": "删除此图钉及其连接路径？",
   "dropQuestion": "放下后要执行什么操作？",
-  "cancel": "取消"
+  "cancel": "取消",
+  "municipalSupport": "市郡区边界目前支持韩国。"
 }

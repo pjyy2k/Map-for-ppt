@@ -18,7 +18,7 @@
   "countries": "Országok és területek",
   "continents": "Földrészek",
   "states": "Államok és tartományok",
-  "cities": "Korea önkormányzatai",
+  "cities": "Önkormányzatok",
   "dongs": "Korea városrészei",
   "scope": "Térképterület",
   "country": "Ország",
@@ -103,5 +103,6 @@
   "routeColor": "Útvonal színe",
   "confirmDeletePin": "Törli ezt a jelölőt és a hozzá kapcsolódó útvonalat?",
   "dropQuestion": "Mit szeretne tenni az elengedés után?",
-  "cancel": "Mégse"
+  "cancel": "Mégse",
+  "municipalSupport": "A településhatárok jelenleg Dél-Koreára érhetők el."
 }

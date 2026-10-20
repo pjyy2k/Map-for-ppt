@@ -1,6 +1,6 @@
 import {CONTINENTS,MODES,COLORS,SIZE,DEFAULTS,initialSelections,collection,nameOf,validateProject,visibleFeature,filteredCountries} from './core.js?v=19';
 import {createEditablePptx} from './export.js?v=12';
-import {initLanguage,language,t,continentName} from './i18n.js?v=18';
+import {initLanguage,language,t,continentName} from './i18n.js?v=21';
 const $=id=>document.getElementById(id),d3=window.d3,STORAGE='map-for-ppt:v1';
 const EXPORTS=['downloadPng','downloadSvg','downloadPptx','downloadRegions','downloadSingle'];
 const CREDIT='통계청 SGIS · vuski/admdongkor (CC BY 4.0) · 2025-01-01 · 경계 간소화';
@@ -50,6 +50,7 @@ function renderUnitPicker(){
   const korean=isKorea(),choices=korean?[['admin1','states'],['municipality','cities']]:[['continent','continents'],['country','country'],['municipality','cities']];
   if(korean&&settings.unit==='dong')choices.push(['dong','dongs']);
   if(!korean&&settings.scope==='country'&&manifest.admin1?.[settings.country])choices.push(['admin1','states']);
+  $('unitSupport').hidden=korean;$('unitSupport').textContent=t('municipalSupport');
   const parent=$('unitPicker');parent.replaceChildren();
   for(const [unit,key]of choices){const b=document.createElement('button');b.textContent=t(key);b.dataset.unit=unit;b.classList.toggle('active',settings.unit===unit);b.setAttribute('aria-pressed',String(settings.unit===unit));b.disabled=!ready;b.addEventListener('click',()=>chooseUnit(unit));parent.append(b);}
 }

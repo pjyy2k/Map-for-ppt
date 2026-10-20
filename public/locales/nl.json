@@ -18,7 +18,7 @@
   "countries": "Landen en gebieden",
   "continents": "Continenten",
   "states": "Staten en provincies",
-  "cities": "Gemeenten in Korea",
+  "cities": "Gemeenten",
   "dongs": "Buurten in Korea",
   "scope": "Kaartgebied",
   "country": "Land",
@@ -103,5 +103,6 @@
   "routeColor": "Routekleur",
   "confirmDeletePin": "Deze pin en de bijbehorende route verwijderen?",
   "dropQuestion": "Wat wil je na het neerzetten doen?",
-  "cancel": "Annuleren"
+  "cancel": "Annuleren",
+  "municipalSupport": "Gemeentegrenzen zijn momenteel beschikbaar voor Zuid-Korea."
 }

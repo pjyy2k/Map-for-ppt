@@ -18,7 +18,7 @@
   "countries": "Pays et territoires",
   "continents": "Continents",
   "states": "États et provinces",
-  "cities": "Municipalités de Corée",
+  "cities": "Municipalités",
   "dongs": "Quartiers de Corée",
   "scope": "Zone de la carte",
   "country": "Pays",
@@ -103,5 +103,6 @@
   "routeColor": "Couleur du trajet",
   "confirmDeletePin": "Supprimer cette épingle et son trajet associé ?",
   "dropQuestion": "Que souhaitez-vous faire après le dépôt ?",
-  "cancel": "Annuler"
+  "cancel": "Annuler",
+  "municipalSupport": "Les limites municipales couvrent actuellement la Corée du Sud."
 }

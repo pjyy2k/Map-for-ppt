@@ -18,7 +18,7 @@
   "countries": "국가 / 지역",
   "continents": "대륙",
   "states": "시도 / 주",
-  "cities": "한국 시군구",
+  "cities": "시군구",
   "dongs": "한국 읍면동",
   "scope": "지도 범위",
   "country": "국가",
@@ -103,5 +103,6 @@
   "routeColor": "경로 색상",
   "confirmDeletePin": "이 핀과 연결된 경로를 삭제할까요?",
   "dropQuestion": "어떻게 놓을까요?",
-  "cancel": "취소"
+  "cancel": "취소",
+  "municipalSupport": "시군구 경계는 현재 한국을 지원합니다."
 }

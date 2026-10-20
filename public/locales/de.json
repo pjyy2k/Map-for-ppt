@@ -18,7 +18,7 @@
   "countries": "Länder und Gebiete",
   "continents": "Kontinente",
   "states": "Bundesländer und Provinzen",
-  "cities": "Gemeinden in Korea",
+  "cities": "Gemeinden",
   "dongs": "Ortsteile in Korea",
   "scope": "Kartenausschnitt",
   "country": "Land",
@@ -103,5 +103,6 @@
   "routeColor": "Routenfarbe",
   "confirmDeletePin": "Diesen Pin und die verbundene Route löschen?",
   "dropQuestion": "Was möchten Sie nach dem Ablegen tun?",
-  "cancel": "Abbrechen"
+  "cancel": "Abbrechen",
+  "municipalSupport": "Gemeindegrenzen sind derzeit für Südkorea verfügbar."
 }

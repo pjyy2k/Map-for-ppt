@@ -18,7 +18,7 @@
   "countries": "Země a území",
   "continents": "Kontinenty",
   "states": "Státy a provincie",
-  "cities": "Obce v Koreji",
+  "cities": "Obce",
   "dongs": "Čtvrti v Koreji",
   "scope": "Oblast mapy",
   "country": "Země",
@@ -103,5 +103,6 @@
   "routeColor": "Barva trasy",
   "confirmDeletePin": "Smazat tento špendlík a připojenou trasu?",
   "dropQuestion": "Co chcete udělat po upuštění?",
-  "cancel": "Zrušit"
+  "cancel": "Zrušit",
+  "municipalSupport": "Hranice obcí jsou nyní dostupné pro Jižní Koreu."
 }

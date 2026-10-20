@@ -18,7 +18,7 @@
   "countries": "Quốc gia và lãnh thổ",
   "continents": "Châu lục",
   "states": "Bang và tỉnh",
-  "cities": "Quận huyện Hàn Quốc",
+  "cities": "Quận huyện",
   "dongs": "Phường xã Hàn Quốc",
   "scope": "Phạm vi bản đồ",
   "country": "Quốc gia",
@@ -103,5 +103,6 @@
   "routeColor": "Màu đường đi",
   "confirmDeletePin": "Xóa ghim này và đường đi được kết nối?",
   "dropQuestion": "Bạn muốn làm gì sau khi thả?",
-  "cancel": "Hủy"
+  "cancel": "Hủy",
+  "municipalSupport": "Ranh giới quận huyện hiện có cho Hàn Quốc."
 }

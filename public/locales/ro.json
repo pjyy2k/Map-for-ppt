@@ -18,7 +18,7 @@
   "countries": "Țări și teritorii",
   "continents": "Continente",
   "states": "State și provincii",
-  "cities": "Municipalități din Coreea",
+  "cities": "Municipalități",
   "dongs": "Cartiere din Coreea",
   "scope": "Zona hărții",
   "country": "Țară",
@@ -103,5 +103,6 @@
   "routeColor": "Culoarea traseului",
   "confirmDeletePin": "Ștergeți acest marcaj și traseul conectat?",
   "dropQuestion": "Ce doriți să faceți după eliberare?",
-  "cancel": "Anulare"
+  "cancel": "Anulare",
+  "municipalSupport": "Limitele municipale sunt disponibile în prezent pentru Coreea de Sud."
 }

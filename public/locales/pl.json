@@ -18,7 +18,7 @@
   "countries": "Kraje i terytoria",
   "continents": "Kontynenty",
   "states": "Stany i prowincje",
-  "cities": "Gminy Korei",
+  "cities": "Gminy",
   "dongs": "Dzielnice Korei",
   "scope": "Obszar mapy",
   "country": "Kraj",
@@ -103,5 +103,6 @@
   "routeColor": "Kolor trasy",
   "confirmDeletePin": "Usunąć tę pinezkę i powiązaną trasę?",
   "dropQuestion": "Co zrobić po upuszczeniu?",
-  "cancel": "Anuluj"
+  "cancel": "Anuluj",
+  "municipalSupport": "Granice gmin są obecnie dostępne dla Korei Południowej."
 }

@@ -18,7 +18,7 @@
   "countries": "国・地域",
   "continents": "大陸",
   "states": "州・都道府県",
-  "cities": "韓国の市郡区",
+  "cities": "市郡区",
   "dongs": "韓国の邑面洞",
   "scope": "地図の範囲",
   "country": "国",
@@ -103,5 +103,6 @@
   "routeColor": "経路の色",
   "confirmDeletePin": "このピンと接続された経路を削除しますか？",
   "dropQuestion": "ドロップ後の動作を選んでください。",
-  "cancel": "キャンセル"
+  "cancel": "キャンセル",
+  "municipalSupport": "市郡区の境界は現在、韓国に対応しています。"
 }

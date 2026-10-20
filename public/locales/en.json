@@ -18,7 +18,7 @@
   "countries": "Countries / territories",
   "continents": "Continents",
   "states": "States / provinces",
-  "cities": "Korean municipalities",
+  "cities": "Municipalities",
   "dongs": "Korean neighborhoods",
   "scope": "Map area",
   "country": "Country",
@@ -103,5 +103,6 @@
   "routeColor": "Route color",
   "confirmDeletePin": "Delete this pin and its connected route?",
   "dropQuestion": "What would you like to do after dropping?",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "municipalSupport": "Municipal boundaries currently cover South Korea."
 }

@@ -18,7 +18,7 @@
   "countries": "Negara dan wilayah",
   "continents": "Benua",
   "states": "Negara bagian dan provinsi",
-  "cities": "Kota/kabupaten Korea",
+  "cities": "Kota/kabupaten",
   "dongs": "Kelurahan Korea",
   "scope": "Cakupan peta",
   "country": "Negara",
@@ -103,5 +103,6 @@
   "routeColor": "Warna rute",
   "confirmDeletePin": "Hapus pin ini dan rute yang terhubung?",
   "dropQuestion": "Apa yang ingin dilakukan setelah melepas?",
-  "cancel": "Batal"
+  "cancel": "Batal",
+  "municipalSupport": "Batas kota/kabupaten saat ini tersedia untuk Korea Selatan."
 }

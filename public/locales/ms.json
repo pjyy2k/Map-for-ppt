@@ -18,7 +18,7 @@
   "countries": "Negara dan wilayah",
   "continents": "Benua",
   "states": "Negeri dan wilayah",
-  "cities": "Perbandaran Korea",
+  "cities": "Perbandaran",
   "dongs": "Kejiranan Korea",
   "scope": "Kawasan peta",
   "country": "Negara",
@@ -103,5 +103,6 @@
   "routeColor": "Warna laluan",
   "confirmDeletePin": "Padam pin ini dan laluan yang disambungkan?",
   "dropQuestion": "Apakah yang anda mahu lakukan selepas melepaskan?",
-  "cancel": "Batal"
+  "cancel": "Batal",
+  "municipalSupport": "Sempadan perbandaran kini tersedia untuk Korea Selatan."
 }

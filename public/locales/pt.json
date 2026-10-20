@@ -18,7 +18,7 @@
   "countries": "Países e territórios",
   "continents": "Continentes",
   "states": "Estados e províncias",
-  "cities": "Municípios da Coreia",
+  "cities": "Municípios",
   "dongs": "Bairros da Coreia",
   "scope": "Área do mapa",
   "country": "País",
@@ -103,5 +103,6 @@
   "routeColor": "Cor da rota",
   "confirmDeletePin": "Excluir este pino e sua rota conectada?",
   "dropQuestion": "O que deseja fazer após soltar?",
-  "cancel": "Cancelar"
+  "cancel": "Cancelar",
+  "municipalSupport": "Os limites municipais cobrem atualmente a Coreia do Sul."
 }

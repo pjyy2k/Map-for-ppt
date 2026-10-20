@@ -1,6 +1,6 @@
-import {CONTINENTS,MODES,COLORS,SIZE,DEFAULTS,initialSelections,collection,nameOf,validateProject,visibleFeature,filteredCountries} from './core.js?v=22';
+import {CONTINENTS,MODES,COLORS,SIZE,DEFAULTS,initialSelections,collection,nameOf,validateProject,visibleFeature,filteredCountries} from './core.js?v=23';
 import {createEditablePptx} from './export.js?v=12';
-import {initLanguage,language,t,continentName} from './i18n.js?v=21';
+import {initLanguage,language,t,continentName} from './i18n.js?v=23';
 const $=id=>document.getElementById(id),d3=window.d3,STORAGE='map-for-ppt:v1';
 const EXPORTS=['downloadPng','downloadSvg','downloadPptx','downloadRegions','downloadSingle'];
 const CREDIT='통계청 SGIS · vuski/admdongkor (CC BY 4.0) · 2025-01-01 · 경계 간소화';
@@ -13,7 +13,7 @@ const styleFor=id=>selection()[id];
 const keyFor=f=>settings.unit==='continent'?f.properties.continent:f.properties.id;
 const dimensions=()=>SIZE[settings.ratio];
 const currentSelections=()=>allItems.filter(i=>styleFor(i.id));
-const isKorea=()=>settings.scope==='country'&&settings.country==='KOR'&&['admin1','municipality','dong'].includes(settings.unit);
+const isKorea=()=>settings.family==='korea';
 function notify(message){if(language()!=='ko'&&/[가-힣]/.test(message))message=t('error');$('toast').textContent=message;$('toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('visible'),3500);}
 function project(){return {version:1,settings,selections,pins};}
 function persist(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>{try{localStorage.setItem(STORAGE,JSON.stringify(project()));}catch{/* Private browsing can disable storage. */}},200);}
@@ -37,19 +37,41 @@ function syncMapInteraction(){
     else{region.removeAttribute('role');region.removeAttribute('aria-checked');}
   }
 }
-function chooseUnit(unit){
-  if(!ready)return;
-  settings.unit=unit;
-  if(unit==='continent')settings.scope='world';
-  if(isKorea()||['municipality','dong'].includes(unit)){
-    settings.country='KOR';settings.scope='country';settings.koreaAll=unit==='municipality';
+function normalizeViewUnit(){
+  if(!isKorea()){
+    if(['municipality','dong'].includes(settings.unit)||(settings.unit==='admin1'&&settings.scope!=='country')||(settings.unit==='continent'&&settings.scope==='country'))settings.unit='country';
   }
+}
+function unitAllowed(unit){return isKorea()?['admin1','municipality'].includes(unit):unit==='admin1'?settings.scope==='country'&&!!manifest.admin1[settings.country]:unit==='continent'?settings.scope!=='country':unit==='country';}
+function chooseUnit(unit){
+  if(!ready||!unitAllowed(unit))return;settings.unit=unit;
   $('search').value='';syncControls();changeView();
+}
+function setView(scope,value){
+  if(!ready)return;
+  if(isKorea()){
+    settings.koreaAll=scope==='world';if(value)settings.province=value;
+    if(settings.unit==='dong')settings.unit='municipality';
+  }else{settings.scope=scope;if(scope==='country')settings.country=value;if(scope==='Antarctica')settings.antarctica=true;normalizeViewUnit();}
+  $('search').value='';syncControls();changeView();
+}
+function renderViewPicker(){
+  const parent=$('viewPicker');parent.replaceChildren();
+  function button(label,scope,value,container=parent){const b=document.createElement('button');b.textContent=label;b.dataset.view=scope;b.dataset.value=value||'';b.disabled=!ready;const active=isKorea()?scope==='world'?settings.koreaAll:!settings.koreaAll&&settings.province===value:scope===settings.scope&&(scope!=='country'||settings.country===value);b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));b.addEventListener('click',()=>setView(scope,value));container.append(b);}
+  function menu(label){const details=document.createElement('details');details.className='view-menu';const summary=document.createElement('summary');summary.textContent=label;details.append(summary);const choices=document.createElement('div');details.append(choices);parent.append(details);return choices;}
+  button(isKorea()?t('korea'):t('world'),'world');
+  if(isKorea()){const choices=menu(t('states'));for(const p of korea.provinces||[])button(p.name,'province',p.code,choices);}
+  else{
+    const continents=menu(t('continents'));for(const id of Object.keys(CONTINENTS))button(continentName(id),id,null,continents);
+    const current=countries.find(f=>f.properties.id===settings.country),list=menu(settings.scope==='country'&&current?nameOf(current):t('country'));
+    for(const f of [...countries].sort((a,b)=>nameOf(a).localeCompare(nameOf(b),'ko')))button(nameOf(f),'country',f.properties.id,list);
+  }
 }
 function renderUnitPicker(){
   const choices=isKorea()?[['admin1','states'],['municipality','cities']]:[['continent','continents'],['country','country'],['admin1','states']];
   const parent=$('unitPicker');parent.replaceChildren();
-  for(const [unit,key]of choices){const b=document.createElement('button');b.textContent=t(key);b.dataset.unit=unit;b.classList.toggle('active',settings.unit===unit);b.setAttribute('aria-pressed',String(settings.unit===unit));b.disabled=!ready;b.addEventListener('click',()=>chooseUnit(unit));parent.append(b);}
+  for(const [unit,key]of choices){const b=document.createElement('button');b.textContent=t(key);b.dataset.unit=unit;b.classList.toggle('active',settings.unit===unit);b.setAttribute('aria-pressed',String(settings.unit===unit));b.disabled=!ready||!unitAllowed(unit);b.addEventListener('click',()=>chooseUnit(unit));parent.append(b);}
+  $('unitHint').hidden=isKorea()||settings.scope==='country';$('unitHint').textContent=t('selectCountryFirst');
 }
 function regionItem(f){
   const p=f.properties;
@@ -58,18 +80,18 @@ function regionItem(f){
   return {id:p.id,name,en:p.name,fullName:p.fullName};
 }
 async function loadAdminRegions(codes){
-  const results=new Array(codes.length);let next=0;
-  async function worker(){while(next<codes.length){const index=next++,code=codes[index];if(!adminCache[code])adminCache[code]=(await getJSON(`data/admin1/${code}.geojson`)).features;results[index]=adminCache[code];}}
-  await Promise.all(Array.from({length:Math.min(8,codes.length)},worker));return results.flat();
+  if(codes.length!==1)throw Error(t('selectCountryFirst'));
+  const code=codes[0];if(!adminCache[code])adminCache[code]=(await getJSON(`data/admin1/${code}.geojson`)).features;return adminCache[code];
 }
 function syncEnabled(){
   for(const id of EXPORTS)$(id).disabled=!ready||busy.has(id);
-  document.querySelectorAll('#unitPicker button').forEach(b=>b.disabled=!ready);
+  document.querySelectorAll('#unitPicker button').forEach(b=>b.disabled=!ready||!unitAllowed(b.dataset.unit));
+  document.querySelectorAll('#viewPicker button').forEach(b=>b.disabled=!ready);
   $('nextStep').disabled=!ready;$('mobileDownload').disabled=!ready||busy.has('downloadPng');
   $('koreaMap').disabled=!ready;$('worldMap').disabled=!ready;
 }
 function syncControls(){
-  renderUnitPicker();
+  renderViewPicker();renderUnitPicker();
   for(const key of Object.keys(DEFAULTS)){const el=$(key);if(!el)continue;if(el.type==='checkbox')el.checked=settings[key];else el.value=settings[key];}
   for(const key of ['lineWidth','markerSize','simplification','rounding','islandArea'])$(key+'Value').textContent=settings[key];
   document.querySelectorAll('[data-mode]').forEach(b=>{b.classList.toggle('active',b.dataset.mode===settings.mode);b.setAttribute('aria-pressed',String(b.dataset.mode===settings.mode));});
@@ -96,6 +118,7 @@ function addCrumb(label,action){
   for(const id of ['breadcrumbs','regionTrail']){const parent=$(id),b=document.createElement('button');b.textContent=label;b.addEventListener('click',action);if(parent.children.length){const sep=document.createElement('span');sep.textContent='›';sep.setAttribute('aria-hidden','true');parent.append(sep);}parent.append(b);}
 }
 function goContinent(id){if(!ready)return;settings.unit='country';settings.scope=id;if(id==='Antarctica')settings.antarctica=true;$('search').value='';syncControls();changeView();}
+function viewLabel(){return isKorea()?(settings.unit==='dong'?korea.cities.find(c=>c.code===settings.municipality)?.name:settings.koreaAll?t('korea'):korea.provinces.find(p=>p.code===settings.province)?.name)||t('korea'):settings.scope==='world'?t('world'):settings.scope==='country'?nameOf(countries.find(f=>f.properties.id===settings.country)):continentName(settings.scope);}
 function renderBreadcrumbs(){
   $('breadcrumbs').replaceChildren();$('regionTrail').replaceChildren();
   if(isKorea()){
@@ -111,10 +134,11 @@ function renderBreadcrumbs(){
   }
 }
 async function changeView(){
+  normalizeViewUnit();
   const token=++loadToken;ready=false;syncEnabled();$('loading').hidden=false;$('loading').textContent=t('loading');$('regionList').setAttribute('aria-busy','true');
   try{
     if(isKorea()){
-      if(settings.unit==='admin1')rawCurrent=provinceData;
+      if(settings.unit==='admin1')rawCurrent=settings.koreaAll?provinceData:provinceData.filter(f=>f.properties.province===settings.province);
       else if(settings.unit==='municipality')rawCurrent=settings.koreaAll?cityData:cityData.filter(f=>f.properties.province===settings.province);
       else{if(!dongCache[settings.municipality])dongCache[settings.municipality]=(await getJSON(`data/korea/dong/${settings.municipality}.geojson`)).features;if(token!==loadToken)return false;rawCurrent=dongCache[settings.municipality];}
     }else if(settings.unit==='admin1'){
@@ -129,7 +153,7 @@ async function changeView(){
     else items=rawCurrent.map(regionItem);
     items.sort((a,b)=>a.name.localeCompare(b.name,'ko'));
     allItems=settings.unit==='continent'?Object.entries(CONTINENTS).map(([id])=>({id,name:continentName(id),en:id})):settings.unit==='country'?countries.map(f=>({id:f.properties.id,name:nameOf(f),en:f.properties.name})):settings.unit==='municipality'?cityData.map(f=>({...regionItem(f),name:f.properties.fullName})):items;
-    $('viewName').textContent=isKorea()?({admin1:t('states'),municipality:t('cities'),dong:t('dongs')}[settings.unit]):settings.scope==='world'?t('world'):settings.scope==='country'?nameOf(countries.find(f=>f.properties.id===settings.country)):continentName(settings.scope);
+    $('viewName').textContent=viewLabel();
     ready=true;syncControls();resetZoom();renderBreadcrumbs();renderList();renderSelected();renderMap();renderExportRegions();persist();$('loading').hidden=true;return true;
   }catch(e){if(token!==loadToken)return false;ready=false;$('loading').textContent=e.name==='TimeoutError'?'로딩 시간이 길어지고 있어요. 연결을 확인한 뒤 다시 선택해 주세요.':e.message;$('regionList').replaceChildren();$('listCount').textContent='지역 없음';notify(e.message);return false;}
   finally{if(token===loadToken){$('regionList').setAttribute('aria-busy','false');syncEnabled();}}
@@ -138,7 +162,7 @@ function queryItems(){const q=$('search').value.trim().toLocaleLowerCase();retur
 function canDrill(item){return settings.unit==='continent'||(settings.unit==='country'&&!!manifest.admin1[item.id])||(isKorea()&&['admin1','municipality'].includes(settings.unit));}
 function drill(id){
   if(settings.unit==='continent'){settings.scope=id;settings.unit='country';if(id==='Antarctica')settings.antarctica=true;}
-  else if(settings.unit==='country'){settings.country=id;settings.scope='country';settings.unit='admin1';}
+  else if(settings.unit==='country'){settings.country=id;settings.scope='country';settings.unit='admin1';if(id==='KOR'){settings.family='korea';settings.koreaAll=true;}}
   else if(settings.unit==='admin1'&&isKorea()){settings.province=provinceData.find(f=>f.properties.id===id).properties.province;settings.unit='municipality';settings.koreaAll=false;}
   else if(settings.unit==='municipality'){const city=cityData.find(f=>f.properties.id===id).properties;settings.municipality=city.city;settings.province=city.province;settings.koreaAll=false;settings.unit='dong';}
   $('search').value='';syncControls();changeView();
@@ -350,8 +374,8 @@ $('downloadRegions').addEventListener('click',()=>exportAction('downloadRegions'
   const chosen=items.filter(i=>styleFor(i.id)),targets=chosen.length?chosen:items,zip=new window.JSZip();if(!targets.length)throw Error('다운로드할 지역이 없습니다.');
   for(const item of targets)zip.file(filename(item),await regionSvg(item.id).arrayBuffer());zip.file('README.txt',`Map for PPT\n${isKorea()?CREDIT+'\nhttps://github.com/vuski/admdongkor\n':'Natural Earth world boundaries\n'}SVG files are independent editable vector maps. Free-position pins are included in the full SVG/PPTX, not these region files.`);download(new Blob([await zip.generateAsync({type:'uint8array',compression:'DEFLATE'})],{type:'application/zip'}),'map-for-ppt-regions.zip');notify(`${t('done')} ${targets.length} SVG`);
 }));
-function goWorld(){if(!ready)return;settings.unit='continent';settings.scope='world';$('search').value='';syncControls();changeView();}
-function goKorea(unit='admin1'){if(!ready)return;settings.country='KOR';settings.scope='country';settings.unit=unit;settings.koreaAll=false;$('search').value='';syncControls();changeView();}
+function goWorld(){if(!ready)return;settings.family='world';settings.unit='continent';settings.scope='world';$('search').value='';syncControls();changeView();}
+function goKorea(unit='admin1'){if(!ready)return;settings.family='korea';settings.country='KOR';settings.scope='country';settings.unit=unit;settings.koreaAll=unit==='admin1';$('search').value='';syncControls();changeView();}
 $('worldMap').addEventListener('click',goWorld);$('koreaMap').addEventListener('click',()=>goKorea());
 for(const key of ['alaska','hawaii','greenland','antarctica','mainland','usInset','islandArea'])$(key).addEventListener('change',()=>{
   if(!ready)return;const el=$(key);settings[key]=el.type==='checkbox'?el.checked:typeof DEFAULTS[key]==='number'?Number(el.value):el.value;
@@ -389,7 +413,7 @@ document.addEventListener('languagechange',()=>{
  if(settings.unit==='continent')items=items.map(i=>({...i,name:continentName(i.id)}));
  else items=rawCurrent.map(regionItem);
  if(settings.unit==='country')allItems=countries.map(f=>({id:f.properties.id,name:nameOf(f),en:f.properties.name}));else allItems=settings.unit==='continent'?Object.keys(CONTINENTS).map(id=>({id,name:continentName(id),en:id})):settings.unit==='municipality'?cityData.map(f=>({...regionItem(f),name:f.properties.fullName})):items;
- $('viewName').textContent=isKorea()?t(settings.unit==='admin1'?'states':settings.unit==='municipality'?'cities':'dongs'):settings.scope==='world'?t('world'):settings.scope==='country'?nameOf(countries.find(f=>f.properties.id===settings.country)):continentName(settings.scope);
+ $('viewName').textContent=viewLabel();
  $('pinCount').textContent=`${t('pins')} · ${pins.length}`;updateCanvasHelp();syncControls();
  setStep(step);renderBreadcrumbs();renderList();renderSelected();renderMap();renderExportRegions();
 });

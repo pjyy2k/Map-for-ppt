@@ -104,5 +104,7 @@
   "confirmDeletePin": "Diesen Pin und die verbundene Route löschen?",
   "dropQuestion": "Was möchten Sie nach dem Ablegen tun?",
   "cancel": "Abbrechen",
-  "municipalSupport": "Gemeindegrenzen sind derzeit für Südkorea verfügbar."
+  "municipalSupport": "Gemeindegrenzen sind derzeit für Südkorea verfügbar.",
+  "viewUnit": "Ansichtsbereich",
+  "selectCountryFirst": "Wählen Sie zuerst ein Land im Ansichtsbereich, dann Bundesländer oder Provinzen."
 }

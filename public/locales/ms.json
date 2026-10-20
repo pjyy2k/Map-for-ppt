@@ -104,5 +104,7 @@
   "confirmDeletePin": "Padam pin ini dan laluan yang disambungkan?",
   "dropQuestion": "Apakah yang anda mahu lakukan selepas melepaskan?",
   "cancel": "Batal",
-  "municipalSupport": "Sempadan perbandaran kini tersedia untuk Korea Selatan."
+  "municipalSupport": "Sempadan perbandaran kini tersedia untuk Korea Selatan.",
+  "viewUnit": "Kawasan paparan",
+  "selectCountryFirst": "Pilih negara dalam kawasan paparan sebelum memilih negeri atau wilayah."
 }

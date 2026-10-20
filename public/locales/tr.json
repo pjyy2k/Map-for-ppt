@@ -104,5 +104,7 @@
   "confirmDeletePin": "Bu iğne ve bağlı rotası silinsin mi?",
   "dropQuestion": "Bıraktıktan sonra ne yapmak istersiniz?",
   "cancel": "İptal",
-  "municipalSupport": "Belediye sınırları şu anda Güney Kore için kullanılabilir."
+  "municipalSupport": "Belediye sınırları şu anda Güney Kore için kullanılabilir.",
+  "viewUnit": "Görüntüleme alanı",
+  "selectCountryFirst": "İl veya eyalet seçmeden önce görüntüleme alanından ülke seçin."
 }

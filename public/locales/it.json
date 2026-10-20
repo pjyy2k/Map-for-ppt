@@ -104,5 +104,7 @@
   "confirmDeletePin": "Eliminare questo segnaposto e il percorso collegato?",
   "dropQuestion": "Cosa vuoi fare dopo il rilascio?",
   "cancel": "Annulla",
-  "municipalSupport": "I confini comunali coprono attualmente la Corea del Sud."
+  "municipalSupport": "I confini comunali coprono attualmente la Corea del Sud.",
+  "viewUnit": "Area visualizzata",
+  "selectCountryFirst": "Scegli un paese nell’area visualizzata prima di selezionare province o stati."
 }

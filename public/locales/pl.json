@@ -104,5 +104,7 @@
   "confirmDeletePin": "Usunąć tę pinezkę i powiązaną trasę?",
   "dropQuestion": "Co zrobić po upuszczeniu?",
   "cancel": "Anuluj",
-  "municipalSupport": "Granice gmin są obecnie dostępne dla Korei Południowej."
+  "municipalSupport": "Granice gmin są obecnie dostępne dla Korei Południowej.",
+  "viewUnit": "Obszar widoku",
+  "selectCountryFirst": "Wybierz kraj w obszarze widoku przed wyborem regionów."
 }

@@ -104,5 +104,7 @@
   "confirmDeletePin": "Delete this pin and its connected route?",
   "dropQuestion": "What would you like to do after dropping?",
   "cancel": "Cancel",
-  "municipalSupport": "Municipal boundaries currently cover South Korea."
+  "municipalSupport": "Municipal boundaries currently cover South Korea.",
+  "viewUnit": "View area",
+  "selectCountryFirst": "Choose a country in View area before selecting states/provinces."
 }

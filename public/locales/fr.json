@@ -104,5 +104,7 @@
   "confirmDeletePin": "Supprimer cette épingle et son trajet associé ?",
   "dropQuestion": "Que souhaitez-vous faire après le dépôt ?",
   "cancel": "Annuler",
-  "municipalSupport": "Les limites municipales couvrent actuellement la Corée du Sud."
+  "municipalSupport": "Les limites municipales couvrent actuellement la Corée du Sud.",
+  "viewUnit": "Zone affichée",
+  "selectCountryFirst": "Choisissez un pays dans la zone affichée avant de sélectionner les provinces ou États."
 }

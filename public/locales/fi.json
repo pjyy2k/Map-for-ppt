@@ -104,5 +104,7 @@
   "confirmDeletePin": "Poistetaanko tämä nasta ja siihen liittyvä reitti?",
   "dropQuestion": "Mitä haluat tehdä pudottamisen jälkeen?",
   "cancel": "Peruuta",
-  "municipalSupport": "Kuntarajat ovat tällä hetkellä saatavilla Etelä-Korealle."
+  "municipalSupport": "Kuntarajat ovat tällä hetkellä saatavilla Etelä-Korealle.",
+  "viewUnit": "Näkymäalue",
+  "selectCountryFirst": "Valitse ensin maa näkymäalueesta ennen alueiden valintaa."
 }

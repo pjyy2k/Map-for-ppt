@@ -104,5 +104,7 @@
   "confirmDeletePin": "Ștergeți acest marcaj și traseul conectat?",
   "dropQuestion": "Ce doriți să faceți după eliberare?",
   "cancel": "Anulare",
-  "municipalSupport": "Limitele municipale sunt disponibile în prezent pentru Coreea de Sud."
+  "municipalSupport": "Limitele municipale sunt disponibile în prezent pentru Coreea de Sud.",
+  "viewUnit": "Zona afișată",
+  "selectCountryFirst": "Alegeți o țară în zona afișată înainte de a selecta regiuni."
 }

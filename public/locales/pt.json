@@ -104,5 +104,7 @@
   "confirmDeletePin": "Excluir este pino e sua rota conectada?",
   "dropQuestion": "O que deseja fazer após soltar?",
   "cancel": "Cancelar",
-  "municipalSupport": "Os limites municipais cobrem atualmente a Coreia do Sul."
+  "municipalSupport": "Os limites municipais cobrem atualmente a Coreia do Sul.",
+  "viewUnit": "Área de visualização",
+  "selectCountryFirst": "Escolha um país na área de visualização antes de selecionar estados ou províncias."
 }

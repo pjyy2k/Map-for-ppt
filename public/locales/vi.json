@@ -104,5 +104,7 @@
   "confirmDeletePin": "Xóa ghim này và đường đi được kết nối?",
   "dropQuestion": "Bạn muốn làm gì sau khi thả?",
   "cancel": "Hủy",
-  "municipalSupport": "Ranh giới quận huyện hiện có cho Hàn Quốc."
+  "municipalSupport": "Ranh giới quận huyện hiện có cho Hàn Quốc.",
+  "viewUnit": "Phạm vi hiển thị",
+  "selectCountryFirst": "Chọn quốc gia trong phạm vi hiển thị trước khi chọn tỉnh hoặc bang."
 }

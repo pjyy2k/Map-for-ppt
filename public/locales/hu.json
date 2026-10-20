@@ -104,5 +104,7 @@
   "confirmDeletePin": "Törli ezt a jelölőt és a hozzá kapcsolódó útvonalat?",
   "dropQuestion": "Mit szeretne tenni az elengedés után?",
   "cancel": "Mégse",
-  "municipalSupport": "A településhatárok jelenleg Dél-Koreára érhetők el."
+  "municipalSupport": "A településhatárok jelenleg Dél-Koreára érhetők el.",
+  "viewUnit": "Nézeti terület",
+  "selectCountryFirst": "A megyék kiválasztása előtt válasszon országot a nézeti területen."
 }

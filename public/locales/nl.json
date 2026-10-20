@@ -104,5 +104,7 @@
   "confirmDeletePin": "Deze pin en de bijbehorende route verwijderen?",
   "dropQuestion": "Wat wil je na het neerzetten doen?",
   "cancel": "Annuleren",
-  "municipalSupport": "Gemeentegrenzen zijn momenteel beschikbaar voor Zuid-Korea."
+  "municipalSupport": "Gemeentegrenzen zijn momenteel beschikbaar voor Zuid-Korea.",
+  "viewUnit": "Weergavegebied",
+  "selectCountryFirst": "Kies eerst een land in het weergavegebied voordat je provincies selecteert."
 }

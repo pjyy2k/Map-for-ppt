@@ -104,5 +104,7 @@
   "confirmDeletePin": "删除此图钉及其连接路径？",
   "dropQuestion": "放下后要执行什么操作？",
   "cancel": "取消",
-  "municipalSupport": "市郡区边界目前支持韩国。"
+  "municipalSupport": "市郡区边界目前支持韩国。",
+  "viewUnit": "查看范围",
+  "selectCountryFirst": "请先在查看范围中选择国家，再选择省或州。"
 }

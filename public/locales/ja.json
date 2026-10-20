@@ -104,5 +104,7 @@
   "confirmDeletePin": "このピンと接続された経路を削除しますか？",
   "dropQuestion": "ドロップ後の動作を選んでください。",
   "cancel": "キャンセル",
-  "municipalSupport": "市郡区の境界は現在、韓国に対応しています。"
+  "municipalSupport": "市郡区の境界は現在、韓国に対応しています。",
+  "viewUnit": "表示範囲",
+  "selectCountryFirst": "都道府県・州を選ぶ前に、表示範囲で国を選んでください。"
 }

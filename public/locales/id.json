@@ -104,5 +104,7 @@
   "confirmDeletePin": "Hapus pin ini dan rute yang terhubung?",
   "dropQuestion": "Apa yang ingin dilakukan setelah melepas?",
   "cancel": "Batal",
-  "municipalSupport": "Batas kota/kabupaten saat ini tersedia untuk Korea Selatan."
+  "municipalSupport": "Batas kota/kabupaten saat ini tersedia untuk Korea Selatan.",
+  "viewUnit": "Area tampilan",
+  "selectCountryFirst": "Pilih negara di area tampilan sebelum memilih provinsi."
 }

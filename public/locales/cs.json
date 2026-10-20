@@ -104,5 +104,7 @@
   "confirmDeletePin": "Smazat tento špendlík a připojenou trasu?",
   "dropQuestion": "Co chcete udělat po upuštění?",
   "cancel": "Zrušit",
-  "municipalSupport": "Hranice obcí jsou nyní dostupné pro Jižní Koreu."
+  "municipalSupport": "Hranice obcí jsou nyní dostupné pro Jižní Koreu.",
+  "viewUnit": "Oblast zobrazení",
+  "selectCountryFirst": "Před výběrem krajů zvolte zemi v oblasti zobrazení."
 }

@@ -104,5 +104,7 @@
   "confirmDeletePin": "Ta bort den här nålen och dess anslutna rutt?",
   "dropQuestion": "Vad vill du göra efter att du släppt?",
   "cancel": "Avbryt",
-  "municipalSupport": "Kommungränser finns för närvarande för Sydkorea."
+  "municipalSupport": "Kommungränser finns för närvarande för Sydkorea.",
+  "viewUnit": "Visningsområde",
+  "selectCountryFirst": "Välj ett land i visningsområdet innan du väljer regioner."
 }

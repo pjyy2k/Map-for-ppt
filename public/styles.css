@@ -284,3 +284,11 @@ button:hover { background-color:rgba(213,234,226,.7); }
 .unit-picker button { flex:1; min-height:40px; padding:8px 10px; font-size:12px; color:#526d69; white-space:nowrap; }
 .unit-picker button.active { color:var(--green); background:#ffffffde; box-shadow:0 2px 8px #24484012; font-weight:650; }
 @media(max-width:650px) { .unit-picker button { min-height:44px; font-size:13px; } }
+
+.view-picker { position:relative; align-items:start; }
+.view-menu { flex:1; min-width:65px; position:relative; }
+.view-menu summary { min-height:40px; padding:10px 8px; cursor:pointer; font-size:12px; color:#526d69; }
+.view-menu>div { position:absolute; top:100%; inset-inline-start:0; width:230px; max-width:calc(100vw - 48px); max-height:260px; overflow:auto; z-index:35; border:1px solid #d8e5df; border-radius:12px; background:#fafffd; box-shadow:0 10px 30px #183c3526; padding:6px; }
+.view-menu:last-child>div { inset-inline-start:auto; inset-inline-end:0; }
+.view-menu>div button { display:block; width:100%; text-align:start; min-height:40px; }
+@media(max-width:650px) { .view-menu summary,.view-menu>div button { min-height:44px; } }

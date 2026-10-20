@@ -206,9 +206,14 @@ function renderPins(){
   svg.select('[data-pins-layer]').remove();const layer=svg.append('g').attr('data-pins-layer','true'),[w,h]=dimensions();
   for(const pin of pins)if(pin.origin){
     const x=pin.origin.x*w,y=pin.origin.y*h,tx=pin.x*w,ty=pin.y*h;
-    if(Math.hypot(tx-x,ty-y)<5)continue;
+    const dx=tx-x,dy=ty-y,distance=Math.hypot(dx,dy);
+    if(distance<5)continue;
+    // A bowed flight path with the same start and destination points.
+    const side=dx>=0?1:-1,bend=Math.min(distance*.38,200);
+    const cx=Math.max(12,Math.min(w-12,(x+tx)/2+dy/distance*bend*side));
+    const cy=Math.max(12,Math.min(h-12,(y+ty)/2-dx/distance*bend*side));
     const route=layer.append('g').attr('data-route',pin.id);
-    route.append('path').attr('d',`M${x} ${y} L${tx} ${ty}`).attr('fill','none').attr('stroke',settings.accent).attr('stroke-width',4).attr('stroke-dasharray','1 12').attr('stroke-linecap','round').attr('pointer-events','none');
+    route.append('path').attr('d',`M${x} ${y} Q${cx} ${cy} ${tx} ${ty}`).attr('fill','none').attr('stroke',settings.accent).attr('stroke-width',4).attr('stroke-dasharray','1 12').attr('stroke-linecap','round').attr('pointer-events','none');
     route.append('circle').attr('cx',x).attr('cy',y).attr('r',9).attr('fill','#fff').attr('stroke',settings.accent).attr('stroke-width',4).attr('pointer-events','none');
     if(step===2&&pin.id===selectedPinId)route.append('circle').attr('cx',x).attr('cy',y).attr('r',15).attr('fill','transparent').attr('data-route-origin',pin.id).attr('data-editor','true').style('touch-action','none');
   }

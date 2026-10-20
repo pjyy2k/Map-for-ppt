@@ -267,3 +267,8 @@ button:hover { background-color:rgba(213,234,226,.7); }
 .workspace[data-current-step="2"] #map.pin-mode .region { cursor:crosshair; }
 
 .workspace[data-current-step="2"] #map.pin-ready,.workspace[data-current-step="2"] #map.pin-ready .region { cursor:crosshair; }
+
+/* Avoid native SVG focus rectangles while keeping keyboard region outlines. */
+#map,#map .region,#map [data-pin] { outline:none; -webkit-user-select:none; user-select:none; }
+#map [data-pin]:focus-visible { filter:drop-shadow(0 0 4px #176b58); }
+#map [data-route-origin] { cursor:move; touch-action:none; }

@@ -95,5 +95,9 @@
   "busy": "Préparation…",
   "done": "Terminé.",
   "error": "Impossible de terminer. Veuillez réessayer.",
-  "pinCanvasHint": "Cliquez sur la carte pour ajouter une épingle. Si une épingle est sélectionnée, cliquez dans un espace vide pour la désélectionner."
+  "pinCanvasHint": "Cliquez sur la carte pour ajouter une épingle. Si une épingle est sélectionnée, cliquez dans un espace vide pour la désélectionner.",
+  "pinDrag": "Glisser l’épingle",
+  "route": "Laisser un trajet pointillé",
+  "moveOnly": "Déplacer seulement",
+  "clearRoute": "Effacer le trajet"
 }

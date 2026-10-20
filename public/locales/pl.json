@@ -95,5 +95,9 @@
   "busy": "Przygotowywanie…",
   "done": "Gotowe.",
   "error": "Nie udało się zakończyć. Spróbuj ponownie.",
-  "pinCanvasHint": "Kliknij mapę, aby dodać pinezkę. Gdy pinezka jest wybrana, kliknij puste miejsce, aby anulować wybór."
+  "pinCanvasHint": "Kliknij mapę, aby dodać pinezkę. Gdy pinezka jest wybrana, kliknij puste miejsce, aby anulować wybór.",
+  "pinDrag": "Przeciąganie pinezki",
+  "route": "Pozostaw trasę kropkowaną",
+  "moveOnly": "Tylko przesuń",
+  "clearRoute": "Usuń trasę"
 }

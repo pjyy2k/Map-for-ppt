@@ -95,5 +95,9 @@
   "busy": "Forbereder…",
   "done": "Færdig.",
   "error": "Handlingen mislykkedes. Prøv igen.",
-  "pinCanvasHint": "Klik på kortet for at tilføje en knappenål. Når en nål er valgt, klik på et tomt sted for at fravælge den."
+  "pinCanvasHint": "Klik på kortet for at tilføje en knappenål. Når en nål er valgt, klik på et tomt sted for at fravælge den.",
+  "pinDrag": "Træk knappenål",
+  "route": "Efterlad prikket rute",
+  "moveOnly": "Flyt kun",
+  "clearRoute": "Ryd rute"
 }

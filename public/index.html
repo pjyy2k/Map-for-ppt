@@ -5,9 +5,9 @@
   <meta name="description" content="지역을 고르고 스타일을 더해 PPT용 지도를 만드세요. 한국 읍면동부터 세계 지도까지, PNG·SVG·편집 가능한 PPT로 다운로드합니다.">
   <title>Map for PPT — 슬라이드를 위한 지도</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%23176b58'/%3E%3Cpath d='m8 12 8-4 8 4 8-4v22l-8 4-8-4-8 4z' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css?v=11">
+  <link rel="stylesheet" href="styles.css?v=12">
   <script src="vendor/d3.min.js" defer></script><script src="vendor/topology.min.js" defer></script><script src="vendor/jszip.min.js" defer></script>
-  <script type="module" src="app.js?v=11"></script>
+  <script type="module" src="app.js?v=12"></script>
 </head>
 <body>
 <header class="topbar">
@@ -45,18 +45,20 @@
       <label class="check-line"><input type="checkbox" id="showLabels">선택 지역 이름 표시</label><label class="check-line"><input type="checkbox" id="legend">범례 표시</label>
       <details class="options"><summary>지도 모양과 색상</summary>
         <label for="corners">단순화 모드</label><select id="corners"><option value="round">동글게</option><option value="angular">각지게</option></select>
+        <div id="roundingField"><label for="rounding" class="range-label">동글게 <output id="roundingValue">60</output></label><input type="range" id="rounding" min="0" max="100" value="60"></div>
         <label for="simplification" class="range-label">경계 단순화 <output id="simplificationValue">0</output></label><input type="range" id="simplification" min="0" max="100" step="1" value="0">
         <div class="color-row"><label for="baseColor">기본 육지</label><input type="color" id="baseColor" value="#e3e9e7"></div><div class="color-row"><label for="lineColor">경계선</label><input type="color" id="lineColor" value="#ffffff"></div>
         <label for="lineWidth" class="range-label">경계선 두께 <output id="lineWidthValue">1</output></label><input type="range" id="lineWidth" min="0.25" max="3" step="0.25" value="1">
         <label for="markerSize" class="range-label">지역 깃발 크기 <output id="markerSizeValue">16</output></label><input type="range" id="markerSize" min="8" max="32" step="1" value="16">
       </details>
       <details class="options"><summary>핀 추가와 편집</summary>
+        <label for="pinDragAction">핀 드래그</label><select id="pinDragAction"><option value="route">점선 경로 남기기</option><option value="move">위치만 이동</option></select>
         <button id="addPin" class="secondary full">＋ 지도에 핀 찍기</button><p class="help">버튼을 누른 뒤 지도를 클릭하세요. 핀을 드래그해 옮길 수 있어요.</p>
         <div id="pinEditor" hidden><label for="pinShape">핀 모양</label><select id="pinShape"><option value="pin">위치 핀</option><option value="flag">깃발</option><option value="circle">원</option></select>
           <div class="color-row"><label for="pinColor">핀 색상</label><input id="pinColor" type="color" value="#d57464"></div>
           <label for="pinSize" class="range-label">핀 크기 <output id="pinSizeValue">24</output></label><input id="pinSize" type="range" min="8" max="64" value="24">
           <label class="check-line"><input id="pinOutline" type="checkbox" checked>핀 테두리 표시</label>
-          <div class="button-pair"><button id="duplicatePin" class="secondary">복제</button><button id="deletePin" class="secondary">삭제</button></div><p class="help">Ctrl/Cmd+C → Ctrl/Cmd+V</p>
+          <button id="clearRoute" class="secondary full">경로 지우기</button><div class="button-pair"><button id="duplicatePin" class="secondary">복제</button><button id="deletePin" class="secondary">삭제</button></div><p class="help">Ctrl/Cmd+C → Ctrl/Cmd+V</p>
         </div><p id="pinCount" class="help">추가한 핀 0개</p>
       </details>
 

@@ -95,5 +95,9 @@
   "busy": "Preparing…",
   "done": "Done.",
   "error": "Could not complete the action. Please try again.",
-  "pinCanvasHint": "Click the map to add a pin. With a pin selected, click an empty spot to deselect."
+  "pinCanvasHint": "Click the map to add a pin. With a pin selected, click an empty spot to deselect.",
+  "pinDrag": "Drag pin",
+  "route": "Leave a dotted route",
+  "moveOnly": "Move only",
+  "clearRoute": "Clear route"
 }

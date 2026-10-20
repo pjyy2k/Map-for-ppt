@@ -35,7 +35,7 @@ export function svgToSlideXml(svg,width,height) {
   const emuWidth=12192000,scale=emuWidth/width,emuHeight=number(height*scale);
   let id=1;const collected=[];
   const transformPoint=(x,y,m)=>[(x*m[0]+m[1])*scale,(y*m[0]+m[2])*scale];
-  function shape(name,commands,fill,stroke,lineWidth) {
+  function shape(name,commands,fill,stroke,lineWidth,dashed=false) {
     if(!commands.length)return '';
     const coords=commands.flatMap(c=>c.values),xs=coords.filter((_,i)=>i%2===0),ys=coords.filter((_,i)=>i%2);
     if(!xs.length)return '';
@@ -46,7 +46,7 @@ export function svgToSlideXml(svg,width,height) {
       const pts=[];for(let j=0;j<c.values.length;j+=2)pts.push(points(c.values[j]-minx,c.values[j+1]-miny));
       const tag={M:'moveTo',L:'lnTo',C:'cubicBezTo',Q:'quadBezTo'}[c.type];return `<a:${tag}>${pts.join('')}</a:${tag}>`;
     }).join('');
-    const line=stroke&&stroke!=='none'?`<a:ln w="${number(lineWidth)}">${solid(stroke)}<a:prstDash val="solid"/><a:round/></a:ln>`:'<a:ln><a:noFill/></a:ln>';
+    const line=stroke&&stroke!=='none'?`<a:ln w="${number(lineWidth)}">${solid(stroke)}<a:prstDash val="${dashed?'sysDot':'solid'}"/><a:round/></a:ln>`:'<a:ln><a:noFill/></a:ln>';
     return `<p:sp><p:nvSpPr><p:cNvPr id="${++id}" name="${esc(name)}"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr><p:spPr><a:xfrm><a:off x="${number(minx)}" y="${number(miny)}"/><a:ext cx="${number(w)}" cy="${number(h)}"/></a:xfrm><a:custGeom><a:avLst/><a:gdLst/><a:ahLst/><a:cxnLst/><a:rect l="0" t="0" r="r" b="b"/><a:pathLst><a:path w="${number(w)}" h="${number(h)}">${geometry}</a:path></a:pathLst></a:custGeom>${solid(fill)}${line}</p:spPr></p:sp>`;
   }
   function walk(node,parent=[1,0,0],inherited={fill:'#233c35',stroke:'none',lineWidth:1}) {
@@ -55,7 +55,7 @@ export function svgToSlideXml(svg,width,height) {
     const tag=node.localName,name=node.getAttribute('aria-label')||node.getAttribute('data-id')||node.getAttribute('data-pin')||tag;
     if(tag==='path'){
       const commands=pathCommands(node.getAttribute('d')||'').map(c=>({type:c.type,values:c.values.flatMap((_,i,a)=>i%2?[]:transformPoint(a[i],a[i+1],m))}));
-      return shape(name,commands,style.fill,style.stroke,style.lineWidth*m[0]*scale);
+      return shape(name,commands,style.fill,style.stroke,style.lineWidth*m[0]*scale,!!node.getAttribute('stroke-dasharray'));
     }
     if(tag==='circle') {
       const cx=Number(node.getAttribute('cx')||0),cy=Number(node.getAttribute('cy')||0),r=Number(node.getAttribute('r')||0);

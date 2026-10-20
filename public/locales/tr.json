@@ -95,5 +95,9 @@
   "busy": "Hazırlanıyor…",
   "done": "Tamamlandı.",
   "error": "İşlem tamamlanamadı. Tekrar deneyin.",
-  "pinCanvasHint": "İğne eklemek için haritaya tıklayın. Bir iğne seçiliyken boş bir yere tıklayarak seçimi kaldırın."
+  "pinCanvasHint": "İğne eklemek için haritaya tıklayın. Bir iğne seçiliyken boş bir yere tıklayarak seçimi kaldırın.",
+  "pinDrag": "İğneyi sürükle",
+  "route": "Noktalı rota bırak",
+  "moveOnly": "Yalnızca taşı",
+  "clearRoute": "Rotayı sil"
 }

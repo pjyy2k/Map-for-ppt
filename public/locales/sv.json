@@ -95,5 +95,9 @@
   "busy": "Förbereder…",
   "done": "Klart.",
   "error": "Åtgärden misslyckades. Försök igen.",
-  "pinCanvasHint": "Klicka på kartan för att lägga till en nål. När en nål är vald, klicka på en tom yta för att avmarkera."
+  "pinCanvasHint": "Klicka på kartan för att lägga till en nål. När en nål är vald, klicka på en tom yta för att avmarkera.",
+  "pinDrag": "Dra nål",
+  "route": "Lämna prickad rutt",
+  "moveOnly": "Flytta endast",
+  "clearRoute": "Rensa rutt"
 }

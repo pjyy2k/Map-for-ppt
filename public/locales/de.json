@@ -95,5 +95,9 @@
   "busy": "Wird vorbereitet…",
   "done": "Fertig.",
   "error": "Aktion fehlgeschlagen. Bitte erneut versuchen.",
-  "pinCanvasHint": "Klicken Sie auf die Karte, um einen Pin hinzuzufügen. Klicken Sie bei ausgewähltem Pin auf eine freie Stelle, um die Auswahl aufzuheben."
+  "pinCanvasHint": "Klicken Sie auf die Karte, um einen Pin hinzuzufügen. Klicken Sie bei ausgewähltem Pin auf eine freie Stelle, um die Auswahl aufzuheben.",
+  "pinDrag": "Pin ziehen",
+  "route": "Gepunktete Route hinterlassen",
+  "moveOnly": "Nur verschieben",
+  "clearRoute": "Route löschen"
 }

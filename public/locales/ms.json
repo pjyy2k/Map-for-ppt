@@ -95,5 +95,9 @@
   "busy": "Menyediakan…",
   "done": "Selesai.",
   "error": "Tindakan gagal. Sila cuba lagi.",
-  "pinCanvasHint": "Klik peta untuk menambah pin. Apabila pin dipilih, klik ruang kosong untuk membatalkan pilihan."
+  "pinCanvasHint": "Klik peta untuk menambah pin. Apabila pin dipilih, klik ruang kosong untuk membatalkan pilihan.",
+  "pinDrag": "Seret pin",
+  "route": "Tinggalkan laluan bertitik",
+  "moveOnly": "Alih sahaja",
+  "clearRoute": "Padam laluan"
 }

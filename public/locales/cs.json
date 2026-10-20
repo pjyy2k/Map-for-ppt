@@ -95,5 +95,9 @@
   "busy": "Příprava…",
   "done": "Hotovo.",
   "error": "Akci nelze dokončit. Zkuste to znovu.",
-  "pinCanvasHint": "Kliknutím na mapu přidejte špendlík. Když je špendlík vybrán, klikněte na prázdné místo pro zrušení výběru."
+  "pinCanvasHint": "Kliknutím na mapu přidejte špendlík. Když je špendlík vybrán, klikněte na prázdné místo pro zrušení výběru.",
+  "pinDrag": "Přetáhnout špendlík",
+  "route": "Zanechat tečkovanou trasu",
+  "moveOnly": "Pouze přesunout",
+  "clearRoute": "Smazat trasu"
 }

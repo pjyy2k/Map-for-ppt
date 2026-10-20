@@ -1,12 +1,12 @@
-import {CONTINENTS,MODES,COLORS,SIZE,DEFAULTS,initialSelections,collection,nameOf,validateProject,visibleFeature,filteredCountries} from './core.js?v=7';
-import {createEditablePptx} from './export.js?v=3';
-import {initLanguage,language,t,continentName} from './i18n.js?v=7';
+import {CONTINENTS,MODES,COLORS,SIZE,DEFAULTS,initialSelections,collection,nameOf,validateProject,visibleFeature,filteredCountries} from './core.js?v=12';
+import {createEditablePptx} from './export.js?v=12';
+import {initLanguage,language,t,continentName} from './i18n.js?v=12';
 const $=id=>document.getElementById(id),d3=window.d3,STORAGE='map-for-ppt:v1';
 const EXPORTS=['downloadPng','downloadSvg','downloadPptx','downloadRegions','downloadSingle'];
 const CREDIT='통계청 SGIS · vuski/admdongkor (CC BY 4.0) · 2025-01-01 · 경계 간소화';
 let settings={...DEFAULTS},selections=initialSelections(),pins=[],countries=[],manifest={},korea={},provinceData=[],cityData=[],current=[],rawCurrent=[],items=[],allItems=[],adminCache={},dongCache={};
 let step=1,loadToken=0,ready=false,zoom={k:1,x:0,y:0},drawn=[],path,projection,toastTimer,saveTimer,focusIds=null,contextFeatures=[],weightedTopology=null,geometryKey='',pinMode=false,selectedPinId=null,copiedPin=null;
-let dragging=false,dragDistance=0,dragStart=null,dragPinId=null,pointerStartedOnPin=false;
+let dragging=false,dragDistance=0,dragStart=null,dragPinId=null,pointerStartedOnPin=false,dragKind='move';
 const busy=new Set(),svg=d3.select('#map');
 const selection=()=>selections[settings.unit];
 const styleFor=id=>selection()[id];
@@ -32,7 +32,7 @@ function setStep(value,focus=false){
 function updateCanvasHelp(){ $('canvasHelp').textContent=step===2?t('pinCanvasHint'):t('canvasHint'); }
 function syncMapInteraction(){
   for(const region of document.querySelectorAll('#map .region')){
-    region.setAttribute('tabindex',step===1?'0':'-1');
+    if(step===1)region.setAttribute('tabindex','0');else{region.removeAttribute('tabindex');region.setAttribute('focusable','false');if(document.activeElement===region)region.blur?.();}
     if(step===1){region.setAttribute('role','checkbox');region.setAttribute('aria-checked',String(!!styleFor(region.dataset.id)));}
     else{region.removeAttribute('role');region.removeAttribute('aria-checked');}
   }
@@ -44,10 +44,11 @@ function syncEnabled(){
 }
 function syncControls(){
   for(const key of Object.keys(DEFAULTS)){const el=$(key);if(!el)continue;if(el.type==='checkbox')el.checked=settings[key];else el.value=settings[key];}
-  for(const key of ['lineWidth','markerSize','simplification','islandArea'])$(key+'Value').textContent=settings[key];
+  for(const key of ['lineWidth','markerSize','simplification','rounding','islandArea'])$(key+'Value').textContent=settings[key];
   document.querySelectorAll('[data-mode]').forEach(b=>{b.classList.toggle('active',b.dataset.mode===settings.mode);b.setAttribute('aria-pressed',String(b.dataset.mode===settings.mode));});
   document.querySelectorAll('[data-color]').forEach(b=>{b.classList.toggle('active',b.dataset.color===settings.accent);b.setAttribute('aria-label',t('color')+' '+b.dataset.color);});
   $('koreaMap').classList.toggle('active',isKorea());$('worldMap').classList.toggle('active',!isKorea());
+  $('roundingField').hidden=settings.corners!=='round';
   $('backgroundField').hidden=settings.transparent;
   $('mapStage').style.aspectRatio=dimensions().join('/');$('aspectTag').textContent={wide:'16:9',standard:'4:3',square:'1:1'}[settings.ratio];
   $('mapStage').style.backgroundColor=settings.transparent?'#ffffff':settings.background;$('mapStage').style.backgroundImage=settings.transparent?'':'none';
@@ -129,15 +130,25 @@ function renderSelected(){
   for(const item of selected){const s=styleFor(item.id),row=document.createElement('div');row.className='selected-item';const color=document.createElement('input');color.type='color';color.value=s.color;color.setAttribute('aria-label',item.name+' '+t('color'));color.addEventListener('input',()=>{s.color=color.value;renderMap();persist();});const name=document.createElement('span');name.textContent=item.name+(visibleIds.has(item.id)?'':' · '+t('hidden'));const mode=document.createElement('select');mode.setAttribute('aria-label',item.name+' '+t('style'));for(const [value,label]of Object.entries(MODES)){const option=document.createElement('option');option.value=value;option.textContent=t(value);mode.append(option);}mode.value=s.mode;mode.addEventListener('change',()=>{s.mode=mode.value;renderMap();persist();});const remove=document.createElement('button');remove.textContent='×';remove.setAttribute('aria-label',item.name+' '+t('clear'));remove.addEventListener('click',()=>toggleRegion(item.id));row.append(color,name,mode,remove);parent.append(row);}
 }
 function smoothTopology(topo){
+  const strength=settings.rounding/100,passes=Math.round(strength*10);
   return {...topo,arcs:topo.arcs.map(arc=>{
-    if(arc.length<3)return arc;
-    const result=[arc[0]];
-    for(let i=0;i<arc.length-1;i++){const a=arc[i],b=arc[i+1];result.push([a[0]*.75+b[0]*.25,a[1]*.75+b[1]*.25],[a[0]*.25+b[0]*.75,a[1]*.25+b[1]*.75]);}
-    result.push(arc.at(-1));return result;
+    if(arc.length<3||!strength)return arc;
+    const closed=arc[0][0]===arc.at(-1)[0]&&arc[0][1]===arc.at(-1)[1];
+    let points=closed?arc.slice(0,-1):arc;
+    // Shared arc endpoints stay fixed, so neighboring regions retain matching borders.
+    for(let n=0;n<passes;n++)points=points.map((p,i)=>{
+      if(!closed&&(i===0||i===points.length-1))return p;
+      const a=points[(i+points.length-1)%points.length],b=points[(i+1)%points.length];
+      return [p[0]*.5+(a[0]+b[0])*.25,p[1]*.5+(a[1]+b[1])*.25];
+    });
+    if(closed)points=[...points,points[0]];
+    const result=[points[0]],cut=.1+strength*.3;
+    for(let i=0;i<points.length-1;i++){const a=points[i],b=points[i+1];result.push([a[0]*(1-cut)+b[0]*cut,a[1]*(1-cut)+b[1]*cut],[a[0]*cut+b[0]*(1-cut),a[1]*cut+b[1]*(1-cut)]);}
+    result.push(points.at(-1));return result;
   })};
 }
 function updateGeometry(){
-  const key=`${settings.simplification}:${settings.corners}`;if(geometryKey===key)return;
+  const key=`${settings.simplification}:${settings.corners}:${settings.rounding}`;if(geometryKey===key)return;
   if(!weightedTopology){current=[];return;}
   let topo=window.topojson.simplify(weightedTopology,settings.simplification?window.topojson.quantile(weightedTopology,1-settings.simplification*.009):0);
   if(settings.corners==='round')topo=smoothTopology(topo);
@@ -193,6 +204,14 @@ function pointFromEvent(e){const rect=$('map').getBoundingClientRect();return {x
 function renderPins(){
   svg.classed('pin-ready',step===2&&!selectedPinId);
   svg.select('[data-pins-layer]').remove();const layer=svg.append('g').attr('data-pins-layer','true'),[w,h]=dimensions();
+  for(const pin of pins)if(pin.origin){
+    const x=pin.origin.x*w,y=pin.origin.y*h,tx=pin.x*w,ty=pin.y*h;
+    if(Math.hypot(tx-x,ty-y)<5)continue;
+    const route=layer.append('g').attr('data-route',pin.id);
+    route.append('path').attr('d',`M${x} ${y} L${tx} ${ty}`).attr('fill','none').attr('stroke',settings.accent).attr('stroke-width',4).attr('stroke-dasharray','1 12').attr('stroke-linecap','round').attr('pointer-events','none');
+    route.append('circle').attr('cx',x).attr('cy',y).attr('r',9).attr('fill','#fff').attr('stroke',settings.accent).attr('stroke-width',4).attr('pointer-events','none');
+    if(step===2&&pin.id===selectedPinId)route.append('circle').attr('cx',x).attr('cy',y).attr('r',15).attr('fill','transparent').attr('data-route-origin',pin.id).attr('data-editor','true').style('touch-action','none');
+  }
   for(const pin of pins){const g=layer.append('g').attr('data-pin',pin.id).attr('transform',`translate(${pin.x*w},${pin.y*h})`).attr('role','button').attr('tabindex',0).attr('aria-label',t('pin')).classed('pin-selected',pin.id===selectedPinId),s=pin.size,stroke=pin.outline?'#ffffff':'none';
     if(pin.shape==='pin'){g.append('path').attr('d',`M0 0 C${-s*.35} ${-s*.55} ${-s*.7} ${-s*.8} ${-s*.7} ${-s*1.22} C${-s*.7} ${-s*2.18} ${s*.7} ${-s*2.18} ${s*.7} ${-s*1.22} C${s*.7} ${-s*.8} ${s*.35} ${-s*.55} 0 0 Z`).attr('fill',pin.color).attr('stroke',stroke).attr('stroke-width',1.8);g.append('circle').attr('cy',-s*1.25).attr('r',s*.24).attr('fill','#fff');}
     else if(pin.shape==='flag')g.append('path').attr('d',`M0 0 V${-s*1.8} L${s*1.4} ${-s*1.55} L0 ${-s*.9} Z M0 ${-s*.9} V0`).attr('fill',pin.color).attr('stroke',pin.outline?'#fff':pin.color).attr('stroke-width',2);
@@ -201,17 +220,22 @@ function renderPins(){
     if(pin.id===selectedPinId&&step===2)g.append('circle').attr('r',s*.85).attr('cy',pin.shape==='pin'?-s:0).attr('fill','none').attr('stroke','#176b58').attr('stroke-width',1.3).attr('stroke-dasharray','4 3').attr('pointer-events','none').attr('data-editor','true');
   }
 }
-function selectPin(id){selectedPinId=id;const p=pins.find(p=>p.id===id);$('pinEditor').hidden=!p;$('pinCount').textContent=`${t('pins')} · ${pins.length}`;if(p){for(const [id,key]of [['pinShape','shape'],['pinColor','color'],['pinSize','size']])$(id).value=p[key];$('pinOutline').checked=p.outline;$('pinSizeValue').textContent=p.size;if(step!==2)setStep(2);$('pinEditor').closest('details').open=true;}renderPins();}
-function addPin(position,source=null){if(pins.length>=200){notify('핀은 최대 200개까지 추가할 수 있어요.');return;}const pin={id:'pin-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7),x:position.x,y:position.y,size:source?.size||24,color:source?.color||'#d57464',shape:source?.shape||'pin',outline:source?.outline??true};pins.push(pin);selectPin(pin.id);persist();}
+function selectPin(id){selectedPinId=id;const p=pins.find(p=>p.id===id);$('pinEditor').hidden=!p;$('clearRoute').hidden=!p?.origin;$('pinCount').textContent=`${t('pins')} · ${pins.length}`;if(p){for(const [id,key]of [['pinShape','shape'],['pinColor','color'],['pinSize','size']])$(id).value=p[key];$('pinOutline').checked=p.outline;$('pinSizeValue').textContent=p.size;if(step!==2)setStep(2);$('pinEditor').closest('details').open=true;}renderPins();}
+function addPin(position,source=null){if(pins.length>=200){notify('핀은 최대 200개까지 추가할 수 있어요.');return;}const pin={id:'pin-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7),x:position.x,y:position.y,...(source?.origin?{origin:{...source.origin}}:{}),size:source?.size||24,color:source?.color||'#d57464',shape:source?.shape||'pin',outline:source?.outline??true};pins.push(pin);selectPin(pin.id);persist();}
 function duplicatePin(){const p=pins.find(p=>p.id===selectedPinId);if(p)addPin({x:Math.min(.98,p.x+.025),y:Math.min(.98,p.y+.025)},p);}
 $('map').addEventListener('pointerdown',e=>{
-  if(!ready||e.button!==0)return;const pin=e.target.closest('[data-pin]');dragDistance=0;dragPinId=pin?.getAttribute('data-pin')||null;pointerStartedOnPin=!!pin;
+  if(!ready||e.button!==0)return;
+  if(step===2){e.preventDefault();document.activeElement?.closest?.('#map')&&document.activeElement.blur?.();}
+  const pin=e.target.closest('[data-pin]'),origin=e.target.closest('[data-route-origin]');dragDistance=0;
+  dragPinId=pin?.getAttribute('data-pin')||origin?.getAttribute('data-route-origin')||null;pointerStartedOnPin=!!dragPinId;
+  dragKind=origin?'origin':e.shiftKey?'move':($('pinDragAction').value||'route');
   if(dragPinId){selectPin(dragPinId);dragging=true;}else if(!pinMode)dragging=true;else return;
-  dragStart={x:e.clientX,y:e.clientY};
+  const p=pins.find(p=>p.id===dragPinId);dragStart={x:e.clientX,y:e.clientY,pin:p?{x:p.x,y:p.y}:null};
+  if(dragPinId&&e.pointerId!==undefined)$('map').setPointerCapture?.(e.pointerId);
 });
 window.addEventListener('pointermove',e=>{
   if(!dragging)return;const dx=e.clientX-dragStart.x,dy=e.clientY-dragStart.y;dragDistance=Math.hypot(dx,dy);if(dragDistance<5)return;
-  if(dragPinId){const p=pins.find(p=>p.id===dragPinId);if(p){Object.assign(p,pointFromEvent(e));renderPins();}}
+  if(dragPinId){const p=pins.find(p=>p.id===dragPinId);if(p){if(dragKind==='origin')p.origin=pointFromEvent(e);else{if(dragKind==='route'&&!p.origin)p.origin={...dragStart.pin};Object.assign(p,pointFromEvent(e));}$('clearRoute').hidden=!p.origin;renderPins();}}
   // Track background drags only to suppress accidental region clicks.
   $('tooltip').hidden=true;
 });
@@ -269,7 +293,7 @@ for(const key of ['alaska','hawaii','greenland','antarctica','mainland','usInset
   if(settings.scope==='Antarctica')settings.antarctica=true;
   $('search').value='';syncControls();changeView();
 });
-for(const key of ['baseColor','lineColor','lineWidth','markerSize','mapTitle','showLabels','legend','ratio','background','transparent','resolution','simplification','corners'])$(key).addEventListener(['color','range','text'].includes($(key).type)?'input':'change',()=>{const el=$(key);settings[key]=el.type==='checkbox'?el.checked:typeof DEFAULTS[key]==='number'?Number(el.value):el.value;syncControls();if(key==='ratio')resetZoom();renderMap();persist();});
+for(const key of ['baseColor','lineColor','lineWidth','markerSize','mapTitle','showLabels','legend','ratio','background','transparent','resolution','simplification','rounding','corners'])$(key).addEventListener(['color','range','text'].includes($(key).type)?'input':'change',()=>{const el=$(key);settings[key]=el.type==='checkbox'?el.checked:typeof DEFAULTS[key]==='number'?Number(el.value):el.value;syncControls();if(key==='ratio')resetZoom();renderMap();persist();});
 $('accent').addEventListener('input',()=>applyStyle('accent',$('accent').value));document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>applyStyle('mode',b.dataset.mode)));
 for(const color of COLORS){const b=document.createElement('button');b.style.background=color;b.dataset.color=color;b.setAttribute('aria-label',`강조 색상 ${color}`);b.addEventListener('click',()=>applyStyle('accent',color));$('swatches').append(b);}
 $('search').addEventListener('input',renderList);
@@ -278,6 +302,7 @@ $('zoomIn').addEventListener('click',()=>zoomBy(1.25));$('zoomOut').addEventList
 $('fitSelection').addEventListener('click',()=>{const selected=items.filter(i=>styleFor(i.id));if(!selected.length){notify('강조할 지역을 먼저 선택해 주세요.');return;}focusIds=new Set(selected.map(i=>i.id));resetZoom();renderMap();});
 $('nextStep').addEventListener('click',()=>{if(ready)setStep(step+1,true);});$('previousStep').addEventListener('click',()=>setStep(step-1,true));document.querySelectorAll('[data-step-to]').forEach(b=>b.addEventListener('click',()=>{if(ready){setStep(Number(b.dataset.stepTo),true);renderPins();}}));
 $('addPin').addEventListener('click',()=>{pinMode=!pinMode;svg.classed('pin-mode',pinMode);$('addPin').classList.toggle('active',pinMode);updateCanvasHelp();});
+$('clearRoute').addEventListener('click',()=>{const p=pins.find(p=>p.id===selectedPinId);if(p){delete p.origin;selectPin(p.id);persist();}});
 $('duplicatePin').addEventListener('click',duplicatePin);$('deletePin').addEventListener('click',()=>{pins=pins.filter(p=>p.id!==selectedPinId);selectPin(null);persist();});
 for(const [id,key]of [['pinShape','shape'],['pinColor','color'],['pinSize','size'],['pinOutline','outline']])$(id).addEventListener(id==='pinColor'||id==='pinSize'?'input':'change',()=>{const p=pins.find(p=>p.id===selectedPinId);if(!p)return;p[key]=id==='pinOutline'?$(id).checked:id==='pinSize'?Number($(id).value):$(id).value;$('pinSizeValue').textContent=p.size;renderPins();persist();});
 $('reset').addEventListener('click',()=>{settings={...DEFAULTS};selections=initialSelections();pins=[];selectedPinId=null;copiedPin=null;$('search').value='';setStep(1);syncControls();selectPin(null);changeView();document.querySelector('.work-menu').open=false;notify(t('done'));});

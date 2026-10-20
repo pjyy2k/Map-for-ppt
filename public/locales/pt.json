@@ -95,5 +95,9 @@
   "busy": "Preparando…",
   "done": "Concluído.",
   "error": "Não foi possível concluir. Tente novamente.",
-  "pinCanvasHint": "Clique no mapa para adicionar um pino. Com um pino selecionado, clique num espaço vazio para desmarcar."
+  "pinCanvasHint": "Clique no mapa para adicionar um pino. Com um pino selecionado, clique num espaço vazio para desmarcar.",
+  "pinDrag": "Arrastar pino",
+  "route": "Deixar rota pontilhada",
+  "moveOnly": "Apenas mover",
+  "clearRoute": "Limpar rota"
 }

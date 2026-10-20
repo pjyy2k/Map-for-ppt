@@ -95,5 +95,9 @@
   "busy": "Voorbereiden…",
   "done": "Gereed.",
   "error": "Actie niet voltooid. Probeer opnieuw.",
-  "pinCanvasHint": "Klik op de kaart om een pin toe te voegen. Klik bij een geselecteerde pin op een lege plek om de selectie op te heffen."
+  "pinCanvasHint": "Klik op de kaart om een pin toe te voegen. Klik bij een geselecteerde pin op een lege plek om de selectie op te heffen.",
+  "pinDrag": "Pin slepen",
+  "route": "Gestippelde route achterlaten",
+  "moveOnly": "Alleen verplaatsen",
+  "clearRoute": "Route wissen"
 }

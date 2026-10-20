@@ -95,5 +95,9 @@
   "busy": "Đang tạo…",
   "done": "Hoàn tất.",
   "error": "Không thể hoàn tất. Vui lòng thử lại.",
-  "pinCanvasHint": "Nhấp vào bản đồ để thêm ghim. Khi đang chọn ghim, nhấp vào chỗ trống để bỏ chọn."
+  "pinCanvasHint": "Nhấp vào bản đồ để thêm ghim. Khi đang chọn ghim, nhấp vào chỗ trống để bỏ chọn.",
+  "pinDrag": "Kéo ghim",
+  "route": "Để lại đường chấm",
+  "moveOnly": "Chỉ di chuyển",
+  "clearRoute": "Xóa đường đi"
 }

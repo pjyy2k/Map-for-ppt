@@ -95,5 +95,9 @@
   "busy": "Előkészítés…",
   "done": "Kész.",
   "error": "A művelet nem sikerült. Próbáld újra.",
-  "pinCanvasHint": "Kattintson a térképre jelölő hozzáadásához. Kijelölt jelölő esetén kattintson egy üres helyre a kijelölés megszüntetéséhez."
+  "pinCanvasHint": "Kattintson a térképre jelölő hozzáadásához. Kijelölt jelölő esetén kattintson egy üres helyre a kijelölés megszüntetéséhez.",
+  "pinDrag": "Jelölő húzása",
+  "route": "Pontozott útvonal hagyása",
+  "moveOnly": "Csak mozgatás",
+  "clearRoute": "Útvonal törlése"
 }

@@ -95,5 +95,9 @@
   "busy": "Se pregătește…",
   "done": "Gata.",
   "error": "Acțiunea nu a reușit. Încearcă din nou.",
-  "pinCanvasHint": "Clic pe hartă pentru a adăuga un marcaj. Când un marcaj este selectat, clic pe un loc liber pentru a-l deselecta."
+  "pinCanvasHint": "Clic pe hartă pentru a adăuga un marcaj. Când un marcaj este selectat, clic pe un loc liber pentru a-l deselecta.",
+  "pinDrag": "Trageți marcajul",
+  "route": "Lăsați traseu punctat",
+  "moveOnly": "Doar mutare",
+  "clearRoute": "Ștergeți traseul"
 }

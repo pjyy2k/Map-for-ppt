@@ -101,5 +101,7 @@
   "moveOnly": "Chỉ di chuyển",
   "clearRoute": "Xóa đường đi",
   "routeColor": "Màu đường đi",
-  "confirmDeletePin": "Xóa ghim này và đường đi được kết nối?"
+  "confirmDeletePin": "Xóa ghim này và đường đi được kết nối?",
+  "dropQuestion": "Bạn muốn làm gì sau khi thả?",
+  "cancel": "Hủy"
 }

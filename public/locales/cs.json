@@ -101,5 +101,7 @@
   "moveOnly": "Pouze přesunout",
   "clearRoute": "Smazat trasu",
   "routeColor": "Barva trasy",
-  "confirmDeletePin": "Smazat tento špendlík a připojenou trasu?"
+  "confirmDeletePin": "Smazat tento špendlík a připojenou trasu?",
+  "dropQuestion": "Co chcete udělat po upuštění?",
+  "cancel": "Zrušit"
 }

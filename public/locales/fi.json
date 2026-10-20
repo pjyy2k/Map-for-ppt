@@ -101,5 +101,7 @@
   "moveOnly": "Vain siirto",
   "clearRoute": "Poista reitti",
   "routeColor": "Reitin väri",
-  "confirmDeletePin": "Poistetaanko tämä nasta ja siihen liittyvä reitti?"
+  "confirmDeletePin": "Poistetaanko tämä nasta ja siihen liittyvä reitti?",
+  "dropQuestion": "Mitä haluat tehdä pudottamisen jälkeen?",
+  "cancel": "Peruuta"
 }

@@ -101,5 +101,7 @@
   "moveOnly": "Alih sahaja",
   "clearRoute": "Padam laluan",
   "routeColor": "Warna laluan",
-  "confirmDeletePin": "Padam pin ini dan laluan yang disambungkan?"
+  "confirmDeletePin": "Padam pin ini dan laluan yang disambungkan?",
+  "dropQuestion": "Apakah yang anda mahu lakukan selepas melepaskan?",
+  "cancel": "Batal"
 }

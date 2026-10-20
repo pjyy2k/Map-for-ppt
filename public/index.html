@@ -5,9 +5,9 @@
   <meta name="description" content="지역을 고르고 스타일을 더해 PPT용 지도를 만드세요. 한국 읍면동부터 세계 지도까지, PNG·SVG·편집 가능한 PPT로 다운로드합니다.">
   <title>Map for PPT — 슬라이드를 위한 지도</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%23176b58'/%3E%3Cpath d='m8 12 8-4 8 4 8-4v22l-8 4-8-4-8 4z' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css?v=12">
+  <link rel="stylesheet" href="styles.css?v=18">
   <script src="vendor/d3.min.js" defer></script><script src="vendor/topology.min.js" defer></script><script src="vendor/jszip.min.js" defer></script>
-  <script type="module" src="app.js?v=17"></script>
+  <script type="module" src="app.js?v=18"></script>
 </head>
 <body>
 <header class="topbar">
@@ -52,7 +52,6 @@
         <label for="markerSize" class="range-label">지역 깃발 크기 <output id="markerSizeValue">16</output></label><input type="range" id="markerSize" min="8" max="32" step="1" value="16">
       </details>
       <details class="options"><summary>핀 추가와 편집</summary>
-        <label for="pinDragAction">핀 드래그</label><select id="pinDragAction"><option value="route">점선 경로 남기기</option><option value="move">위치만 이동</option></select>
         <div class="color-row"><label for="routeColor">경로 색상</label><input id="routeColor" type="color" value="#b74820"></div>
         <button id="addPin" class="secondary full">＋ 지도에 핀 찍기</button><p class="help">버튼을 누른 뒤 지도를 클릭하세요. 핀을 드래그해 옮길 수 있어요.</p>
         <div id="pinEditor" hidden><label for="pinShape">핀 모양</label><select id="pinShape"><option value="pin">위치 핀</option><option value="flag">깃발</option><option value="circle">원</option></select>
@@ -87,6 +86,11 @@
     <details class="data-note"><summary>지도 데이터와 이용 안내</summary><p>발표용 개략 지도입니다. 경계·지명은 데이터 기준일에 따르며 일부 섬을 생략할 수 있습니다. 한국 시군구·읍면동은 2025-01-01 기준 행정동 경계이며 법정리 경계는 포함하지 않습니다.</p><p>한국 상세 경계: 통계청 SGIS(공공누리 제1유형) 원자료, vuski/admdongkor 가공(CC BY 4.0), 본 서비스 간소화. <a href="https://github.com/vuski/admdongkor" target="_blank" rel="noopener noreferrer">출처 ↗</a> · 세계 지도: Natural Earth.</p></details>
   </section>
 </main>
+<dialog id="pinDropDialog" aria-labelledby="pinDropTitle" aria-describedby="pinDropQuestion">
+  <h2 id="pinDropTitle">핀 드래그</h2><p id="pinDropQuestion">어떻게 놓을까요?</p>
+  <div class="drop-choices"><button id="dropMove" class="secondary">위치만 이동</button><button id="dropRoute" class="primary">점선 경로 남기기</button></div>
+  <button id="dropCancel" class="text-button">취소</button>
+</dialog>
 <footer><span>Map for PPT · 운영자 JinYoungPark</span><a href="https://github.com/pjyy2k/Map-for-ppt" target="_blank" rel="noopener noreferrer">GitHub ↗</a></footer>
 <noscript><p class="loading">지도를 만들려면 JavaScript를 켜주세요.</p></noscript><div id="toast" class="toast" role="status" aria-live="polite"></div><div id="tooltip" class="tooltip" role="tooltip" hidden></div>
 </body></html>

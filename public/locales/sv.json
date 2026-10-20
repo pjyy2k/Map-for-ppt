@@ -101,5 +101,7 @@
   "moveOnly": "Flytta endast",
   "clearRoute": "Rensa rutt",
   "routeColor": "Ruttfärg",
-  "confirmDeletePin": "Ta bort den här nålen och dess anslutna rutt?"
+  "confirmDeletePin": "Ta bort den här nålen och dess anslutna rutt?",
+  "dropQuestion": "Vad vill du göra efter att du släppt?",
+  "cancel": "Avbryt"
 }

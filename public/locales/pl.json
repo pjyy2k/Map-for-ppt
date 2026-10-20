@@ -101,5 +101,7 @@
   "moveOnly": "Tylko przesuń",
   "clearRoute": "Usuń trasę",
   "routeColor": "Kolor trasy",
-  "confirmDeletePin": "Usunąć tę pinezkę i powiązaną trasę?"
+  "confirmDeletePin": "Usunąć tę pinezkę i powiązaną trasę?",
+  "dropQuestion": "Co zrobić po upuszczeniu?",
+  "cancel": "Anuluj"
 }

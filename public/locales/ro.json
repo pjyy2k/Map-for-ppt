@@ -101,5 +101,7 @@
   "moveOnly": "Doar mutare",
   "clearRoute": "Ștergeți traseul",
   "routeColor": "Culoarea traseului",
-  "confirmDeletePin": "Ștergeți acest marcaj și traseul conectat?"
+  "confirmDeletePin": "Ștergeți acest marcaj și traseul conectat?",
+  "dropQuestion": "Ce doriți să faceți după eliberare?",
+  "cancel": "Anulare"
 }

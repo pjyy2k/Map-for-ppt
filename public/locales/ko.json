@@ -101,5 +101,7 @@
   "moveOnly": "위치만 이동",
   "clearRoute": "경로 지우기",
   "routeColor": "경로 색상",
-  "confirmDeletePin": "이 핀과 연결된 경로를 삭제할까요?"
+  "confirmDeletePin": "이 핀과 연결된 경로를 삭제할까요?",
+  "dropQuestion": "어떻게 놓을까요?",
+  "cancel": "취소"
 }

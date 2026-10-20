@@ -101,5 +101,7 @@
   "moveOnly": "仅移动位置",
   "clearRoute": "清除路径",
   "routeColor": "路径颜色",
-  "confirmDeletePin": "删除此图钉及其连接路径？"
+  "confirmDeletePin": "删除此图钉及其连接路径？",
+  "dropQuestion": "放下后要执行什么操作？",
+  "cancel": "取消"
 }

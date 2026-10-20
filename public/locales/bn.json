@@ -101,5 +101,7 @@
   "moveOnly": "শুধু সরান",
   "clearRoute": "পথ মুছুন",
   "routeColor": "পথের রং",
-  "confirmDeletePin": "এই পিন এবং এর সংযুক্ত পথ মুছবেন?"
+  "confirmDeletePin": "এই পিন এবং এর সংযুক্ত পথ মুছবেন?",
+  "dropQuestion": "ছেড়ে দেওয়ার পরে কী করতে চান?",
+  "cancel": "বাতিল"
 }

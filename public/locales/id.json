@@ -101,5 +101,7 @@
   "moveOnly": "Pindahkan saja",
   "clearRoute": "Hapus rute",
   "routeColor": "Warna rute",
-  "confirmDeletePin": "Hapus pin ini dan rute yang terhubung?"
+  "confirmDeletePin": "Hapus pin ini dan rute yang terhubung?",
+  "dropQuestion": "Apa yang ingin dilakukan setelah melepas?",
+  "cancel": "Batal"
 }

@@ -101,5 +101,7 @@
   "moveOnly": "Alleen verplaatsen",
   "clearRoute": "Route wissen",
   "routeColor": "Routekleur",
-  "confirmDeletePin": "Deze pin en de bijbehorende route verwijderen?"
+  "confirmDeletePin": "Deze pin en de bijbehorende route verwijderen?",
+  "dropQuestion": "Wat wil je na het neerzetten doen?",
+  "cancel": "Annuleren"
 }

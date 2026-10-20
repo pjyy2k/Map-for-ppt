@@ -101,5 +101,7 @@
   "moveOnly": "Déplacer seulement",
   "clearRoute": "Effacer le trajet",
   "routeColor": "Couleur du trajet",
-  "confirmDeletePin": "Supprimer cette épingle et son trajet associé ?"
+  "confirmDeletePin": "Supprimer cette épingle et son trajet associé ?",
+  "dropQuestion": "Que souhaitez-vous faire après le dépôt ?",
+  "cancel": "Annuler"
 }

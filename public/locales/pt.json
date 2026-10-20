@@ -101,5 +101,7 @@
   "moveOnly": "Apenas mover",
   "clearRoute": "Limpar rota",
   "routeColor": "Cor da rota",
-  "confirmDeletePin": "Excluir este pino e sua rota conectada?"
+  "confirmDeletePin": "Excluir este pino e sua rota conectada?",
+  "dropQuestion": "O que deseja fazer após soltar?",
+  "cancel": "Cancelar"
 }

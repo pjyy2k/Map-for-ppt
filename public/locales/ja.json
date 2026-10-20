@@ -101,5 +101,7 @@
   "moveOnly": "位置のみ移動",
   "clearRoute": "経路を消去",
   "routeColor": "経路の色",
-  "confirmDeletePin": "このピンと接続された経路を削除しますか？"
+  "confirmDeletePin": "このピンと接続された経路を削除しますか？",
+  "dropQuestion": "ドロップ後の動作を選んでください。",
+  "cancel": "キャンセル"
 }

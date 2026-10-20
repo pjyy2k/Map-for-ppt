@@ -101,5 +101,7 @@
   "moveOnly": "فقط جابه‌جایی",
   "clearRoute": "پاک کردن مسیر",
   "routeColor": "رنگ مسیر",
-  "confirmDeletePin": "این سنجاق و مسیر متصل به آن حذف شود؟"
+  "confirmDeletePin": "این سنجاق و مسیر متصل به آن حذف شود؟",
+  "dropQuestion": "پس از رها کردن چه کاری انجام شود؟",
+  "cancel": "لغو"
 }

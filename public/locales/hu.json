@@ -101,5 +101,7 @@
   "moveOnly": "Csak mozgatás",
   "clearRoute": "Útvonal törlése",
   "routeColor": "Útvonal színe",
-  "confirmDeletePin": "Törli ezt a jelölőt és a hozzá kapcsolódó útvonalat?"
+  "confirmDeletePin": "Törli ezt a jelölőt és a hozzá kapcsolódó útvonalat?",
+  "dropQuestion": "Mit szeretne tenni az elengedés után?",
+  "cancel": "Mégse"
 }

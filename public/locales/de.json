@@ -101,5 +101,7 @@
   "moveOnly": "Nur verschieben",
   "clearRoute": "Route löschen",
   "routeColor": "Routenfarbe",
-  "confirmDeletePin": "Diesen Pin und die verbundene Route löschen?"
+  "confirmDeletePin": "Diesen Pin und die verbundene Route löschen?",
+  "dropQuestion": "Was möchten Sie nach dem Ablegen tun?",
+  "cancel": "Abbrechen"
 }

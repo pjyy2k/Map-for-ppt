@@ -1,12 +1,12 @@
 import {CONTINENTS,MODES,COLORS,SIZE,DEFAULTS,initialSelections,collection,nameOf,validateProject,visibleFeature,filteredCountries} from './core.js?v=14';
 import {createEditablePptx} from './export.js?v=12';
-import {initLanguage,language,t,continentName} from './i18n.js?v=16';
+import {initLanguage,language,t,continentName} from './i18n.js?v=18';
 const $=id=>document.getElementById(id),d3=window.d3,STORAGE='map-for-ppt:v1';
 const EXPORTS=['downloadPng','downloadSvg','downloadPptx','downloadRegions','downloadSingle'];
 const CREDIT='통계청 SGIS · vuski/admdongkor (CC BY 4.0) · 2025-01-01 · 경계 간소화';
 let settings={...DEFAULTS},selections=initialSelections(),pins=[],countries=[],manifest={},korea={},provinceData=[],cityData=[],current=[],rawCurrent=[],items=[],allItems=[],adminCache={},dongCache={};
 let step=1,loadToken=0,ready=false,zoom={k:1,x:0,y:0},drawn=[],path,projection,toastTimer,saveTimer,focusIds=null,contextFeatures=[],weightedTopology=null,geometryKey='',pinMode=false,selectedPinId=null,copiedPin=null;
-let dragging=false,dragDistance=0,dragStart=null,dragPinId=null,pointerStartedOnPin=false,dragKind='move';
+let dragging=false,dragDistance=0,dragStart=null,dragPinId=null,pointerStartedOnPin=false,dragKind='move',pendingDrop=null;
 const busy=new Set(),svg=d3.select('#map');
 const selection=()=>selections[settings.unit];
 const styleFor=id=>selection()[id];
@@ -243,19 +243,42 @@ $('map').addEventListener('pointerdown',e=>{
   if(step===2){e.preventDefault();document.activeElement?.closest?.('#map')&&document.activeElement.blur?.();}
   const pin=e.target.closest('[data-pin]'),origin=e.target.closest('[data-route-origin]');dragDistance=0;
   dragPinId=pin?.getAttribute('data-pin')||origin?.getAttribute('data-route-origin')||null;pointerStartedOnPin=!!dragPinId;
-  dragKind=origin?'origin':e.shiftKey?'move':($('pinDragAction').value||'route');
+  dragKind=origin?'origin':'pin';
   if(dragPinId){selectPin(dragPinId);dragging=true;}else if(!pinMode)dragging=true;else return;
-  const p=pins.find(p=>p.id===dragPinId);dragStart={x:e.clientX,y:e.clientY,pin:p?{x:p.x,y:p.y}:null};
+  const p=pins.find(p=>p.id===dragPinId);if(p)clearTimeout(saveTimer);dragStart={x:e.clientX,y:e.clientY,pin:p?{x:p.x,y:p.y,origin:p.origin?{...p.origin}:null}:null};
   if(dragPinId&&e.pointerId!==undefined)$('map').setPointerCapture?.(e.pointerId);
 });
 window.addEventListener('pointermove',e=>{
   if(!dragging)return;const dx=e.clientX-dragStart.x,dy=e.clientY-dragStart.y;dragDistance=Math.hypot(dx,dy);if(dragDistance<5)return;
-  if(dragPinId){const p=pins.find(p=>p.id===dragPinId);if(p){if(dragKind==='origin')p.origin=pointFromEvent(e);else{if(dragKind==='route'&&!p.origin)p.origin={...dragStart.pin};Object.assign(p,pointFromEvent(e));}$('clearRoute').hidden=!p.origin;renderPins();}}
+  if(dragPinId){const p=pins.find(p=>p.id===dragPinId);if(p){if(dragKind==='origin')p.origin=pointFromEvent(e);else Object.assign(p,pointFromEvent(e));$('clearRoute').hidden=!p.origin;renderPins();}}
   // Track background drags only to suppress accidental region clicks.
   $('tooltip').hidden=true;
 });
-window.addEventListener('pointerup',()=>{if(dragPinId)persist();dragging=false;dragPinId=null;});
-window.addEventListener('pointercancel',()=>{dragging=false;dragPinId=null;pointerStartedOnPin=false;});
+function finishPinDrop(action){
+  const pending=pendingDrop;if(!pending)return;pendingDrop=null;
+  const p=pins.find(p=>p.id===pending.id),start=pending.start;
+  if(p){
+    if(action==='cancel'){p.x=start.x;p.y=start.y;if(start.origin)p.origin={...start.origin};else delete p.origin;}
+    else if(action==='route')p.origin=start.origin?{...start.origin}:{x:start.x,y:start.y};
+    else if(start.origin){const dx=p.x-start.x,dy=p.y-start.y;p.origin={x:Math.max(0,Math.min(1,start.origin.x+dx)),y:Math.max(0,Math.min(1,start.origin.y+dy))};}
+    else delete p.origin;
+  }
+  const dialog=$('pinDropDialog');if(dialog.close)dialog.close();else dialog.removeAttribute('open');
+  selectPin(p?.id||null);persist();
+}
+window.addEventListener('pointerup',()=>{
+  const id=dragPinId;dragging=false;dragPinId=null;
+  if(!id)return;
+  if(dragKind==='pin'&&dragDistance>=5){pendingDrop={id,start:dragStart.pin};const dialog=$('pinDropDialog');if(dialog.showModal)dialog.showModal();else dialog.setAttribute('open','');$('dropMove').focus();}
+  else persist();
+});
+window.addEventListener('pointercancel',()=>{
+  const p=pins.find(p=>p.id===dragPinId),start=dragStart?.pin;
+  if(p&&start){p.x=start.x;p.y=start.y;if(start.origin)p.origin={...start.origin};else delete p.origin;selectPin(p.id);persist();}
+  dragging=false;dragPinId=null;pointerStartedOnPin=false;
+});
+for(const [id,action]of [['dropMove','move'],['dropRoute','route'],['dropCancel','cancel']])$(id).addEventListener('click',()=>finishPinDrop(action));
+$('pinDropDialog').addEventListener('cancel',e=>{e.preventDefault();finishPinDrop('cancel');});
 $('map').addEventListener('click',e=>{
   const onPin=pointerStartedOnPin||!!e.target.closest('[data-pin]');pointerStartedOnPin=false;
   if(onPin||dragDistance>=5)return;
@@ -263,6 +286,7 @@ $('map').addEventListener('click',e=>{
   else if(step===2){if(selectedPinId)selectPin(null);else addPin(pointFromEvent(e));}
 });
 window.addEventListener('keydown',e=>{
+  if(pendingDrop)return;
   if(e.target.matches?.('input,textarea,select,[contenteditable=true]'))return;
   const p=pins.find(p=>p.id===selectedPinId);
   if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='c'&&p){copiedPin={...p};e.preventDefault();notify(t('done')+' Ctrl/Cmd+V');}

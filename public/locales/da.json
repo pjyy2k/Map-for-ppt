@@ -101,5 +101,7 @@
   "moveOnly": "Flyt kun",
   "clearRoute": "Ryd rute",
   "routeColor": "Rutefarve",
-  "confirmDeletePin": "Slet denne knappenål og dens tilknyttede rute?"
+  "confirmDeletePin": "Slet denne knappenål og dens tilknyttede rute?",
+  "dropQuestion": "Hvad vil du gøre efter at have sluppet?",
+  "cancel": "Annuller"
 }

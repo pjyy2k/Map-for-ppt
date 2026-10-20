@@ -101,5 +101,7 @@
   "moveOnly": "Yalnızca taşı",
   "clearRoute": "Rotayı sil",
   "routeColor": "Rota rengi",
-  "confirmDeletePin": "Bu iğne ve bağlı rotası silinsin mi?"
+  "confirmDeletePin": "Bu iğne ve bağlı rotası silinsin mi?",
+  "dropQuestion": "Bıraktıktan sonra ne yapmak istersiniz?",
+  "cancel": "İptal"
 }

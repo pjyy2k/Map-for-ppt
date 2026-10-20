@@ -47,7 +47,7 @@ function chooseUnit(unit){
   $('search').value='';syncControls();changeView();
 }
 function renderUnitPicker(){
-  const korean=isKorea(),choices=korean?[['admin1','states'],['municipality','cities']]:[['continent','continents'],['country','country']];
+  const korean=isKorea(),choices=korean?[['admin1','states'],['municipality','cities']]:[['continent','continents'],['country','country'],['municipality','cities']];
   if(korean&&settings.unit==='dong')choices.push(['dong','dongs']);
   if(!korean&&settings.scope==='country'&&manifest.admin1?.[settings.country])choices.push(['admin1','states']);
   const parent=$('unitPicker');parent.replaceChildren();

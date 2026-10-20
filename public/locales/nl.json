@@ -99,5 +99,6 @@
   "pinDrag": "Pin slepen",
   "route": "Gestippelde route achterlaten",
   "moveOnly": "Alleen verplaatsen",
-  "clearRoute": "Route wissen"
+  "clearRoute": "Route wissen",
+  "routeColor": "Routekleur"
 }

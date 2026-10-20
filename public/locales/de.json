@@ -99,5 +99,6 @@
   "pinDrag": "Pin ziehen",
   "route": "Gepunktete Route hinterlassen",
   "moveOnly": "Nur verschieben",
-  "clearRoute": "Route löschen"
+  "clearRoute": "Route löschen",
+  "routeColor": "Routenfarbe"
 }

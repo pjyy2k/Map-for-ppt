@@ -99,5 +99,6 @@
   "pinDrag": "Træk knappenål",
   "route": "Efterlad prikket rute",
   "moveOnly": "Flyt kun",
-  "clearRoute": "Ryd rute"
+  "clearRoute": "Ryd rute",
+  "routeColor": "Rutefarve"
 }

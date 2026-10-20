@@ -99,5 +99,6 @@
   "pinDrag": "Seret pin",
   "route": "Tinggalkan laluan bertitik",
   "moveOnly": "Alih sahaja",
-  "clearRoute": "Padam laluan"
+  "clearRoute": "Padam laluan",
+  "routeColor": "Warna laluan"
 }

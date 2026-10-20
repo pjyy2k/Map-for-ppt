@@ -99,5 +99,6 @@
   "pinDrag": "Arrastar pino",
   "route": "Deixar rota pontilhada",
   "moveOnly": "Apenas mover",
-  "clearRoute": "Limpar rota"
+  "clearRoute": "Limpar rota",
+  "routeColor": "Cor da rota"
 }

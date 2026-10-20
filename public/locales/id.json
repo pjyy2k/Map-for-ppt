@@ -99,5 +99,6 @@
   "pinDrag": "Seret pin",
   "route": "Tinggalkan rute bertitik",
   "moveOnly": "Pindahkan saja",
-  "clearRoute": "Hapus rute"
+  "clearRoute": "Hapus rute",
+  "routeColor": "Warna rute"
 }

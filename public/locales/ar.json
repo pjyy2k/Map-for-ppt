@@ -99,5 +99,6 @@
   "pinDrag": "سحب الدبوس",
   "route": "ترك مسار منقط",
   "moveOnly": "نقل فقط",
-  "clearRoute": "مسح المسار"
+  "clearRoute": "مسح المسار",
+  "routeColor": "لون المسار"
 }

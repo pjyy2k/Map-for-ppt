@@ -99,5 +99,6 @@
   "pinDrag": "Kéo ghim",
   "route": "Để lại đường chấm",
   "moveOnly": "Chỉ di chuyển",
-  "clearRoute": "Xóa đường đi"
+  "clearRoute": "Xóa đường đi",
+  "routeColor": "Màu đường đi"
 }

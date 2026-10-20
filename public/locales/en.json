@@ -99,5 +99,6 @@
   "pinDrag": "Drag pin",
   "route": "Leave a dotted route",
   "moveOnly": "Move only",
-  "clearRoute": "Clear route"
+  "clearRoute": "Clear route",
+  "routeColor": "Route color"
 }

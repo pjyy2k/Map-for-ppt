@@ -99,5 +99,6 @@
   "pinDrag": "İğneyi sürükle",
   "route": "Noktalı rota bırak",
   "moveOnly": "Yalnızca taşı",
-  "clearRoute": "Rotayı sil"
+  "clearRoute": "Rotayı sil",
+  "routeColor": "Rota rengi"
 }

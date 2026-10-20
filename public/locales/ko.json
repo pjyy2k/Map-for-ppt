@@ -99,5 +99,6 @@
   "pinDrag": "핀 드래그",
   "route": "점선 경로 남기기",
   "moveOnly": "위치만 이동",
-  "clearRoute": "경로 지우기"
+  "clearRoute": "경로 지우기",
+  "routeColor": "경로 색상"
 }

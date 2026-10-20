@@ -99,5 +99,6 @@
   "pinDrag": "Vedä nastaa",
   "route": "Jätä pisteviivareitti",
   "moveOnly": "Vain siirto",
-  "clearRoute": "Poista reitti"
+  "clearRoute": "Poista reitti",
+  "routeColor": "Reitin väri"
 }

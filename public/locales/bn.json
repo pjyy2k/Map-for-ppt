@@ -99,5 +99,6 @@
   "pinDrag": "পিন টানুন",
   "route": "বিন্দুযুক্ত পথ রাখুন",
   "moveOnly": "শুধু সরান",
-  "clearRoute": "পথ মুছুন"
+  "clearRoute": "পথ মুছুন",
+  "routeColor": "পথের রং"
 }

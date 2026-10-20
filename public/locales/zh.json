@@ -99,5 +99,6 @@
   "pinDrag": "拖动图钉",
   "route": "保留虚线路径",
   "moveOnly": "仅移动位置",
-  "clearRoute": "清除路径"
+  "clearRoute": "清除路径",
+  "routeColor": "路径颜色"
 }

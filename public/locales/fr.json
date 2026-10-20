@@ -99,5 +99,6 @@
   "pinDrag": "Glisser l’épingle",
   "route": "Laisser un trajet pointillé",
   "moveOnly": "Déplacer seulement",
-  "clearRoute": "Effacer le trajet"
+  "clearRoute": "Effacer le trajet",
+  "routeColor": "Couleur du trajet"
 }

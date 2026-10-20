@@ -99,5 +99,6 @@
   "pinDrag": "Przeciąganie pinezki",
   "route": "Pozostaw trasę kropkowaną",
   "moveOnly": "Tylko przesuń",
-  "clearRoute": "Usuń trasę"
+  "clearRoute": "Usuń trasę",
+  "routeColor": "Kolor trasy"
 }

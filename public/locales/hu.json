@@ -99,5 +99,6 @@
   "pinDrag": "Jelölő húzása",
   "route": "Pontozott útvonal hagyása",
   "moveOnly": "Csak mozgatás",
-  "clearRoute": "Útvonal törlése"
+  "clearRoute": "Útvonal törlése",
+  "routeColor": "Útvonal színe"
 }

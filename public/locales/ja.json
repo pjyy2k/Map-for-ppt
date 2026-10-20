@@ -99,5 +99,6 @@
   "pinDrag": "ピンをドラッグ",
   "route": "点線の経路を残す",
   "moveOnly": "位置のみ移動",
-  "clearRoute": "経路を消去"
+  "clearRoute": "経路を消去",
+  "routeColor": "経路の色"
 }

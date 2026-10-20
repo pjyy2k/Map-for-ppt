@@ -99,5 +99,6 @@
   "pinDrag": "Trascina segnaposto",
   "route": "Lascia percorso punteggiato",
   "moveOnly": "Sposta soltanto",
-  "clearRoute": "Cancella percorso"
+  "clearRoute": "Cancella percorso",
+  "routeColor": "Colore percorso"
 }

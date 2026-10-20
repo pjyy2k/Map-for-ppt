@@ -99,5 +99,6 @@
   "pinDrag": "Dra nål",
   "route": "Lämna prickad rutt",
   "moveOnly": "Flytta endast",
-  "clearRoute": "Rensa rutt"
+  "clearRoute": "Rensa rutt",
+  "routeColor": "Ruttfärg"
 }

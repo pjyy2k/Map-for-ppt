@@ -99,5 +99,6 @@
   "pinDrag": "Trageți marcajul",
   "route": "Lăsați traseu punctat",
   "moveOnly": "Doar mutare",
-  "clearRoute": "Ștergeți traseul"
+  "clearRoute": "Ștergeți traseul",
+  "routeColor": "Culoarea traseului"
 }

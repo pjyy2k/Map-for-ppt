@@ -1,6 +1,6 @@
-import {CONTINENTS,MODES,COLORS,SIZE,DEFAULTS,initialSelections,collection,nameOf,validateProject,visibleFeature,filteredCountries} from './core.js?v=12';
+import {CONTINENTS,MODES,COLORS,SIZE,DEFAULTS,initialSelections,collection,nameOf,validateProject,visibleFeature,filteredCountries} from './core.js?v=14';
 import {createEditablePptx} from './export.js?v=12';
-import {initLanguage,language,t,continentName} from './i18n.js?v=12';
+import {initLanguage,language,t,continentName} from './i18n.js?v=14';
 const $=id=>document.getElementById(id),d3=window.d3,STORAGE='map-for-ppt:v1';
 const EXPORTS=['downloadPng','downloadSvg','downloadPptx','downloadRegions','downloadSingle'];
 const CREDIT='통계청 SGIS · vuski/admdongkor (CC BY 4.0) · 2025-01-01 · 경계 간소화';
@@ -213,8 +213,12 @@ function renderPins(){
     const cx=Math.max(12,Math.min(w-12,(x+tx)/2+dy/distance*bend*side));
     const cy=Math.max(12,Math.min(h-12,(y+ty)/2-dx/distance*bend*side));
     const route=layer.append('g').attr('data-route',pin.id);
-    route.append('path').attr('d',`M${x} ${y} Q${cx} ${cy} ${tx} ${ty}`).attr('fill','none').attr('stroke',settings.accent).attr('stroke-width',4).attr('stroke-dasharray','1 12').attr('stroke-linecap','round').attr('pointer-events','none');
-    route.append('circle').attr('cx',x).attr('cy',y).attr('r',9).attr('fill','#fff').attr('stroke',settings.accent).attr('stroke-width',4).attr('pointer-events','none');
+    const routePath=`M${x} ${y} Q${cx} ${cy} ${tx} ${ty}`;
+    // A white halo keeps each dot visible even over an identically colored region.
+    route.append('path').attr('d',routePath).attr('fill','none').attr('stroke','#ffffff').attr('stroke-width',8).attr('stroke-dasharray','1 12').attr('stroke-linecap','round').attr('pointer-events','none');
+    route.append('path').attr('data-route-color','true').attr('d',routePath).attr('fill','none').attr('stroke',settings.routeColor).attr('stroke-width',4).attr('stroke-dasharray','1 12').attr('stroke-linecap','round').attr('pointer-events','none');
+    route.append('circle').attr('cx',x).attr('cy',y).attr('r',9).attr('fill','#fff').attr('stroke','#ffffff').attr('stroke-width',8).attr('pointer-events','none');
+    route.append('circle').attr('cx',x).attr('cy',y).attr('r',9).attr('fill','#fff').attr('stroke',settings.routeColor).attr('stroke-width',4).attr('pointer-events','none');
     if(step===2&&pin.id===selectedPinId)route.append('circle').attr('cx',x).attr('cy',y).attr('r',15).attr('fill','transparent').attr('data-route-origin',pin.id).attr('data-editor','true').style('touch-action','none');
   }
   for(const pin of pins){const g=layer.append('g').attr('data-pin',pin.id).attr('transform',`translate(${pin.x*w},${pin.y*h})`).attr('role','button').attr('tabindex',0).attr('aria-label',t('pin')).classed('pin-selected',pin.id===selectedPinId),s=pin.size,stroke=pin.outline?'#ffffff':'none';
@@ -298,7 +302,7 @@ for(const key of ['alaska','hawaii','greenland','antarctica','mainland','usInset
   if(settings.scope==='Antarctica')settings.antarctica=true;
   $('search').value='';syncControls();changeView();
 });
-for(const key of ['baseColor','lineColor','lineWidth','markerSize','mapTitle','showLabels','legend','ratio','background','transparent','resolution','simplification','rounding','corners'])$(key).addEventListener(['color','range','text'].includes($(key).type)?'input':'change',()=>{const el=$(key);settings[key]=el.type==='checkbox'?el.checked:typeof DEFAULTS[key]==='number'?Number(el.value):el.value;syncControls();if(key==='ratio')resetZoom();renderMap();persist();});
+for(const key of ['routeColor','baseColor','lineColor','lineWidth','markerSize','mapTitle','showLabels','legend','ratio','background','transparent','resolution','simplification','rounding','corners'])$(key).addEventListener(['color','range','text'].includes($(key).type)?'input':'change',()=>{const el=$(key);settings[key]=el.type==='checkbox'?el.checked:typeof DEFAULTS[key]==='number'?Number(el.value):el.value;syncControls();if(key==='ratio')resetZoom();renderMap();persist();});
 $('accent').addEventListener('input',()=>applyStyle('accent',$('accent').value));document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>applyStyle('mode',b.dataset.mode)));
 for(const color of COLORS){const b=document.createElement('button');b.style.background=color;b.dataset.color=color;b.setAttribute('aria-label',`강조 색상 ${color}`);b.addEventListener('click',()=>applyStyle('accent',color));$('swatches').append(b);}
 $('search').addEventListener('input',renderList);

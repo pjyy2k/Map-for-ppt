@@ -99,5 +99,6 @@
   "pinDrag": "Přetáhnout špendlík",
   "route": "Zanechat tečkovanou trasu",
   "moveOnly": "Pouze přesunout",
-  "clearRoute": "Smazat trasu"
+  "clearRoute": "Smazat trasu",
+  "routeColor": "Barva trasy"
 }

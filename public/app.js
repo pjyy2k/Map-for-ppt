@@ -225,12 +225,18 @@ function renderPins(){
     if(pin.shape==='pin'){g.append('path').attr('d',`M0 0 C${-s*.35} ${-s*.55} ${-s*.7} ${-s*.8} ${-s*.7} ${-s*1.22} C${-s*.7} ${-s*2.18} ${s*.7} ${-s*2.18} ${s*.7} ${-s*1.22} C${s*.7} ${-s*.8} ${s*.35} ${-s*.55} 0 0 Z`).attr('fill',pin.color).attr('stroke',stroke).attr('stroke-width',1.8);g.append('circle').attr('cy',-s*1.25).attr('r',s*.24).attr('fill','#fff');}
     else if(pin.shape==='flag')g.append('path').attr('d',`M0 0 V${-s*1.8} L${s*1.4} ${-s*1.55} L0 ${-s*.9} Z M0 ${-s*.9} V0`).attr('fill',pin.color).attr('stroke',pin.outline?'#fff':pin.color).attr('stroke-width',2);
     else g.append('circle').attr('r',s*.65).attr('fill',pin.color).attr('stroke',stroke).attr('stroke-width',2);
-    g.on('click',e=>{e.stopPropagation();selectPin(pin.id);}).on('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectPin(pin.id);}});
+    g.on('contextmenu',e=>{e.preventDefault();e.stopPropagation();removePin(pin.id);}).on('click',e=>{e.stopPropagation();selectPin(pin.id);}).on('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectPin(pin.id);}});
     if(pin.id===selectedPinId&&step===2)g.append('circle').attr('r',s*.85).attr('cy',pin.shape==='pin'?-s:0).attr('fill','none').attr('stroke','#176b58').attr('stroke-width',1.3).attr('stroke-dasharray','4 3').attr('pointer-events','none').attr('data-editor','true');
   }
 }
 function selectPin(id){selectedPinId=id;const p=pins.find(p=>p.id===id);$('pinEditor').hidden=!p;$('clearRoute').hidden=!p?.origin;$('pinCount').textContent=`${t('pins')} · ${pins.length}`;if(p){for(const [id,key]of [['pinShape','shape'],['pinColor','color'],['pinSize','size']])$(id).value=p[key];$('pinOutline').checked=p.outline;$('pinSizeValue').textContent=p.size;if(step!==2)setStep(2);$('pinEditor').closest('details').open=true;}renderPins();}
 function addPin(position,source=null){if(pins.length>=200){notify('핀은 최대 200개까지 추가할 수 있어요.');return;}const pin={id:'pin-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7),x:position.x,y:position.y,...(source?.origin?{origin:{...source.origin}}:{}),size:source?.size||24,color:source?.color||'#d57464',shape:source?.shape||'pin',outline:source?.outline??true};pins.push(pin);selectPin(pin.id);persist();}
+function removePin(id){
+  if(!id)return;
+  pins=pins.filter(p=>p.id!==id);
+  if(dragPinId===id){dragging=false;dragPinId=null;pointerStartedOnPin=false;}
+  selectPin(selectedPinId===id?null:selectedPinId);persist();
+}
 function duplicatePin(){const p=pins.find(p=>p.id===selectedPinId);if(p)addPin({x:Math.min(.98,p.x+.025),y:Math.min(.98,p.y+.025)},p);}
 $('map').addEventListener('pointerdown',e=>{
   if(!ready||e.button!==0)return;
@@ -261,7 +267,7 @@ window.addEventListener('keydown',e=>{
   const p=pins.find(p=>p.id===selectedPinId);
   if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='c'&&p){copiedPin={...p};e.preventDefault();notify(t('done')+' Ctrl/Cmd+V');}
   if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='v'&&copiedPin){e.preventDefault();setStep(2);addPin({x:Math.min(.98,copiedPin.x+.03),y:Math.min(.98,copiedPin.y+.03)},copiedPin);}
-  if((e.key==='Delete'||e.key==='Backspace')&&p){e.preventDefault();pins=pins.filter(pin=>pin.id!==p.id);selectPin(null);persist();}
+  if((e.key==='Delete'||e.key==='Backspace')&&p){e.preventDefault();removePin(p.id);}
   if(e.key==='Escape'){pinMode=false;svg.classed('pin-mode',false);selectPin(null);}
 });
 function applyStyle(key,value){settings[key]=value;for(const s of Object.values(selection()))s[key==='accent'?'color':'mode']=value;syncControls();renderSelected();renderMap();persist();}
@@ -312,7 +318,7 @@ $('fitSelection').addEventListener('click',()=>{const selected=items.filter(i=>s
 $('nextStep').addEventListener('click',()=>{if(ready)setStep(step+1,true);});$('previousStep').addEventListener('click',()=>setStep(step-1,true));document.querySelectorAll('[data-step-to]').forEach(b=>b.addEventListener('click',()=>{if(ready){setStep(Number(b.dataset.stepTo),true);renderPins();}}));
 $('addPin').addEventListener('click',()=>{pinMode=!pinMode;svg.classed('pin-mode',pinMode);$('addPin').classList.toggle('active',pinMode);updateCanvasHelp();});
 $('clearRoute').addEventListener('click',()=>{const p=pins.find(p=>p.id===selectedPinId);if(p){delete p.origin;selectPin(p.id);persist();}});
-$('duplicatePin').addEventListener('click',duplicatePin);$('deletePin').addEventListener('click',()=>{pins=pins.filter(p=>p.id!==selectedPinId);selectPin(null);persist();});
+$('duplicatePin').addEventListener('click',duplicatePin);$('deletePin').addEventListener('click',()=>removePin(selectedPinId));
 for(const [id,key]of [['pinShape','shape'],['pinColor','color'],['pinSize','size'],['pinOutline','outline']])$(id).addEventListener(id==='pinColor'||id==='pinSize'?'input':'change',()=>{const p=pins.find(p=>p.id===selectedPinId);if(!p)return;p[key]=id==='pinOutline'?$(id).checked:id==='pinSize'?Number($(id).value):$(id).value;$('pinSizeValue').textContent=p.size;renderPins();persist();});
 $('reset').addEventListener('click',()=>{settings={...DEFAULTS};selections=initialSelections();pins=[];selectedPinId=null;copiedPin=null;$('search').value='';setStep(1);syncControls();selectPin(null);changeView();document.querySelector('.work-menu').open=false;notify(t('done'));});
 $('saveProject').addEventListener('click',()=>download(new Blob([JSON.stringify(project(),null,2)],{type:'application/json'}),'map-for-ppt-project.json'));

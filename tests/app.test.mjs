@@ -53,6 +53,8 @@ test('three-step editor, Korean drilldown, smoothing, pins, 30 languages and all
 
   event(window,'keydown',{key:'c',ctrlKey:true});event(window,'keydown',{key:'v',ctrlKey:true});assert.equal(document.querySelectorAll('[data-pin]').length,3);
   click('deletePin');assert.equal(document.querySelectorAll('[data-pin]').length,2);
+  event(document.querySelector('[data-pin]'),'click');click('duplicatePin');const selectedBeforeRightClick=document.querySelector('.pin-selected').getAttribute('data-pin'),rightClickTarget=document.querySelector('[data-pin]'),removedId=rightClickTarget.getAttribute('data-pin');assert.notEqual(removedId,selectedBeforeRightClick);const contextMenu=new window.Event('contextmenu',{bubbles:true,cancelable:true});rightClickTarget.querySelector('path').dispatchEvent(contextMenu);assert.equal(contextMenu.defaultPrevented,true);assert.equal(document.querySelectorAll('[data-pin]').length,2);assert.equal(document.querySelector(`[data-pin="${removedId}"]`),null);assert.equal(document.querySelector(`[data-route="${removedId}"]`),null);assert.equal(document.querySelector('.pin-selected').getAttribute('data-pin'),selectedBeforeRightClick);
+
   click('previousStep');click('koreaMap');await ready();assert.equal(paths().length,17);assert.equal($('alaska').closest('label').hidden,true);assert.equal($('hawaii').closest('label').hidden,true);assert.equal($('usInset').closest('label').hidden,true);
   event(document.querySelector('[aria-label="서울특별시 ›"]'),'click');await ready();assert.equal(paths().length,25);
   event(document.querySelector('[aria-label="종로구 ›"]'),'click');await ready();assert.equal(paths().length,17);

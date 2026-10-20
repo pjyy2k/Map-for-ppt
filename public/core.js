@@ -24,7 +24,7 @@ export function validateProject(data) {
  }
  if(!['country','continent','admin1','municipality','dong'].includes(settings.unit)||!['world','country',...Object.keys(CONTINENTS)].includes(settings.scope)||!Object.hasOwn(SIZE,settings.ratio)||!Object.hasOwn(MODES,settings.mode)||!/^\w{3}$/.test(settings.country)) throw Error('지원하지 않는 지도 설정입니다.');
  if(settings.mapTitle.length>100 || settings.lineWidth<.25 || settings.lineWidth>3 || settings.markerSize<8 || settings.markerSize>32 || ![1920,3840,7680].includes(settings.resolution)) throw Error('지도 설정이 허용 범위를 벗어났습니다.');
- if(['admin1','municipality','dong'].includes(settings.unit)) settings.scope='country';
+ if(['municipality','dong'].includes(settings.unit)) settings.scope='country';
  if(['municipality','dong'].includes(settings.unit))settings.country='KOR';
  if(!['round','angular'].includes(settings.corners)||settings.simplification<0||settings.simplification>100||settings.rounding<0||settings.rounding>100||settings.islandArea<0||settings.islandArea>100)throw Error('잘못된 지도 모양 설정입니다.');
  const selections={country:{},continent:{},admin1:{},municipality:{},dong:{}};

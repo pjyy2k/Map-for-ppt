@@ -41,5 +41,5 @@ test('scope filters and project persistence retain individual colors and styles'
  assert.throws(()=>validateProject({version:3}));
  assert.throws(()=>validateProject({version:1,settings:{...DEFAULTS,resolution:1e9},selections:selected}));
  assert.throws(()=>validateProject({version:1,settings:{...DEFAULTS,accent:'url(https://example.com)'},selections:selected}));
- assert.equal(validateProject({version:1,settings:{...DEFAULTS,unit:'admin1'},selections:selected}).settings.scope,'country');
+ assert.equal(validateProject({version:1,settings:{...DEFAULTS,unit:'admin1'},selections:selected}).settings.scope,'world');
 });

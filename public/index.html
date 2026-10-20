@@ -5,9 +5,9 @@
   <meta name="description" content="지역을 고르고 스타일을 더해 PPT용 지도를 만드세요. 한국 읍면동부터 세계 지도까지, PNG·SVG·편집 가능한 PPT로 다운로드합니다.">
   <title>Map for PPT — 슬라이드를 위한 지도</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%23176b58'/%3E%3Cpath d='m8 12 8-4 8 4 8-4v22l-8 4-8-4-8 4z' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css?v=18">
+  <link rel="stylesheet" href="styles.css?v=19">
   <script src="vendor/d3.min.js" defer></script><script src="vendor/topology.min.js" defer></script><script src="vendor/jszip.min.js" defer></script>
-  <script type="module" src="app.js?v=18"></script>
+  <script type="module" src="app.js?v=19"></script>
 </head>
 <body>
 <header class="topbar">
@@ -28,6 +28,7 @@
     <div class="panel step-panel" id="step1" data-step-panel="1">
       <div class="panel-heading"><div><p class="eyebrow">STEP 01</p><h2 tabindex="-1">어떤 지도가 필요한가요?</h2></div></div>
       <div class="map-family" role="group" aria-label="지도 종류"><button id="koreaMap">한국 지도</button><button id="worldMap" class="active">세계 지도</button></div>
+      <label>선택 단위</label><div id="unitPicker" class="unit-picker" role="group" aria-label="선택 단위"></div>
       <nav id="regionTrail" class="region-trail" aria-label="지도 탐색 경로"></nav>
       <div class="search-wrap"><span aria-hidden="true">⌕</span><input type="search" id="search" placeholder="지역 이름으로 검색" aria-label="지역 검색" autocomplete="off"></div>
       <div class="list-toolbar"><span id="listCount">지도를 불러오는 중…</span><div><button id="selectAll" class="text-button">모두 선택</button><button id="clearAll" class="text-button">해제</button></div></div>

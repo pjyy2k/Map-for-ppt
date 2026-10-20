@@ -1,4 +1,4 @@
-import {CONTINENTS,MODES,COLORS,SIZE,DEFAULTS,initialSelections,collection,nameOf,validateProject,visibleFeature,filteredCountries} from './core.js?v=14';
+import {CONTINENTS,MODES,COLORS,SIZE,DEFAULTS,initialSelections,collection,nameOf,validateProject,visibleFeature,filteredCountries} from './core.js?v=19';
 import {createEditablePptx} from './export.js?v=12';
 import {initLanguage,language,t,continentName} from './i18n.js?v=18';
 const $=id=>document.getElementById(id),d3=window.d3,STORAGE='map-for-ppt:v1';
@@ -37,12 +37,31 @@ function syncMapInteraction(){
     else{region.removeAttribute('role');region.removeAttribute('aria-checked');}
   }
 }
+function chooseUnit(unit){
+  if(!ready)return;
+  settings.unit=unit;
+  if(unit==='continent')settings.scope='world';
+  if(isKorea()||['municipality','dong'].includes(unit)){
+    settings.country='KOR';settings.scope='country';settings.koreaAll=unit==='municipality';
+  }
+  $('search').value='';syncControls();changeView();
+}
+function renderUnitPicker(){
+  const korean=isKorea(),choices=korean?[['admin1','states'],['municipality','cities']]:[['continent','continents'],['country','country']];
+  if(korean&&settings.unit==='dong')choices.push(['dong','dongs']);
+  if(!korean&&settings.scope==='country'&&manifest.admin1?.[settings.country])choices.push(['admin1','states']);
+  const parent=$('unitPicker');parent.replaceChildren();
+  for(const [unit,key]of choices){const b=document.createElement('button');b.textContent=t(key);b.dataset.unit=unit;b.classList.toggle('active',settings.unit===unit);b.setAttribute('aria-pressed',String(settings.unit===unit));b.disabled=!ready;b.addEventListener('click',()=>chooseUnit(unit));parent.append(b);}
+}
+function regionItem(f){return {id:f.properties.id,name:settings.unit==='municipality'&&settings.koreaAll?f.properties.fullName:nameOf(f),en:f.properties.name,fullName:f.properties.fullName};}
 function syncEnabled(){
   for(const id of EXPORTS)$(id).disabled=!ready||busy.has(id);
+  document.querySelectorAll('#unitPicker button').forEach(b=>b.disabled=!ready);
   $('nextStep').disabled=!ready;$('mobileDownload').disabled=!ready||busy.has('downloadPng');
   $('koreaMap').disabled=!ready;$('worldMap').disabled=!ready;
 }
 function syncControls(){
+  renderUnitPicker();
   for(const key of Object.keys(DEFAULTS)){const el=$(key);if(!el)continue;if(el.type==='checkbox')el.checked=settings[key];else el.value=settings[key];}
   for(const key of ['lineWidth','markerSize','simplification','rounding','islandArea'])$(key+'Value').textContent=settings[key];
   document.querySelectorAll('[data-mode]').forEach(b=>{b.classList.toggle('active',b.dataset.mode===settings.mode);b.setAttribute('aria-pressed',String(b.dataset.mode===settings.mode));});
@@ -73,7 +92,8 @@ function renderBreadcrumbs(){
   $('breadcrumbs').replaceChildren();$('regionTrail').replaceChildren();
   if(isKorea()){
     addCrumb(t('korea'),()=>goKorea('admin1'));
-    if(['municipality','dong'].includes(settings.unit))addCrumb(korea.provinces.find(p=>p.code===settings.province)?.name||t('states'),()=>goKorea('municipality'));
+    if(settings.unit==='municipality'&&settings.koreaAll)addCrumb(t('cities'),()=>chooseUnit('municipality'));
+    else if(['municipality','dong'].includes(settings.unit))addCrumb(korea.provinces.find(p=>p.code===settings.province)?.name||t('states'),()=>goKorea('municipality'));
     if(settings.unit==='dong')addCrumb(korea.cities.find(c=>c.code===settings.municipality)?.name||t('cities'),()=>goKorea('dong'));
   }else{
     addCrumb(t('world'),goWorld);
@@ -87,7 +107,7 @@ async function changeView(){
   try{
     if(isKorea()){
       if(settings.unit==='admin1')rawCurrent=provinceData;
-      else if(settings.unit==='municipality')rawCurrent=cityData.filter(f=>f.properties.province===settings.province);
+      else if(settings.unit==='municipality')rawCurrent=settings.koreaAll?cityData:cityData.filter(f=>f.properties.province===settings.province);
       else{if(!dongCache[settings.municipality])dongCache[settings.municipality]=(await getJSON(`data/korea/dong/${settings.municipality}.geojson`)).features;if(token!==loadToken)return false;rawCurrent=dongCache[settings.municipality];}
     }else if(settings.unit==='admin1'){
       if(!manifest.admin1[settings.country])throw Error('이 국가에는 시도 데이터가 없습니다. 다른 국가를 선택해 주세요.');
@@ -98,9 +118,9 @@ async function changeView(){
     contextFeatures=rawCurrent;rawCurrent=rawCurrent.map(f=>visibleFeature(f,settings)).filter(Boolean);focusIds=null;geometryKey='';
     weightedTopology=rawCurrent.length?window.topojson.presimplify(window.topojson.topology({regions:collection(rawCurrent)})):null;
     if(settings.unit==='continent')items=[...new Set(rawCurrent.map(f=>f.properties.continent))].map(c=>({id:c,name:continentName(c),en:c}));
-    else items=rawCurrent.map(f=>({id:f.properties.id,name:nameOf(f),en:f.properties.name,fullName:f.properties.fullName}));
+    else items=rawCurrent.map(regionItem);
     items.sort((a,b)=>a.name.localeCompare(b.name,'ko'));
-    allItems=settings.unit==='continent'?Object.entries(CONTINENTS).map(([id])=>({id,name:continentName(id),en:id})):settings.unit==='country'?countries.map(f=>({id:f.properties.id,name:nameOf(f),en:f.properties.name})):items;
+    allItems=settings.unit==='continent'?Object.entries(CONTINENTS).map(([id])=>({id,name:continentName(id),en:id})):settings.unit==='country'?countries.map(f=>({id:f.properties.id,name:nameOf(f),en:f.properties.name})):settings.unit==='municipality'?cityData.map(f=>({...regionItem(f),name:f.properties.fullName})):items;
     $('viewName').textContent=isKorea()?({admin1:t('states'),municipality:t('cities'),dong:t('dongs')}[settings.unit]):settings.scope==='world'?t('world'):settings.scope==='country'?nameOf(countries.find(f=>f.properties.id===settings.country)):continentName(settings.scope);
     ready=true;syncControls();resetZoom();renderBreadcrumbs();renderList();renderSelected();renderMap();renderExportRegions();persist();$('loading').hidden=true;return true;
   }catch(e){if(token!==loadToken)return false;ready=false;$('loading').textContent=e.name==='TimeoutError'?'로딩 시간이 길어지고 있어요. 연결을 확인한 뒤 다시 선택해 주세요.':e.message;$('regionList').replaceChildren();$('listCount').textContent='지역 없음';notify(e.message);return false;}
@@ -111,8 +131,8 @@ function canDrill(item){return settings.unit==='continent'||(settings.unit==='co
 function drill(id){
   if(settings.unit==='continent'){settings.scope=id;settings.unit='country';if(id==='Antarctica')settings.antarctica=true;}
   else if(settings.unit==='country'){settings.country=id;settings.scope='country';settings.unit='admin1';}
-  else if(settings.unit==='admin1'&&isKorea()){settings.province=provinceData.find(f=>f.properties.id===id).properties.province;settings.unit='municipality';}
-  else if(settings.unit==='municipality'){settings.municipality=cityData.find(f=>f.properties.id===id).properties.city;settings.unit='dong';}
+  else if(settings.unit==='admin1'&&isKorea()){settings.province=provinceData.find(f=>f.properties.id===id).properties.province;settings.unit='municipality';settings.koreaAll=false;}
+  else if(settings.unit==='municipality'){const city=cityData.find(f=>f.properties.id===id).properties;settings.municipality=city.city;settings.province=city.province;settings.koreaAll=false;settings.unit='dong';}
   $('search').value='';syncControls();changeView();
 }
 function renderList(){
@@ -323,7 +343,7 @@ $('downloadRegions').addEventListener('click',()=>exportAction('downloadRegions'
   for(const item of targets)zip.file(filename(item),await regionSvg(item.id).arrayBuffer());zip.file('README.txt',`Map for PPT\n${isKorea()?CREDIT+'\nhttps://github.com/vuski/admdongkor\n':'Natural Earth world boundaries\n'}SVG files are independent editable vector maps. Free-position pins are included in the full SVG/PPTX, not these region files.`);download(new Blob([await zip.generateAsync({type:'uint8array',compression:'DEFLATE'})],{type:'application/zip'}),'map-for-ppt-regions.zip');notify(`${t('done')} ${targets.length} SVG`);
 }));
 function goWorld(){if(!ready)return;settings.unit='continent';settings.scope='world';$('search').value='';syncControls();changeView();}
-function goKorea(unit='admin1'){if(!ready)return;settings.country='KOR';settings.scope='country';settings.unit=unit;$('search').value='';syncControls();changeView();}
+function goKorea(unit='admin1'){if(!ready)return;settings.country='KOR';settings.scope='country';settings.unit=unit;settings.koreaAll=false;$('search').value='';syncControls();changeView();}
 $('worldMap').addEventListener('click',goWorld);$('koreaMap').addEventListener('click',()=>goKorea());
 for(const key of ['alaska','hawaii','greenland','antarctica','mainland','usInset','islandArea'])$(key).addEventListener('change',()=>{
   if(!ready)return;const el=$(key);settings[key]=el.type==='checkbox'?el.checked:typeof DEFAULTS[key]==='number'?Number(el.value):el.value;
@@ -360,8 +380,8 @@ async function init(){
 document.addEventListener('languagechange',()=>{
  if(!ready)return;
  if(settings.unit==='continent')items=items.map(i=>({...i,name:continentName(i.id)}));
- else items=items.map(i=>({...i,name:nameOf(rawCurrent.find(f=>f.properties.id===i.id))}));
- if(settings.unit==='country')allItems=countries.map(f=>({id:f.properties.id,name:nameOf(f),en:f.properties.name}));else allItems=settings.unit==='continent'?Object.keys(CONTINENTS).map(id=>({id,name:continentName(id),en:id})):items;
+ else items=rawCurrent.map(regionItem);
+ if(settings.unit==='country')allItems=countries.map(f=>({id:f.properties.id,name:nameOf(f),en:f.properties.name}));else allItems=settings.unit==='continent'?Object.keys(CONTINENTS).map(id=>({id,name:continentName(id),en:id})):settings.unit==='municipality'?cityData.map(f=>({...regionItem(f),name:f.properties.fullName})):items;
  $('viewName').textContent=isKorea()?t(settings.unit==='admin1'?'states':settings.unit==='municipality'?'cities':'dongs'):settings.scope==='world'?t('world'):settings.scope==='country'?nameOf(countries.find(f=>f.properties.id===settings.country)):continentName(settings.scope);
  $('pinCount').textContent=`${t('pins')} · ${pins.length}`;updateCanvasHelp();syncControls();
  setStep(step);renderBreadcrumbs();renderList();renderSelected();renderMap();renderExportRegions();

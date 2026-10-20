@@ -2,7 +2,7 @@ export const CONTINENTS = {'Asia':'아시아','Europe':'유럽','Africa':'아프
 export const MODES = {fill:'색칠',flag:'깃발',border:'테두리'};
 export const COLORS = ['#176b58','#4788bd','#e2a84b','#d57464','#9b82bd','#343f4b'];
 export const SIZE = {wide:[1280,720],standard:[1200,900],square:[1000,1000]};
-export const DEFAULTS = {unit:'continent',scope:'world',country:'KOR',mode:'fill',accent:'#176b58',routeColor:'#b74820',baseColor:'#e3e9e7',lineColor:'#ffffff',lineWidth:1,markerSize:16,simplification:0,corners:'round',rounding:60,islandArea:0,province:'11',municipality:'11110',mapTitle:'',showLabels:false,legend:false,alaska:true,hawaii:true,greenland:true,antarctica:false,mainland:false,usInset:true,ratio:'wide',background:'#ffffff',transparent:true,resolution:3840};
+export const DEFAULTS = {unit:'continent',scope:'world',country:'KOR',mode:'fill',accent:'#176b58',routeColor:'#b74820',baseColor:'#e3e9e7',lineColor:'#ffffff',lineWidth:1,markerSize:16,simplification:0,corners:'round',rounding:60,islandArea:0,koreaAll:false,province:'11',municipality:'11110',mapTitle:'',showLabels:false,legend:false,alaska:true,hawaii:true,greenland:true,antarctica:false,mainland:false,usInset:true,ratio:'wide',background:'#ffffff',transparent:true,resolution:3840};
 export const initialSelections = () => ({country:{},continent:{},admin1:{},municipality:{},dong:{}});
 export const collection = features => ({type:'FeatureCollection',features});
 export const nameOf = f => {

@@ -26,7 +26,7 @@ const CUSTOM={
  '지역을 고르고, 스타일을 더하고, 슬라이드에 담으세요.':'subtitle',
  'Ctrl/Cmd+C → Ctrl/Cmd+V':'keyboard'
 };
-function lookup(value){return SOURCES[value]||CUSTOM[value]||Object.keys(packs.get('ko')||{}).find(k=>packs.get('ko')[k]===value);}
+function lookup(value){return SOURCES[value]||CUSTOM[value]||Object.keys(packs.get('ko')||{}).find(k=>packs.get('ko')[k]===value)||Object.keys(pack).find(k=>pack[k]===value);}
 const continentCodes={'Asia':'142','Europe':'150','Africa':'002','North America':'003','South America':'005','Oceania':'009','Antarctica':'010'};
 const continentLabels={"ko": ["아시아", "유럽", "아프리카", "북아메리카", "남아메리카", "오세아니아", "남극"], "en": ["Asia", "Europe", "Africa", "North America", "South America", "Oceania", "Antarctica"], "zh": ["亚洲", "欧洲", "非洲", "北美洲", "南美洲", "大洋洲", "南极洲"], "es": ["Asia", "Europa", "África", "América del Norte", "América del Sur", "Oceanía", "Antártida"], "hi": ["एशिया", "यूरोप", "अफ्रीका", "उत्तरी अमेरिका", "दक्षिण अमेरिका", "ओशिनिया", "अंटार्कटिका"], "ar": ["آسيا", "أوروبا", "أفريقيا", "أمريكا الشمالية", "أمريكا الجنوبية", "أوقيانوسيا", "القارة القطبية الجنوبية"], "pt": ["Ásia", "Europa", "África", "América do Norte", "América do Sul", "Oceania", "Antártida"], "bn": ["এশিয়া", "ইউরোপ", "আফ্রিকা", "উত্তর আমেরিকা", "দক্ষিণ আমেরিকা", "ওশেনিয়া", "অ্যান্টার্কটিকা"], "ru": ["Азия", "Европа", "Африка", "Северная Америка", "Южная Америка", "Океания", "Антарктида"], "fr": ["Asie", "Europe", "Afrique", "Amérique du Nord", "Amérique du Sud", "Océanie", "Antarctique"], "ur": ["ایشیا", "یورپ", "افریقہ", "شمالی امریکہ", "جنوبی امریکہ", "اوقیانوسیہ", "انٹارکٹیکا"], "id": ["Asia", "Eropa", "Afrika", "Amerika Utara", "Amerika Selatan", "Oseania", "Antarktika"], "de": ["Asien", "Europa", "Afrika", "Nordamerika", "Südamerika", "Ozeanien", "Antarktis"], "ja": ["アジア", "ヨーロッパ", "アフリカ", "北アメリカ", "南アメリカ", "オセアニア", "南極"], "tr": ["Asya", "Avrupa", "Afrika", "Kuzey Amerika", "Güney Amerika", "Okyanusya", "Antarktika"], "vi": ["Châu Á", "Châu Âu", "Châu Phi", "Bắc Mỹ", "Nam Mỹ", "Châu Đại Dương", "Nam Cực"], "fa": ["آسیا", "اروپا", "آفریقا", "آمریکای شمالی", "آمریکای جنوبی", "اقیانوسیه", "جنوبگان"], "it": ["Asia", "Europa", "Africa", "America del Nord", "America del Sud", "Oceania", "Antartide"], "th": ["เอเชีย", "ยุโรป", "แอฟริกา", "อเมริกาเหนือ", "อเมริกาใต้", "โอเชียเนีย", "แอนตาร์กติกา"], "pl": ["Azja", "Europa", "Afryka", "Ameryka Północna", "Ameryka Południowa", "Oceania", "Antarktyda"], "uk": ["Азія", "Європа", "Африка", "Північна Америка", "Південна Америка", "Океанія", "Антарктида"], "nl": ["Azië", "Europa", "Afrika", "Noord-Amerika", "Zuid-Amerika", "Oceanië", "Antarctica"], "ro": ["Asia", "Europa", "Africa", "America de Nord", "America de Sud", "Oceania", "Antarctica"], "el": ["Ασία", "Ευρώπη", "Αφρική", "Βόρεια Αμερική", "Νότια Αμερική", "Ωκεανία", "Ανταρκτική"], "hu": ["Ázsia", "Európa", "Afrika", "Észak-Amerika", "Dél-Amerika", "Óceánia", "Antarktisz"], "ms": ["Asia", "Eropah", "Afrika", "Amerika Utara", "Amerika Selatan", "Oceania", "Antartika"], "sv": ["Asien", "Europa", "Afrika", "Nordamerika", "Sydamerika", "Oceanien", "Antarktis"], "da": ["Asien", "Europa", "Afrika", "Nordamerika", "Sydamerika", "Oceanien", "Antarktis"], "fi": ["Aasia", "Eurooppa", "Afrikka", "Pohjois-Amerikka", "Etelä-Amerikka", "Oseania", "Etelämanner"], "cs": ["Asie", "Evropa", "Afrika", "Severní Amerika", "Jižní Amerika", "Oceánie", "Antarktida"]};
 export function continentName(name){const index=Object.keys(continentCodes).indexOf(name);return index<0?t('islands'):(continentLabels[locale]||continentLabels.en)[index];}
@@ -55,19 +55,36 @@ function apply(){
   const footer=document.querySelector('footer span');if(footer)footer.textContent='Map for PPT · '+t('operator')+' JinYoungPark';
   document.querySelector('.brand').setAttribute('aria-label','Map for PPT');
   document.getElementById('zoomIn').setAttribute('aria-label','+');document.getElementById('zoomOut').setAttribute('aria-label','−');
-  document.title='Map for PPT — '+t('hero');
+  document.title='Map for PPT — '+t('world')+' · '+t('korea')+' · PNG / SVG / PPTX';
+  const description=t('subtitle')+' '+t('world')+' · '+t('korea')+' · '+t('cities')+'. '+t('png')+' · '+t('svg')+' · '+t('pptx')+'.';
+  const intro=document.querySelector('.intro > p:last-child');if(intro)intro.textContent=t('world')+' · '+t('korea')+' · PNG / SVG / PPTX';
+  for(const selector of ['meta[name=description]','meta[property="og:description"]']){const meta=document.querySelector(selector);if(meta)meta.content=description;}
+  const ogTitle=document.querySelector('meta[property="og:title"]');if(ogTitle)ogTitle.content=document.title;
 }
 async function load(code){if(!packs.has(code)){const r=await fetch(`locales/${code}.json`,{cache:'no-store'});if(!r.ok)throw Error('Language file unavailable');packs.set(code,await r.json());}return packs.get(code);}
 export async function setLanguage(code){
   if(!languages.some(l=>l.code===code))code='ko';
   const next=await load(code);locale=code;pack=next;document.getElementById('language').value=code;apply();
+  const canonical=document.querySelector('link[rel=canonical]');
+  if(canonical&&window.history?.replaceState&&window.location?.protocol?.startsWith('http')){
+    const url=new URL('/'+code+'/',canonical.href);
+    window.history.replaceState(null,'',url.pathname+window.location.search+window.location.hash);
+    canonical.href=url.href;
+    const schema=document.querySelector('script[type="application/ld+json"]');
+    if(schema){const data=JSON.parse(schema.textContent);data.url=url.href;data.inLanguage=code;data.description=document.querySelector('meta[name=description]').content;data.featureList=[t('world'),t('korea'),t('fill'),t('flag'),t('border'),t('route'),'PNG','SVG','PPTX'];schema.textContent=JSON.stringify(data).replaceAll('<','\\u003c');}
+    const og=document.querySelector('meta[property="og:url"]');if(og)og.content=url.href;
+  }
   try{localStorage.setItem('map-for-ppt:language',code);}catch{}
   document.dispatchEvent(new window.Event('languagechange'));
 }
 export async function initLanguage(){
   const response=await fetch('locales/languages.json',{cache:'no-store'});languages=await response.json();await load('ko');
-  const select=document.getElementById('language');for(const lang of languages){const option=document.createElement('option');option.value=lang.code;option.textContent=lang.name;option.lang=lang.code;select.append(option);}
-  capture(document.body);
+  const select=document.getElementById('language');select.replaceChildren();for(const lang of languages){const option=document.createElement('option');option.value=lang.code;option.textContent=lang.name;option.lang=lang.code;select.append(option);}
   let initial='ko';try{initial=localStorage.getItem('map-for-ppt:language')||'ko';}catch{}
+  const pathCode=window.location?.pathname?.split('/')[1];
+  if(languages.some(l=>l.code===pathCode))initial=pathCode;
+  if(!languages.some(l=>l.code===initial))initial='ko';
+  pack=await load(initial);
+  capture(document.body);
   await setLanguage(initial);select.addEventListener('change',()=>setLanguage(select.value).catch(()=>{select.value=locale;}));
 }

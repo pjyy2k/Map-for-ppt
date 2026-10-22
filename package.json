@@ -7,7 +7,8 @@
     "check": "node --check public/app.js && node --check public/core.js && node --check public/export.js && node --check public/i18n.js",
     "prepare-data": "node scripts/prepare-data.cjs",
     "prepare-korea": "node scripts/prepare-korea.cjs",
-    "prepare-template": "node scripts/prepare-pptx-template.cjs"
+    "prepare-template": "node scripts/prepare-pptx-template.cjs",
+    "build:seo": "node scripts/build-seo.mjs"
   },
   "repository": {
     "type": "git",

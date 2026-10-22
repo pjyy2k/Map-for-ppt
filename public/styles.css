@@ -292,3 +292,5 @@ button:hover { background-color:rgba(213,234,226,.7); }
 .view-menu:last-child>div { inset-inline-start:auto; inset-inline-end:0; }
 .view-menu>div button { display:block; width:100%; text-align:start; min-height:40px; }
 @media(max-width:650px) { .view-menu summary,.view-menu>div button { min-height:44px; } }
+
+.search-links{display:flex;justify-content:center;flex-wrap:wrap;gap:1.5rem;margin:2rem 1rem 0;font-size:.85rem}.search-links a{color:#176b58;text-underline-offset:4px}

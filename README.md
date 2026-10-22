@@ -146,3 +146,27 @@ npm run prepare-template
 선택 단위는 세계 지도에서 대륙·국가·시도/주, 한국 지도에서 시도/주·시군구로 구분합니다. 세계 지도에서 시도/주를 바로 선택하면 국가별 정적 경계 파일을 최대 8개씩 병렬로 불러와 전체 지도와 국가명이 붙은 목록을 표시합니다. 한국 시군구의 전국 다중 선택은 한국 지도에서 제공합니다.
 
 보기 단위(지도를 표시할 범위)와 선택 단위(색칠할 행정구역)를 구분합니다. 세계 전체/대륙 보기에서 시도·주는 비활성화되며, 국가 보기에서 선택한 국가의 시도·주 파일 한 개만 불러옵니다. 세계 지도에서는 시군구를 선택할 수 없습니다. 한국 지도에서는 전국/시도 보기와 시도/시군구 선택 단위를 독립적으로 바꿀 수 있고 다른 도의 시군구 선택도 유지됩니다.
+
+## 검색 및 AI 검색 대응
+
+편집기는 기존 3단계를 유지하며, 검색봇이 JavaScript 없이 읽을 수 있는 언어별 HTML을 제공합니다. 기본 `/`는 한국어 `/ko/`를 대표 URL로 지정합니다. 30개 언어별 편집 화면과 한국어·영어 사용법 12개 페이지를 `public/`에 생성해 커밋하므로 기존 Nginx/Coolify 배포 방식 그대로 사용할 수 있습니다. `base href="/"`를 사용하므로 도메인 루트에 배포하세요.
+
+- `/ko/`, `/en/` 등: 언어별 제목·설명, canonical, 상호 hreflang, WebApplication JSON-LD.
+- `/guides/`, `/guides/en/`: 국가 색칠, 한국 시군구, 핀/곡선 경로, 파일 형식, 데이터·라이선스 안내.
+- `/sitemap.xml`, `/robots.txt`: 색인 대상 42개 URL 및 검색봇 접근 허용. `OAI-SearchBot`은 검색용이며 이 설정은 학습용 봇에 대한 별도 의사결정을 추가하지 않습니다.
+- `/images/`: 실제 경계 데이터로 생성한 지도 예시 SVG 및 공유용 PNG.
+
+### 페이지 재생성과 도메인 변경
+
+현재 대표 주소는 기존 검증 주소 `https://5kiqiunhwfihz6lfdi0qrpkk.hellojyp.com`입니다. 운영 도메인을 변경하면 아래 명령으로 canonical·hreflang·공유 메타데이터·사이트맵을 **함께** 다시 만들고 생성 파일을 커밋하세요.
+
+```bash
+npm ci
+SITE_URL=https://your-domain.example npm run build:seo
+npm run check
+npm test
+```
+
+편집 화면의 HTML 원본은 `scripts/seo/editor.html`, 사용법 원본은 `scripts/seo/guides.json`, 언어 팩은 `public/locales/`입니다. 생성된 `public/index.html`이나 언어별 `index.html`을 직접 고치지 말고 원본 수정 후 재생성하세요. CSS·JS는 기존 `public/` 원본을 수정합니다. 런타임은 계속 정적 서비스이며 빌드 도구가 서버에서 실행될 필요는 없습니다.
+
+배포 후 Google Search Console과 Bing Webmaster Tools에서 도메인 소유권을 확인하고 `https://운영도메인/sitemap.xml`을 제출하세요. 소유권 인증이 필요한 등록은 자동 수행하지 않습니다. CDN·방화벽에서 Googlebot·Bingbot·OAI-SearchBot 접근을 차단하지 않는지도 확인하세요. 사이트맵과 구조화 데이터는 검색 노출을 보장하지 않습니다.

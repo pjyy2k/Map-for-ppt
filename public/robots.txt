@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+Sitemap: https://5kiqiunhwfihz6lfdi0qrpkk.hellojyp.com/sitemap.xml

@@ -1,6 +1,6 @@
 import {CONTINENTS,MODES,COLORS,SIZE,DEFAULTS,initialSelections,collection,nameOf,validateProject,visibleFeature,filteredCountries} from './core.js?v=23';
 import {createEditablePptx} from './export.js?v=12';
-import {initLanguage,language,t,continentName} from './i18n.js?v=23';
+import {initLanguage,language,t,continentName} from './i18n.js?v=24';
 const $=id=>document.getElementById(id),d3=window.d3,STORAGE='map-for-ppt:v1';
 const EXPORTS=['downloadPng','downloadSvg','downloadPptx','downloadRegions','downloadSingle'];
 const CREDIT='통계청 SGIS · vuski/admdongkor (CC BY 4.0) · 2025-01-01 · 경계 간소화';
